@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/modoZona"
+        android:icon="@mipmap/ic_action_brush"
+        android:title="Zonas" />
+
+    <item
+        android:id="@+id/modoMensajes"
+        android:icon="@drawable/ic_message"
+        android:title="Mensajes" />
+
+    <item
+        android:id="@+id/modoPerfil"
+        android:icon="@mipmap/ic_action_person"
+        android:title="Perfil" />
+
+</menu>

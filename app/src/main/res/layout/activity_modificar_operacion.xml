@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/UIModificarOperacion"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="com.example.ruben.Paginas.ConsultaOperacion"
+    tools:layout_editor_absoluteY="25dp">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_row="0"
+        android:text="Modificar Operación"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <GridLayout
+        android:id="@+id/gridLayout9"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_column="0"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_row="1"
+        android:background="@drawable/border_list"
+        app:layout_constraintEnd_toStartOf="@+id/gridLayout8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:background="#6da7f3"
+            android:text="Código"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/CodigoModificarOperacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_row="1"
+            android:maxLength="9"
+            android:text="Código"
+            android:textAlignment="center"
+            android:textColor="#000000" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/gridLayout8"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_column="0"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_row="1"
+        android:background="@drawable/border_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/gridLayout9"
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:background="#f37f6d"
+            android:text="Nombre"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/NombreModificarOperacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_row="1"
+            android:maxLength="12"
+            android:text="Nombre"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/gridLayout14"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_column="0"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_row="1"
+        android:background="@drawable/border_list"
+        app:layout_constraintEnd_toStartOf="@+id/gridLayout13"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayout10">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:background="#6df3b7"
+            android:text="Finca"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/FincaModificarOperacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_row="1"
+            android:text="Finca"
+            android:textAlignment="center"
+            android:textColor="#000000" />
+    </GridLayout>
+
+
+    <GridLayout
+        android:id="@+id/gridLayout10"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_column="0"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_row="1"
+        android:background="@drawable/border_list"
+        app:layout_constraintEnd_toStartOf="@+id/gridLayout12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayout9">
+
+        <TextView
+            android:id="@+id/TextViewFechaOperacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:background="#836df3"
+            android:text="Fecha"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/ModificarFechaOperacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_row="1"
+            android:text="Fecha"
+            android:textAlignment="center"
+            android:textColor="#000000" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/gridLayout12"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_column="0"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_row="1"
+        android:background="@drawable/border_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/gridLayout10"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayout8">
+
+        <TextView
+            android:id="@+id/TextViewColorOperacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:background="#db9c54"
+            android:text="Color"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/ColorModificarOperacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="3dp"
+            android:layout_row="1"
+            android:padding="2dp"
+            android:text="Color"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </GridLayout>
+
+    <GridLayout
+        android:id="@+id/gridLayout13"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_column="0"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_row="1"
+        android:background="@drawable/border_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/gridLayout14"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayout12">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:background="@color/colorAccent2"
+            android:text="Tipo"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/TipoModificarOperacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="3dp"
+            android:layout_row="1"
+            android:padding="2dp"
+            android:text="Tipo"
+            android:textAlignment="center"
+            android:textColor="#000000" />
+    </GridLayout>
+
+
+    <GridLayout
+        android:id="@+id/gridLayout15"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_column="0"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_row="1"
+        android:background="@drawable/border_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ListViewParcelasModificarOperacion">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:background="#64c1dd"
+            android:text="Observaciones"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/ObservacionesModificarOperacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_row="1"
+            android:maxLength="200"
+            android:padding="10dp"
+            android:text="Observaciones"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textColorHint="#494949" />
+    </GridLayout>
+
+    <Button
+        android:id="@+id/BotonAceptarModificarOperacion"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_column="0"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_row="2"
+        android:background="@color/colorAccent4"
+        android:text="Aceptar"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/BotonCancelarModificarOperacion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayout15" />
+
+    <Button
+        android:id="@+id/BotonCancelarModificarOperacion"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_column="0"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_row="2"
+        android:background="@color/colorAccent5"
+        android:text="Cancelar"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/BotonAceptarModificarOperacion"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayout15" />
+
+    <ListView
+        android:id="@+id/ListViewParcelasModificarOperacion"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+        android:layout_column="0"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_row="1"
+        android:background="@drawable/border_list"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="@+id/gridLayout14"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayout14" />
+
+    <GridLayout
+        android:id="@+id/GridArticulosModificarOperacion"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+        android:layout_column="0"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_row="1"
+        android:background="@drawable/border_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/gridLayout13"
+        app:layout_constraintTop_toBottomOf="@+id/gridLayout13">
+
+        <ListView
+            android:id="@+id/ListViewArticulosModificarOperacion"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary" />
+
+        <Button
+            android:id="@+id/BotonAddArticuloModificarOperacion"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="130dp"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:background="@color/colorAccent3"
+            android:text="+"
+            android:textColor="#FFFFFF" />
+    </GridLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/UIModificarOperacionAddArticulo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/white"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Añadir Artículo"
+            android:textColor="#000000"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/buscarArticulo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="Buscar Artículo"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+        <ListView
+            android:id="@+id/ListViewArticulosDBCrearOperacion"
+            android:layout_width="0dp"
+            android:layout_height="295dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buscarArticulo" />
+
+        <Button
+            android:id="@+id/BotonAceptarArticulos"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="62dp"
+            android:background="@color/colorAccent3"
+            android:elevation="0dp"
+            android:text="Aceptar"
+            android:textSize="8sp"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toStartOf="@+id/BotonCancelarArticulos"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ListViewArticulosDBCrearOperacion" />
+
+        <Button
+            android:id="@+id/BotonCancelarArticulos"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="62dp"
+            android:background="@color/colorAccent2"
+            android:elevation="0dp"
+            android:text="Cancelar"
+            android:textSize="8sp"
+            android:textColor="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/BotonAceptarArticulos"
+            app:layout_constraintTop_toBottomOf="@+id/ListViewArticulosDBCrearOperacion" />
+    </android.support.constraint.ConstraintLayout>
+
+
+</android.support.constraint.ConstraintLayout>
