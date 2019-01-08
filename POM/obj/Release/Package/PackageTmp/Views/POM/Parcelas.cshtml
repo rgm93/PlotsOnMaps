@@ -1,0 +1,783 @@
+﻿
+@using POM.Models
+
+@{
+    Layout = null;
+    WebGrid webGrid = new WebGrid(source: Model);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Parcelas</title>
+    <link rel="stylesheet" type="text/css" href="~/CSS/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="~/CSS/mapas.css">
+    <link rel="stylesheet" href="~/CSS/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="~/JS/jquery.js"></script>
+    <script type="text/javascript" src="~/JS/function.js"></script>
+    <script type="text/javascript" src="~/JS/Home.js"></script>
+    @Html.DevExpress().GetStyleSheets(
+       new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+       new StyleSheet { ExtensionSuite = ExtensionSuite.Editors },
+       new StyleSheet { ExtensionSuite = ExtensionSuite.GridView }
+   )
+    @Html.DevExpress().GetScripts(
+        new Script { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+        new Script { ExtensionSuite = ExtensionSuite.Editors },
+        new Script { ExtensionSuite = ExtensionSuite.GridView }
+    )
+</head>
+
+<body>
+    <nav class="w3-sidebar w3-bar-block w3-white w3-card w3-animate-left w3-xxlarge" style="display:none;z-index:2" id="mySidebar">
+        <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-display-topright w3-text-teal">
+            Close
+            <i class="fa fa-remove"></i>
+        </a>
+        <a href="#" class="w3-bar-item w3-button">Link 1</a>
+        <a href="#" class="w3-bar-item w3-button">Link 2</a>
+        <a href="#" class="w3-bar-item w3-button">Link 3</a>
+        <a href="#" class="w3-bar-item w3-button">Link 4</a>
+        <a href="#" class="w3-bar-item w3-button">Link 5</a>
+    </nav>
+
+    <!-- Navbar -->
+    <div class="w3-top">
+        <div class="w3-bar w3-theme-d2 w3-left-align">
+            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+            <a href="/POM/Home" class="w3-bar-item w3-button w3-teal"><i class="fa fa-home w3-margin-right"></i>PlotsOnMaps</a>
+            <a href="/POM/Parcelas" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Fincas y Parcelas</a>
+
+            <div class="w3-dropdown-hover w3-hide-small">
+                <button class="w3-button" title="Notifications">Otros <i class="fa fa-caret-down"></i></button>
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block">
+                    <a href="/POM/Usuarios" class="w3-bar-item w3-button">Usuarios</a>
+                    <a href="/POM/Variedades" class="w3-bar-item w3-button">Variedades</a>
+                    <a href="/POM/Articulos" class="w3-bar-item w3-button">Artículos</a>
+                    <a href="/POM/Operaciones" class="w3-bar-item w3-button">Operaciones</a>
+                </div>
+            </div>
+
+            <a href="/POM/Filtrado" class="w3-bar-item w3-button w3-hide-small w3-hover-teal" title="Filtrar Operaciones"><i class="fa fa-search"></i></a>
+            <a href="/POM/Login" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-white">Cerrar Sesión</a>
+        </div>
+
+        <!-- Navbar on small screens -->
+        <div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium">
+            <a href="/POM/Parcelas" class="w3-bar-item w3-button">Parcelas</a>
+            <a href="/POM/Otros" class="w3-bar-item w3-button">Otros</a>
+            <a href="/POM/Login" class="w3-bar-item w3-button">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <input id="pac-input" class="controls" type="text" placeholder="Buscar en Google Maps" style="visibility:hidden">
+
+    <div id="map"></div>
+    <div id="floating-panel">
+        <input onclick="removeLine();" type=button value="Eliminar Parcela Dibujada del Mapa" style="background-color: white">
+    </div>
+
+
+    <div id="formparcelas">
+        <div class="tablas">
+            <h2> Fincas </h2>
+            @Html.Action("GridViewPartialFincas")
+        </div>
+
+        <div class="tablas" style="margin-top: -8%;">
+            <form id="formcrearfinca" class="login-form" action="/POM/CrearFinca" method="post">
+                <h3> Añadir Finca </h3>
+                <input class="campo2" id="codigoFinca" name="codigo" type="text" placeholder="Código" />
+                <input class="campo2" id="nombreFinca" name="nombre" type="text" placeholder="Nombre" />
+                <select id="colorFinca" name="color">
+                    <option value="X">Elige un color</option>
+                    <option value="-16776961">AZUL</option>
+                    <option value="-16711936">VERDE</option>
+                    <option value="-65536">ROJO</option>
+                    <option value="-256">AMARILLO</option>
+                    <option value="-65281">MAGENTA</option>
+                    <option value="-16711681">CYAN</option>
+                    <option value="-16777216">BLACK</option>
+                    <option value="-1">WHITE</option>
+                </select>
+                <input id="crearFinca" type="button" name="enviar" value="Crear Finca" />
+                <script>
+                    $(document).ready(function () {
+                        $(function () {
+                            $('#crearFinca').click(function (event) {
+
+                                var finca = {
+                                    codigo: $('#codigoFinca').val(),
+                                    nombre: $('#nombreFinca').val(),
+                                    color: $('#colorFinca').val()
+                                };
+
+                                if (comprobarCrearFinca(finca)) {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/POM/CrearFinca",
+                                        contentType: "application/json",
+                                        data: JSON.stringify(finca),
+                                        dataType: "json",
+                                        async: false,
+                                        cache: false,
+                                        traditional: true,
+                                        success: function (data) {
+                                            $("#FincaPL").empty();
+                                            var options = '';
+                                            for (var i = 0; i < data.length; i++) {
+                                                options += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                                            }
+                                            $('#FincaPL').append(options);
+                                            alert("¡Finca creada con éxito!");
+                                            document.getElementById('codigoFinca').value = ''
+                                            document.getElementById('nombreFinca').value = ''
+                                            location.reload();
+                                        },
+                                        error: function (xhr, status, error) { alert("Fallo en la operación"); }
+                                    });
+                                }
+                            });
+                        });
+                        function comprobarCrearFinca(finca) {
+                            var devolver = false;
+                            if (finca.codigo != "") {
+                                if (finca.nombre != "") {
+                                    if (finca.color != "X") {
+                                        devolver = true;
+                                    }
+                                    else alert("Falta elegir el color de la finca");
+                                }
+                                else alert("Falta por definir el nombre de la finca");
+                            }
+                            else alert("Falta por definir el código de la finca.");
+                            return devolver;
+                        }
+                    });
+                </script>
+            </form>
+        </div>
+
+        <div class="tablas" style="margin-top: -8%;">
+            <h2> Parcelas </h2>
+            @Html.Action("GridViewPartialParcelas")
+        </div>
+        <div class="tablas" style="margin-top: -8%;">
+            <form id="formcrearparcela" class="login-form">
+                <h3> Añadir Parcela </h3>
+                <input class="campo2" id="codigo" name="codigo" type="text" placeholder="Código" />
+                <input class="campo2" id="nombre" name="nombre" type="text" placeholder="Nombre" />
+                <select id="conjunta" name="conjunta">
+                    <option value="X"> ¿Parcela conjunta? </option>
+                    <option value="1">SI</option>
+                    <option value="0">NO</option>
+                </select>
+                @Html.DropDownList("VariedadPL", ViewData["Variedades"] as List<SelectListItem>)
+                <span id="select_variedad" name="sv" style="visibility: hidden"></span>
+                <script>
+                    $(document).ready(function () {
+                        $("#VariedadPL").change(function () {
+                            var n = $('#VariedadPL Option:Selected').text();
+                            $("#select_variedad").text(n);
+                        })
+                    })
+                </script>
+                @Html.DropDownList("FincaPL", ViewData["Fincas"] as List<SelectListItem>)
+                <span id="select_finca" name="sf" style="visibility: hidden"></span>
+                <script>
+                    $(document).ready(function () {
+                        $("#FincaPL").change(function () {
+                            var n = $('#FincaPL Option:Selected').text();
+                            $("#select_finca").text(n);
+                        })
+                    })
+                </script>
+
+                <input id="output" name="Poly" type="text" hidden="hidden" />
+                <input id="crear" type="button" value="Crear Parcela" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $(function () {
+                            $('#crear').click(function (event) {
+
+                                var parcela = {
+                                    codigo: $('#codigo').val(),
+                                    nombre: $('#nombre').val(),
+                                    conjunta: $('#conjunta').val(),
+                                    variedad: $('#VariedadPL').val(),
+                                    finca: $('#FincaPL').val(),
+                                    coordenadas: $('#output').val()
+                                };
+
+                                if (comprobarCrearParcela(parcela)) {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/POM/CrearParcela",
+                                        contentType: "application/json",
+                                        data: JSON.stringify(parcela),
+                                        dataType: "json",
+                                        async: false,
+                                        cache: false,
+                                        traditional: true,
+                                        success: function (data) {
+                                            //cargarTabla2(data);
+                                            alert("Parcela creada exitósamente");
+                                            document.getElementById('codigo').value = ''
+                                            document.getElementById('nombre').value = ''
+                                            //initMap2(data.coordenadas);*/
+                                            location.reload();
+                                        },
+                                        error: function (xhr, status, error) { alert("Fallo en la operación"); }
+                                    });
+                                }
+                            });
+                        });
+                        function comprobarCrearParcela(parcela) {
+                            var devolver = false;
+
+                            console.log("Comprobar parcela - ");
+                            if (parcela.codigo != "") {
+                                console.log(parcela.codigo);
+                                if (parcela.nombre != "") {
+                                    if (parcela.conjunta != "X") {
+                                        if (parcela.variedad != 0) {
+                                            console.log(parcela.variedad);
+                                            if (parcela.finca != 0) {
+                                                console.log(parcela.finca);
+                                                if (parcela.coordenadas != "") {
+                                                    console.log(parcela.coordenadas);
+                                                    devolver = true;
+                                                }
+                                                else alert("Falta por definir el trazo de la parcela");
+                                            }
+                                            else alert("Falta por definir la finca a que pertenece la parcela");
+                                        }
+                                        else alert("Falta por definir la variedad de la parcela");
+                                    }
+                                    else alert("Falta por definir si la parcela está conjunta");
+                                }
+                                else alert("Falta por definir el nombre de la parcela");
+                            }
+                            else alert("Falta por definir el código de la parcela");
+                            /*if (parcela.codigo != "" && parcela.nombre != "" && parcela.variedad != 0
+                                && parcela.finca != 0 && parcela.coordenadas != null) {
+                                devovler = true;
+                            }*/
+                            return devolver;
+                        }
+                    });
+                </script>
+            </form>
+        </div>
+
+        <input class="filtrar" id="aplicarFiltro" type="button" value="Recargar Mapa" />
+
+        <script type="text/javascript">
+            $(function () {
+                $("body").on("click", "#aplicarFiltro", function () {
+                    location.reload();
+                });
+            });
+
+        </script>
+        <!--<form id="formcrearparcela" class="login-form" method="post">
+        <h1 id="formOtros"> Eliminar Parcela </h1>
+        @Html.DropDownList("FincaPL2", ViewData["Fincas"] as List<SelectListItem>)
+        <script>
+            $(document).ready(function () {
+                $("#FincaPL2").change(function () {
+                    var filtrar = {
+                        finca: $('#FincaPL2 Option:Selected').val()
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/POM/ObtenerParcelasDeFinca",
+                        contentType: "application/json",
+                        data: JSON.stringify(filtrar),
+                        dataType: "json",
+                        async: false,
+                        cache: false,
+                        traditional: true,
+                        success: function (data) {
+                            var select = $("#ParcelaPL");
+                            select.empty();
+                            select.append($('<option/>', {
+                                value: 0,
+                                text: "Todas las parcelas"
+                            }));
+                            $.each(data, function (index, itemData) {
+                                select.append($('<option/>', {
+                                    text: itemData.nombre
+                                }));
+                            });
+                        },
+                    });
+
+                })
+            })
+        </script>
+        @Html.DropDownList("ParcelaPL", ViewData["Parcelas"] as List<SelectListItem>)
+        <input id="borrarParcela" type="button" name="eliminar" value="Eliminar" />
+        <script>
+            $(document).ready(function () {
+                $("#ParcelasPL").change(function () {
+                    var n = $('#ParcelasPL Option:Selected').text();
+                    $("#select_eliminar_parcela").text(n);
+                })
+            })
+
+            $('#borrarParcela').click(function (event) {
+                var parcela = {
+                    codigo: $('#ParcelaPL Option:Selected').val()
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/POM/EliminarParcela",
+                    contentType: "application/json",
+                    data: JSON.stringify(parcela),
+                    dataType: "json",
+                    async: false,
+                    cache: false,
+                    traditional: true,
+                    success: function (data) {
+                        if (data.eliminado) {
+                            alert("¡Parcela borrada!");
+                            location.reload();
+                            /*var filtrar = {
+                                finca: $('#FincaPL2 Option:Selected').val()
+                            };
+
+                            $.ajax({
+                                type: "POST",
+                                url: "/POM/ObtenerParcelasDeFinca",
+                                contentType: "application/json",
+                                data: JSON.stringify(filtrar),
+                                dataType: "json",
+                                async: false,
+                                cache: false,
+                                traditional: true,
+                                success: function (data) {
+                                    var select = $("#ParcelaPL");
+                                    select.empty();
+                                    select.append($('<option/>', {
+                                        value: 0,
+                                        text: "Todas las parcelas"
+                                    }));
+                                    $.each(data, function (index, itemData) {
+                                        select.append($('<option/>', {
+                                            text: itemData.nombre
+                                        }));
+                                    });
+                                    cargarTabla2(data);
+                                },
+
+                            });
+                            initMap2(data.coordenadas);*/
+                        }
+                        else alert("No se puede borrar la parcela");
+
+                    },
+                    error: function (xhr, status, error) { alert("No se puede borrar la parcela"); }
+                });
+            });
+        </script>
+    </form>
+    <form id="formcrearparcela" class="login-form">
+        <h1 id="formOtros"> Listado de Parcelas </h1>
+        <table id="tbParcelas" class="Grid" width="800" runat="server" clientidmode="Static">
+            <thead><tr><th>Id</th><th>Nombre</th><th>Conjunta</th><th>Variedad</th><th>Finca</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </form>-->
+        <script>
+            $(document).ready(function () {
+                cargarTabla();
+            });
+
+            function cargarTabla() {
+                var row = "";
+                var parcelas =@Html.Raw(Json.Encode(ViewData["TablaParcelas"]));
+
+                for (var i in parcelas) {
+                    row += "<tr><td>" + parcelas[i].codigo + "</td><td>" + parcelas[i].nombre + "</td><td>" + parcelas[i].conjuntaTexto + "</td><td>" + parcelas[i].variedad + "</td><td>" + parcelas[i].finca + "</td></tr>";
+                }
+
+                $("#tbParcelas tbody").append(row);
+            }
+
+            function cargarTabla2(parcelas) {
+                var row = "";
+                console.log(parcelas);
+                var tabla = document.getElementById("tbParcelas");
+                while (tabla.rows.length > 0) {
+                    tabla.deleteRow(1);
+                }
+                //row += "<tr><td>Id</td><td>Nombre</td><td>Conjunta</td><td>Variedad</td><td>Finca</td></tr>";
+                //$("#tbParcelas tbody").append(row);
+
+                for (var i in parcelas) {
+                    row += "<tr><td>" + parcelas[i].codigo + "</td><td>" + parcelas[i].nombre + "</td><td>" + parcelas[i].conjunta + "</td><td>" + parcelas[i].variedad + "</td><td>" + parcelas[i].finca + "</td></tr>";
+                }
+                $("#tbParcelas tbody").append(row);
+            }
+
+        </script>
+    </div>
+
+
+
+        <footer class="w3-container w3-padding-32 w3-theme-d1 w3-center foot">
+            <p> © 2018 PlotsOnMaps - Rubén González Membrilla </p>
+        </footer>
+
+
+        <script>
+        var polylines = [];
+        var coords = [];
+        var polylinesDB = [];
+
+        var drawingControl;
+        var map;
+
+        function removeLine() {
+            for (i = 0; i < polylines.length; i++) {
+                polylines[i].setMap(null);
+                for (var j = 0; j < polylines[i].length; j++) {
+                    polylines[i].getPath().removeAt(j);
+                }
+            }
+
+            coords = [];
+            polylines = [];
+
+            drawingControl.setOptions({
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [
+                        google.maps.drawing.OverlayType.POLYLINE
+                    ]
+                },
+                polylineOptions: {
+                    editable: true,
+                    draggable: false,
+                    geodesic: true
+                }
+            });
+
+            /*drawingControl = new google.maps.drawing.DrawingManager({
+                drawingMode: null,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [
+                        google.maps.drawing.OverlayType.POLYLINE
+                    ]
+                },
+                polylineOptions: {
+                    editable: true,
+                    draggable: false,
+                    geodesic: true
+                }
+            });*/
+
+            drawingControl.setMap(map);
+            //addDrawingControl(map);
+        }
+
+        function initMap() {
+            //set center coordinate
+            var myLat = 37.2547837;
+            var myLng = -6.9536343;
+            var center = {
+                lat: myLat,
+                lng: myLng
+            };
+
+            //create map
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: center,
+                mapTypeId: 'roadmap',
+            });
+
+            var arr = new Array();
+
+            var coordenadasparcelas = @Html.Raw(Json.Encode(ViewBag.Poms));
+
+            polylinesDB = [];
+
+            for (var i in coordenadasparcelas) {
+                arr = [];
+                for (var j = 0; j < coordenadasparcelas[i].length; j++) {
+                    arr.push(new google.maps.LatLng(
+                        parseFloat(coordenadasparcelas[i][j].latitud),
+                        parseFloat(coordenadasparcelas[i][j].longitud)
+                    ));
+                }
+
+                polylinesDB.push(new google.maps.Polyline({
+                    path: arr,
+                    geodesic: true,
+                    strokeColor: coordenadasparcelas[i][j-1].colorHex,
+                    strokeOpacity: 1.0,
+                    strokeWeight: 5,
+                    fillColor: coordenadasparcelas[i][j-1].colorHex,
+                    fillOpacity: 0.35
+                }));
+
+                for (var i in polylinesDB) {
+                    polylinesDB[i].setMap(map);
+                }
+            }
+
+            addDrawingControl(map);
+
+            // Create the search box and link it to the UI element.
+            var input = document.getElementById('pac-input');
+            var searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+            // Bias the SearchBox results towards current map's viewport.
+            map.addListener('bounds_changed', function () {
+                searchBox.setBounds(map.getBounds());
+            });
+
+            var markers = [];
+            // Listen for the event fired when the user selects a prediction and retrieve
+            // more details for that place.
+            searchBox.addListener('places_changed', function () {
+                var places = searchBox.getPlaces();
+
+                if (places.length == 0) {
+                    return;
+                }
+
+                // Clear out the old markers.
+                markers.forEach(function (marker) {
+                    marker.setMap(null);
+                });
+                markers = [];
+
+                // For each place, get the icon, name and location.
+                var bounds = new google.maps.LatLngBounds();
+                places.forEach(function (place) {
+                    if (!place.geometry) {
+                        console.log("Returned place contains no geometry");
+                        return;
+                    }
+                    var icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25)
+                    };
+
+                    // Create a marker for each place.
+                    markers.push(new google.maps.Marker({
+                        map: map,
+                        icon: icon,
+                        title: place.name,
+                        position: place.geometry.location
+                    }));
+
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
+                });
+                map.fitBounds(bounds);
+            });
+        }
+
+        function initMap2(data) {
+            //set center coordinate
+            var myLat = 37.2547837;
+            var myLng = -6.9536343;
+            var center = {
+                lat: myLat,
+                lng: myLng
+            };
+
+            //create map
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: center,
+                mapTypeId: 'roadmap',
+            });
+
+            var arr = new Array();
+
+            var coordenadasparcelas = data;
+
+            polylinesDB = [];
+
+            for (var i in coordenadasparcelas) {
+                arr = [];
+                for (var j = 0; j < coordenadasparcelas[i].length; j++) {
+                    arr.push(new google.maps.LatLng(
+                        parseFloat(coordenadasparcelas[i][j].latitud),
+                        parseFloat(coordenadasparcelas[i][j].longitud)
+                    ));
+                }
+
+                polylinesDB.push(new google.maps.Polyline({
+                    path: arr,
+                    geodesic: true,
+                    strokeColor: coordenadasparcelas[i][j-1].colorHex,
+                    strokeOpacity: 1.0,
+                    strokeWeight: 5,
+                    fillColor: coordenadasparcelas[i][j-1].colorHex,
+                    fillOpacity: 0.35
+                }));
+
+                for (var i in polylinesDB) {
+                    polylinesDB[i].setMap(map);
+                }
+            }
+
+            addDrawingControl(map);
+
+            // Create the search box and link it to the UI element.
+            var input = document.getElementById('pac-input');
+            var searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+            // Bias the SearchBox results towards current map's viewport.
+            map.addListener('bounds_changed', function () {
+                searchBox.setBounds(map.getBounds());
+            });
+
+            var markers = [];
+            // Listen for the event fired when the user selects a prediction and retrieve
+            // more details for that place.
+            searchBox.addListener('places_changed', function () {
+                var places = searchBox.getPlaces();
+
+                if (places.length == 0) {
+                    return;
+                }
+
+                // Clear out the old markers.
+                markers.forEach(function (marker) {
+                    marker.setMap(null);
+                });
+                markers = [];
+
+                // For each place, get the icon, name and location.
+                var bounds = new google.maps.LatLngBounds();
+                places.forEach(function (place) {
+                    if (!place.geometry) {
+                        console.log("Returned place contains no geometry");
+                        return;
+                    }
+                    var icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25)
+                    };
+
+                    // Create a marker for each place.
+                    markers.push(new google.maps.Marker({
+                        map: map,
+                        icon: icon,
+                        title: place.name,
+                        position: place.geometry.location
+                    }));
+
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
+                });
+                map.fitBounds(bounds);
+            });
+        }
+
+        function addDrawingControl(map) {
+
+            drawingControl = new google.maps.drawing.DrawingManager({
+                drawingMode: null,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [
+                        google.maps.drawing.OverlayType.POLYLINE
+                    ]
+                },
+                polylineOptions: {
+                    editable: true,
+                    draggable: false,
+                    geodesic: true
+                }
+            });
+
+            drawingControl.setMap(map);
+
+
+            google.maps.event.addListener(drawingControl, 'polylinecomplete', function (polyline) {
+                /*console.log("prueba");
+                for (var i = 0; i < polylinesDB.length; i++) {
+                    for (var j = 0; j < polyline.length; j++) {
+                            if (google.maps.geometry.poly.isLocationOnEdge(polyline.getPath().getAt(j), polylinesDB[i].getPath(), 0.00001)) {
+                                console.log("Relocate!");
+                            }
+                            else console.log("No pasa nada");
+                    }
+
+                }
+                console.log("fin de prueba");*/
+
+                polylines.push(polyline);
+
+                var polylinePath = polyline.getPath();
+                console.log("polyline : " + polylinePath.getArray());
+
+                var htmlStr = "";
+
+                for (var i = 0; i < polylines.length; i++) {
+                    for (var j = 0; j < polylines[i].getPath().getLength(); j++) {
+                        htmlStr += polylines[i].getPath().getAt(j).toUrlValue(6) + "#";
+                        coords.push(polylines[i].getPath().getAt(j).toUrlValue(6));
+                    }
+                }
+
+                console.log("polylineReal : " + coords);
+                document.getElementById('output').value = coords;
+                drawingControl.setOptions({
+                    drawingMode: null,
+                    drawingControl: true,
+                    drawingControlOptions: {
+                        position: google.maps.ControlPosition.TOP_CENTER,
+                        drawingModes: [
+
+                        ]
+                    },
+                    polylineOptions: {
+                        editable: true,
+                        draggable: false,
+                        geodesic: true
+                    }
+                });
+            });
+        }
+
+        google.maps.event.addDomListener(window, "load", initMap);
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBu6Bjk8hJSQLCnzB8XBwZrJd2Zoms86j4&libraries=drawing,geometry,places&callback=initMap" async defer></script>
+
+</body>
+</html>

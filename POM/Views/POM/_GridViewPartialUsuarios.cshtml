@@ -1,0 +1,78 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "GridViewUsuarios";
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.Height = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.CallbackRouteValues = new { Controller = "POM", Action = "GridViewPartialUsuarios" };
+
+        //settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "POM", Action = "GridViewPartialUsuariosAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "POM", Action = "GridViewPartialUsuariosUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "POM", Action = "GridViewPartialUsuariosDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditForm; //EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        //settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "CODIGO";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = false;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.HideDataCellsWindowLimit;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Left;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.Styles.HeaderFilterItem.CssClass = "MVCxGridViewHeader1";
+        settings.Styles.Header.CssClass = "MVCxGridViewHeader1";
+        
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "USERNAME";
+            c.Caption = "Usuario";
+        });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "PASS";
+            c.Caption = "Contraseña";
+            var tbSettings = c.PropertiesEdit as TextBoxProperties;
+            tbSettings.Password = true;
+        });
+
+        settings.Columns.Add(c =>
+        {
+
+            settings.Name = "Rol del Usuario";
+            c.FieldName = "TIPO";
+            c.Caption = "ROL";
+            c.EditorProperties().ComboBox(p =>
+            {
+                p.ValueType = typeof(string);
+                p.DataSource = POM.Controllers.POMController.getRolUsuario();
+            });
+        });
+
+        settings.Columns.Add(c =>
+        {
+
+            settings.Name = "Habilitado";
+            c.FieldName = "ACTIVADO";
+            c.EditorProperties().ComboBox(p =>
+            {
+                p.ValueType = typeof(string);
+                p.DataSource = POM.Controllers.POMController.getUsuarioHabilitado();
+            });
+        });
+    });
+    if (ViewData["EditError"] != null){
+        
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

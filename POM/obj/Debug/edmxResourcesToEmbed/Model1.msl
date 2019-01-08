@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="PlotsOnMapsDBModelStoreContainer" CdmEntityContainer="PlotsOnMapsDBEntities">
+    <EntitySetMapping Name="ARTICULOes">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModel.ARTICULO">
+        <MappingFragment StoreEntitySet="ARTICULO">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FINCAs">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModel.FINCA">
+        <MappingFragment StoreEntitySet="FINCA">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="COLOR" ColumnName="COLOR" />
+          <ScalarProperty Name="USUARIO" ColumnName="USUARIO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OPERACIONs">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModel.OPERACION">
+        <MappingFragment StoreEntitySet="OPERACION">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="COLOR" ColumnName="COLOR" />
+          <ScalarProperty Name="TIPO" ColumnName="TIPO" />
+          <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+          <ScalarProperty Name="ARTICULOS" ColumnName="ARTICULOS" />
+          <ScalarProperty Name="OBSERVACIONES" ColumnName="OBSERVACIONES" />
+          <ScalarProperty Name="TROZOS" ColumnName="TROZOS" />
+          <ScalarProperty Name="PARCELA" ColumnName="PARCELA" />
+          <ScalarProperty Name="FINCA" ColumnName="FINCA" />
+          <ScalarProperty Name="USUARIO" ColumnName="USUARIO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PARCELAs">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModel.PARCELA">
+        <MappingFragment StoreEntitySet="PARCELA">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="CONJUNTA" ColumnName="CONJUNTA" />
+          <ScalarProperty Name="VARIEDAD" ColumnName="VARIEDAD" />
+          <ScalarProperty Name="FINCA" ColumnName="FINCA" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TIPO_OPERACION">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModel.TIPO_OPERACION">
+        <MappingFragment StoreEntitySet="TIPO_OPERACION">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="TIENE_ARTICULOS" ColumnName="TIENE_ARTICULOS" />
+          <ScalarProperty Name="COLOR" ColumnName="COLOR" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="USUARIOs">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModel.USUARIO">
+        <MappingFragment StoreEntitySet="USUARIO">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="USERNAME" ColumnName="USERNAME" />
+          <ScalarProperty Name="PASS" ColumnName="PASS" />
+          <ScalarProperty Name="TIPO" ColumnName="TIPO" />
+          <ScalarProperty Name="ACTIVADO" ColumnName="ACTIVADO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VARIEDADs">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModel.VARIEDAD">
+        <MappingFragment StoreEntitySet="VARIEDAD">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="PlotsOnMapsDBModeloOneStoreContainer" CdmEntityContainer="PlotsOnMapsDBEntities2">
+    <EntitySetMapping Name="ARTICULO">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.ARTICULO">
+        <MappingFragment StoreEntitySet="ARTICULO">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CONJUNTO_ARTICULOS">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.CONJUNTO_ARTICULOS">
+        <MappingFragment StoreEntitySet="CONJUNTO_ARTICULOS">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="ARTICULO" ColumnName="ARTICULO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CONJUNTO_OPERACIONES">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.CONJUNTO_OPERACIONES">
+        <MappingFragment StoreEntitySet="CONJUNTO_OPERACIONES">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="OPERACION" ColumnName="OPERACION" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CONJUNTO_PARCELAS">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.CONJUNTO_PARCELAS">
+        <MappingFragment StoreEntitySet="CONJUNTO_PARCELAS">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="PARCELA" ColumnName="PARCELA" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="COORDENADAS_OPERACION">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.COORDENADAS_OPERACION">
+        <MappingFragment StoreEntitySet="COORDENADAS_OPERACION">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="LAT" ColumnName="LAT" />
+          <ScalarProperty Name="LONG" ColumnName="LONG" />
+          <ScalarProperty Name="TROZO" ColumnName="TROZO" />
+          <ScalarProperty Name="OPERACION" ColumnName="OPERACION" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="COORDENADAS_PARCELA">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.COORDENADAS_PARCELA">
+        <MappingFragment StoreEntitySet="COORDENADAS_PARCELA">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="LAT" ColumnName="LAT" />
+          <ScalarProperty Name="LONG" ColumnName="LONG" />
+          <ScalarProperty Name="PARCELA" ColumnName="PARCELA" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FINCA">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.FINCA">
+        <MappingFragment StoreEntitySet="FINCA">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="COLOR" ColumnName="COLOR" />
+          <ScalarProperty Name="USUARIO" ColumnName="USUARIO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OPERACION">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.OPERACION">
+        <MappingFragment StoreEntitySet="OPERACION">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="COLOR" ColumnName="COLOR" />
+          <ScalarProperty Name="TIPO" ColumnName="TIPO" />
+          <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+          <ScalarProperty Name="ARTICULOS" ColumnName="ARTICULOS" />
+          <ScalarProperty Name="OBSERVACIONES" ColumnName="OBSERVACIONES" />
+          <ScalarProperty Name="TROZOS" ColumnName="TROZOS" />
+          <ScalarProperty Name="PARCELA" ColumnName="PARCELA" />
+          <ScalarProperty Name="FINCA" ColumnName="FINCA" />
+          <ScalarProperty Name="USUARIO" ColumnName="USUARIO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PARCELA">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.PARCELA">
+        <MappingFragment StoreEntitySet="PARCELA">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="CONJUNTA" ColumnName="CONJUNTA" />
+          <ScalarProperty Name="VARIEDAD" ColumnName="VARIEDAD" />
+          <ScalarProperty Name="FINCA" ColumnName="FINCA" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TIPO_OPERACION">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.TIPO_OPERACION">
+        <MappingFragment StoreEntitySet="TIPO_OPERACION">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+          <ScalarProperty Name="TIENE_ARTICULOS" ColumnName="TIENE_ARTICULOS" />
+          <ScalarProperty Name="COLOR" ColumnName="COLOR" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="USUARIO">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.USUARIO">
+        <MappingFragment StoreEntitySet="USUARIO">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="USERNAME" ColumnName="USERNAME" />
+          <ScalarProperty Name="PASS" ColumnName="PASS" />
+          <ScalarProperty Name="TIPO" ColumnName="TIPO" />
+          <ScalarProperty Name="ACTIVADO" ColumnName="ACTIVADO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VARIEDAD">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.VARIEDAD">
+        <MappingFragment StoreEntitySet="VARIEDAD">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="lstvariedades">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.lstvariedades">
+        <MappingFragment StoreEntitySet="lstvariedades">
+          <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
+          <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="database_firewall_rules">
+      <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.database_firewall_rules">
+        <MappingFragment StoreEntitySet="database_firewall_rules">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="start_ip_address" ColumnName="start_ip_address" />
+          <ScalarProperty Name="end_ip_address" ColumnName="end_ip_address" />
+          <ScalarProperty Name="create_date" ColumnName="create_date" />
+          <ScalarProperty Name="modify_date" ColumnName="modify_date" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

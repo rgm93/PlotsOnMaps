@@ -1,0 +1,141 @@
+﻿@model IEnumerable<POM.Models.DB.VARIEDAD>
+
+@{
+    Layout = null;
+    WebGrid webGrid = new WebGrid(source: Model, canSort: true);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="~/CSS/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="~/CSS/home.css">
+    <link rel="stylesheet" href="~/CSS/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="~/JS/jquery.js"></script>
+    <script type="text/javascript" src="~/JS/function.js"></script>
+    <script type="text/javascript" src="~/JS/Home.js"></script>
+    @Html.DevExpress().GetStyleSheets(
+       new StyleSheet { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+       new StyleSheet { ExtensionSuite = ExtensionSuite.Editors },
+       new StyleSheet { ExtensionSuite = ExtensionSuite.GridView }
+   )
+    @Html.DevExpress().GetScripts(
+        new Script { ExtensionSuite = ExtensionSuite.NavigationAndLayout },
+        new Script { ExtensionSuite = ExtensionSuite.Editors },
+        new Script { ExtensionSuite = ExtensionSuite.GridView }
+    )
+</head>
+
+<body>
+    <nav class="w3-sidebar w3-bar-block w3-white w3-card w3-animate-left w3-xxlarge" style="display:none;z-index:2" id="mySidebar">
+        <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-display-topright w3-text-teal">
+            Close
+            <i class="fa fa-remove"></i>
+        </a>
+        <a href="#" class="w3-bar-item w3-button">Link 1</a>
+        <a href="#" class="w3-bar-item w3-button">Link 2</a>
+        <a href="#" class="w3-bar-item w3-button">Link 3</a>
+        <a href="#" class="w3-bar-item w3-button">Link 4</a>
+        <a href="#" class="w3-bar-item w3-button">Link 5</a>
+    </nav>
+
+    <!-- Navbar -->
+    <div class="w3-top">
+        <div class="w3-bar w3-theme-d2 w3-left-align">
+            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+            <a href="/POM/Home" class="w3-bar-item w3-button w3-teal"><i class="fa fa-home w3-margin-right"></i>PlotsOnMaps</a>
+            <a href="/POM/Parcelas" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Fincas y Parcelas</a>
+
+            <div class="w3-dropdown-hover w3-hide-small">
+                <button class="w3-button" title="Notifications">Otros <i class="fa fa-caret-down"></i></button>
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block">
+                    <a href="/POM/Usuarios" class="w3-bar-item w3-button">Usuarios</a>
+                    <a href="/POM/Variedades" class="w3-bar-item w3-button">Variedades</a>
+                    <a href="/POM/Articulos" class="w3-bar-item w3-button">Artículos</a>
+                    <a href="/POM/Operaciones" class="w3-bar-item w3-button">Operaciones</a>
+                </div>
+            </div>
+
+            <a href="/POM/Filtrado" class="w3-bar-item w3-button w3-hide-small w3-hover-teal" title="Filtrar Operaciones"><i class="fa fa-search"></i></a>
+            <a href="/POM/Login" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-white">Cerrar Sesión</a>
+        </div>
+
+        <!-- Navbar on small screens -->
+        <div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium">
+            <a href="/POM/Parcelas" class="w3-bar-item w3-button">Parcelas</a>
+            <a href="/POM/Otros" class="w3-bar-item w3-button">Otros</a>
+            <a href="/POM/Login" class="w3-bar-item w3-button">Cerrar Sesión</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="map" style="background-color: white;">
+            <div class="tablas">
+                @Html.Action("GridViewPartialVariedades")
+                <span class="FormularioInsertar">
+                    <h2> Añadir Variedad </h2>
+                    <input class="campo2" id="codigo" name="codigo" type="text" placeholder="Id de la Variedad" maxlength="20" />
+                    <input class="campo2" id="nombre" name="nombre" type="text" placeholder="Nombre" maxlength="20" />
+                    <input id="addDB" type="button" name="enviar" value="Añadir" />
+                </span>
+            </div>
+
+
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+            <script type="text/javascript" src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+            <script type="text/javascript">
+
+                
+
+                //Add event handler.
+                $("body").on("click", "#addDB", function () {
+                    var objeto = {
+                        codigo: $("#codigo").val().normalize('NFD').replace(/[\u0300-\u036f]/g, ""),
+                        nombre: $("#nombre").val().normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+                    };
+
+                    if (comprobarDatos(objeto)) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/POM/InsertarVariedad",
+                            data: JSON.stringify(objeto),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (data) {
+                                if (data) {
+                                    location.reload();
+                                    document.getElementById('codigo').value = ''
+                                    document.getElementById('nombre').value = ''
+                                }
+                                else alert("La variedad ya existe");
+                            }
+                        });
+                    }
+                });
+
+                function comprobarDatos(objeto) {
+                    var devolver = false;
+                    if (objeto.codigo != "") {
+                        if (objeto.nombre != "") {
+                            devolver = true;
+                        }
+                        else alert("Falta elegir el nombre de la variedad.")
+                    }
+                    else alert("Falta elegir el código de la variedad.")
+                    return devolver;
+                }
+
+                
+            </script>
+        </div>
+        </div>
+    <footer class="w3-container w3-padding-32 w3-theme-d1 w3-center foot">
+        <p> © 2018 PlotsOnMaps - Rubén González Membrilla </p>
+    </footer>
+</body>
+</html>

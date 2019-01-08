@@ -1,0 +1,115 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "GridViewFiltrado";
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.Height = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.CallbackRouteValues = new { Controller = "POM", Action = "GridViewPartialFiltrado" };
+
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "POM", Action = "GridViewPartialFiltradoUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "POM", Action = "GridViewPartialFiltradoDelete" };
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditForm;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "CODIGO";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = false;
+        settings.CommandColumn.ShowApplyFilterButton = true;
+        settings.SettingsBehavior.FilterRowMode = GridViewFilterRowMode.OnClick;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+        
+        settings.Columns.Add("NOMBRE");
+        settings.Columns.Add(c =>
+        {
+
+            settings.Name = "ComboColor";
+            c.FieldName = "COLOR";
+            c.Caption = "COLOR";
+            c.EditorProperties().ComboBox(p =>
+            {
+                p.ValueType = typeof(string);
+                p.DataSource = POM.Controllers.POMController.getColores();
+            });
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "TIPO";
+            column.ReadOnly = true;
+        });
+        settings.Columns.Add("FECHA");
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "ARTICULOS";
+            column.ReadOnly = true;
+        });
+        settings.Columns.Add("OBSERVACIONES").Settings.AllowAutoFilter = DefaultBoolean.False;
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "TROZOS";
+            column.Settings.AllowAutoFilter = DefaultBoolean.False;
+            column.ReadOnly = true;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "PARCELA";
+            column.ReadOnly = true;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "FINCA";
+            column.ReadOnly = true;
+        });
+        settings.Columns.Add(column =>
+        {
+            column.FieldName = "USUARIO";
+            column.ReadOnly = true;
+        });
+
+        settings.CellEditorInitialize = (sender, e) =>
+        {
+            MVCxGridView g = sender as MVCxGridView;
+            if (e.Column.FieldName == "TRAZOS")
+            {
+                e.Editor.ReadOnly = !g.IsNewRowEditing;
+            }
+            if (e.Column.FieldName == "PARCELAS")
+            {
+                e.Editor.ReadOnly = !g.IsNewRowEditing;
+            }
+            if (e.Column.FieldName == "FINCA")
+            {
+                e.Editor.ReadOnly = !g.IsNewRowEditing;
+            }
+            if (e.Column.FieldName == "USUARIO")
+            {
+                e.Editor.ReadOnly = !g.IsNewRowEditing;
+            }
+        };
+
+
+        settings.BeforeGetCallbackResult = (sender, e) =>
+        {
+            ASPxGridView gridF = (ASPxGridView)sender;
+            Session["query"] = gridF.FilterExpression;
+        };
+    });
+
+
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+
+@grid.Bind(Model).GetHtml()

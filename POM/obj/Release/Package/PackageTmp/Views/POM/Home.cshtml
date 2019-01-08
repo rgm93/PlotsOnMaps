@@ -1,0 +1,244 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PlotsOnMaps</title>
+    <link rel="stylesheet" type="text/css" href="~/CSS/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="~/CSS/mapas.css">
+    <link rel="stylesheet" href="~/CSS/w3.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="~/JS/jquery.js"></script>
+    <script type="text/javascript" src="~/JS/function.js"></script>
+    <script type="text/javascript" src="~/JS/Home.js"></script>
+</head>
+
+<body>
+    <nav class="w3-sidebar w3-bar-block w3-white w3-card w3-animate-left w3-xxlarge" style="display:none;z-index:2" id="mySidebar">
+        <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-display-topright w3-text-teal">
+            Close
+            <i class="fa fa-remove"></i>
+        </a>
+        <a href="#" class="w3-bar-item w3-button">Link 1</a>
+        <a href="#" class="w3-bar-item w3-button">Link 2</a>
+        <a href="#" class="w3-bar-item w3-button">Link 3</a>
+        <a href="#" class="w3-bar-item w3-button">Link 4</a>
+        <a href="#" class="w3-bar-item w3-button">Link 5</a>
+    </nav>
+
+    <!-- Navbar -->
+    <div class="w3-top">
+        <div class="w3-bar w3-theme-d2 w3-left-align">
+            <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+            <a href="/POM/Home" class="w3-bar-item w3-button w3-teal"><i class="fa fa-home w3-margin-right"></i>PlotsOnMaps</a>
+            <a href="/POM/Parcelas" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Fincas y Parcelas</a>
+
+            <div class="w3-dropdown-hover w3-hide-small">
+                <button class="w3-button" title="Notifications">Otros <i class="fa fa-caret-down"></i></button>
+                <div class="w3-dropdown-content w3-card-4 w3-bar-block">
+                    <a href="/POM/Usuarios" class="w3-bar-item w3-button">Usuarios</a>
+                    <a href="/POM/Variedades" class="w3-bar-item w3-button">Variedades</a>
+                    <a href="/POM/Articulos" class="w3-bar-item w3-button">Artículos</a>
+                    <a href="/POM/Operaciones" class="w3-bar-item w3-button">Operaciones</a>
+                </div>
+            </div>
+
+            <a href="/POM/Filtrado" class="w3-bar-item w3-button w3-hide-small w3-hover-teal" title="Filtrar Operaciones"><i class="fa fa-search"></i></a>
+            <a href="/POM/Login" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-white">Cerrar Sesión</a>
+        </div>
+
+        <!-- Navbar on small screens -->
+        <div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium">
+            <a href="/POM/Parcelas" class="w3-bar-item w3-button">Parcelas</a>
+            <a href="/POM/Otros" class="w3-bar-item w3-button">Otros</a>
+            <a href="/POM/Login" class="w3-bar-item w3-button">Cerrar Sesión</a>
+        </div>
+    </div>
+
+
+    <input id="pac-input" class="controls" type="text" placeholder="Buscar en Google Maps" style="visibility:hidden">
+    <div id="map"></div>
+
+    <script>
+        var map;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 37.2547837, lng: -6.9536343 },
+                zoom: 12
+            });
+
+            var arr = new Array();
+
+            var coordenadasparcelas = @Html.Raw(Json.Encode(ViewBag.Poms));
+            var coordenadasoperaciones = @Html.Raw(Json.Encode(ViewBag.PomsOP));
+            var nDibujosOperaciones = @Html.Raw(Json.Encode(ViewBag.PomsNDibujos));
+
+            var polylinesDB = [];
+            var polylinesOPDB = [];
+
+            for (var i in coordenadasparcelas) {
+                arr = [];
+                for (var j = 0; j < coordenadasparcelas[i].length; j++) {
+                    arr.push(new google.maps.LatLng(
+                        parseFloat(coordenadasparcelas[i][j].latitud),
+                        parseFloat(coordenadasparcelas[i][j].longitud)
+                    ));
+                }
+
+                polylinesDB.push(new google.maps.Polyline({
+                    path: arr,
+                    geodesic: true,
+                    strokeColor: coordenadasparcelas[i][j - 1].colorHex,
+                    strokeOpacity: 1.0,
+                    strokeWeight: 5,
+                    fillColor: coordenadasparcelas[i][j - 1].colorHex,
+                    fillOpacity: 0.35
+                }));
+
+                for (var i in polylinesDB) {
+                    polylinesDB[i].setMap(map);
+                }
+            }
+
+            var arrLL = [];
+            for (var i = 0; i < coordenadasoperaciones.length; i++) {
+                arrLL = [];
+                var j = 0;
+                var k = 0;
+                var partir = false;
+                while (k < nDibujosOperaciones[i]) {
+                    arrLL = [];
+                    while (j < coordenadasoperaciones[i].length && partir == false) {
+
+                        var trozoOp = coordenadasoperaciones[i][j].trozo;
+                        if (k == trozoOp) {
+                            arrLL.push(new google.maps.LatLng(
+                                parseFloat(coordenadasoperaciones[i][j].latitud),
+                                parseFloat(coordenadasoperaciones[i][j].longitud)
+                            ));
+
+                        }
+                        else {
+                            var polys = new google.maps.Polyline({
+                                path: arrLL,
+                                strokeColor: coordenadasoperaciones[i][j-1].colorHex,
+                                strokeOpacity: 1.0,
+                                strokeWeight: 5,
+                                fillColor: coordenadasoperaciones[i][j-1].colorHex,
+                                fillOpacity: 0.35,
+                            });
+
+                            polys.setMap(map);
+                            partir = true;
+                        }
+                        j++;
+                    }
+
+                    if (j == coordenadasoperaciones[i].length) {
+                        var polys = new google.maps.Polyline({
+                            path: arrLL,
+                            strokeColor: coordenadasoperaciones[i][j-1].colorHex,
+                            strokeOpacity: 1.0,
+                            strokeWeight: 5,
+                            fillColor: coordenadasoperaciones[i][j-1].colorHex,
+                            fillOpacity: 0.35,
+                        });
+
+                        polys.setMap(map);
+                    }
+
+                    k++;
+                    partir = false;
+                }
+            }
+            
+            var input = document.getElementById('pac-input');
+            var searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+            // Bias the SearchBox results towards current map's viewport.
+            map.addListener('bounds_changed', function () {
+                searchBox.setBounds(map.getBounds());
+            });
+
+            var markers = [];
+            // Listen for the event fired when the user selects a prediction and retrieve
+            // more details for that place.
+            searchBox.addListener('places_changed', function () {
+                var places = searchBox.getPlaces();
+
+                if (places.length == 0) {
+                    return;
+                }
+
+                // Clear out the old markers.
+                markers.forEach(function (marker) {
+                    marker.setMap(null);
+                });
+                markers = [];
+
+                // For each place, get the icon, name and location.
+                var bounds = new google.maps.LatLngBounds();
+                places.forEach(function (place) {
+                    if (!place.geometry) {
+                        console.log("Returned place contains no geometry");
+                        return;
+                    }
+                    var icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25)
+                    };
+
+                    // Create a marker for each place.
+                    markers.push(new google.maps.Marker({
+                        map: map,
+                        icon: icon,
+                        title: place.name,
+                        position: place.geometry.location
+                    }));
+
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
+                });
+                map.fitBounds(bounds);
+            });
+        }
+        google.maps.event.addDomListener(window, "load", initMap);
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBu6Bjk8hJSQLCnzB8XBwZrJd2Zoms86j4&language=es&region=ES&libraries=places&callback=initMap" async defer></script>
+
+    <footer class="w3-container w3-padding-32 w3-theme-d1 w3-center foot">
+        <p> © 2018 PlotsOnMaps - Rubén González Membrilla </p>
+    </footer>
+
+    <script>
+        function myMap() {
+            myCenter = new google.maps.LatLng(41.878114, -87.629798);
+            var mapOptions = {
+                center: myCenter,
+                zoom: 12, scrollwheel: false, draggable: false,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
+
+            var marker = new google.maps.Marker({
+                position: myCenter,
+            });
+            marker.setMap(map);
+            <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBu6Bjk8hJSQLCnzB8XBwZrJd2Zoms86j4&callback=myMap" />
+    </script>
+</body>
+</html>

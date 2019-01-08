@@ -1,0 +1,485 @@
+﻿@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+body {
+    background-color: #000;
+    background-image: url(../images/patterns/light_toast.png);
+    color: #666;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    margin: 0px;
+    padding: 0px;
+}
+
+a {
+    color: #23dbdb;
+    text-decoration: none;
+}
+
+    a:hover {
+        color: #000;
+    }
+
+ol, ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+#wrap {
+    margin: 0 auto;
+}
+
+.inner {
+    margin: 0 auto;
+    max-width: 940px;
+    padding: 0 40px;
+}
+
+.relative {
+    position: relative;
+}
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+/* HEADER */
+#wrap > header {
+    background-color: #333;
+    padding-bottom: 20px;
+}
+
+.logo {
+    display: inline-block;
+    font-size: 0;
+    padding-top: 15px;
+}
+
+#navigation {
+    position: absolute;
+    right: 40px;
+    bottom: 0px;
+}
+
+#menu-toggle {
+    display: none;
+    float: right;
+}
+
+/* HEADER > MENU */
+#main-menu {
+    float: right;
+    font-size: 0;
+    margin: 10px 0;
+}
+
+    #main-menu > li {
+        display: inline-block;
+        margin-left: 30px;
+        padding: 2px 0;
+    }
+
+        #main-menu > li.parent {
+            background-image: url(../images/plus-gray.png);
+            background-size: 7px 7px;
+            background-repeat: no-repeat;
+            background-position: left center;
+        }
+
+            #main-menu > li.parent > a {
+                padding-left: 14px;
+            }
+
+        #main-menu > li > a {
+            color: #eee;
+            font-size: 14px;
+            line-height: 14px;
+            padding: 30px 0;
+            text-decoration: none;
+        }
+
+        #main-menu > li:hover > a,
+        #main-menu > li.current-menu-item > a {
+            color: #23dbdb;
+        }
+
+    /* HEADER > MENU > DROPDOWN */
+    #main-menu li {
+        position: relative;
+    }
+
+ul.sub-menu { /* level 2 */
+    display: none;
+    left: 0px;
+    top: 38px;
+    padding-top: 10px;
+    position: absolute;
+    width: 150px;
+    z-index: 9999;
+}
+
+    ul.sub-menu ul.sub-menu { /* level 3+ */
+        margin-top: -1px;
+        padding-top: 0;
+        left: 149px;
+        top: 0px;
+    }
+
+    ul.sub-menu > li > a {
+        background-color: #333;
+        border: 1px solid #444;
+        border-top: none;
+        color: #bbb;
+        display: block;
+        font-size: 12px;
+        line-height: 15px;
+        padding: 10px 12px;
+    }
+
+        ul.sub-menu > li > a:hover {
+            background-color: #2a2a2a;
+            color: #fff;
+        }
+
+    ul.sub-menu > li:first-child {
+        border-top: 3px solid #23dbdb;
+    }
+
+    ul.sub-menu ul.sub-menu > li:first-child {
+        border-top: 1px solid #444;
+    }
+
+    ul.sub-menu > li:last-child > a {
+        border-radius: 0 0 2px 2px;
+    }
+
+    ul.sub-menu > li > a.parent {
+        background-image: url(../images/arrow.png);
+        background-size: 5px 9px;
+        background-repeat: no-repeat;
+        background-position: 95% center;
+    }
+
+#main-menu li:hover > ul.sub-menu {
+    display: block; /* show the submenu */
+}
+
+@media all and (max-width: 700px) {
+
+    #navigation {
+        position: static;
+        margin-top: 20px;
+    }
+
+    #menu-toggle {
+        display: block;
+    }
+
+    #main-menu {
+        display: none;
+        float: none;
+    }
+
+        #main-menu li {
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        #main-menu > li {
+            margin-top: -1px;
+        }
+
+            #main-menu > li:first-child {
+                margin-top: 0;
+            }
+
+            #main-menu > li > a {
+                background-color: #333;
+                border: 1px solid #444;
+                color: #bbb;
+                display: block;
+                font-size: 14px;
+                padding: 12px !important;
+                padding: 0;
+            }
+
+        #main-menu li > a:hover {
+            background-color: #444;
+        }
+
+        #main-menu > li.parent {
+            background: none !important;
+            padding: 0;
+        }
+
+        #main-menu > li:hover > a,
+        #main-menu > li.current-menu-item > a {
+            border: 1px solid #444 !important;
+            color: #fff !important;
+        }
+
+    ul.sub-menu {
+        display: block;
+        margin-top: -1px;
+        margin-left: 20px;
+        position: static;
+        padding: 0;
+        width: inherit;
+    }
+
+        ul.sub-menu > li:first-child {
+            border-top: 1px solid #444 !important;
+        }
+
+        ul.sub-menu > li > a.parent {
+            background: #333 !important;
+        }
+}
+
+#map {
+    padding: 0%;
+    margin-top: 39.4px;
+    width: 100%;
+    height: 550px;
+}
+
+#panel {
+    width: 200px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    float: right;
+    margin: 10px;
+}
+
+#color-palette {
+    clear: both;
+}
+
+.color-button {
+    width: 14px;
+    height: 14px;
+    font-size: 0;
+    margin: 2px;
+    float: left;
+    cursor: pointer;
+}
+
+#delete-button {
+    margin-top: 5px;
+}
+
+
+#infowindow-content .title {
+    font-weight: bold;
+}
+
+#infowindow-content {
+    display: none;
+}
+
+#map #infowindow-content {
+    display: inline;
+}
+
+.pac-card {
+    margin: 10px 10px 0 0;
+    border-radius: 2px 0 0 2px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
+    font-family: Roboto;
+}
+
+#pac-container {
+    padding-bottom: 12px;
+    margin-right: 12px;
+}
+
+.pac-controls {
+    display: inline-block;
+    padding: 5px 11px;
+}
+
+    .pac-controls label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+    }
+
+#pac-input {
+    background-color: #fff;
+    font-family: Roboto;
+    font-size: 15px;
+    font-weight: 300;
+    margin-left: 30px;
+    margin-top: 15px;
+    padding: 0 5% 0 13px;
+    text-overflow: ellipsis;
+    width: 300px;
+    height: 30px;
+}
+
+#pac-input:focus {
+    border-color: #4d90fe;
+}
+
+#title {
+    color: #fff;
+    background-color: #4d90fe;
+    font-size: 25px;
+    font-weight: 500;
+    padding: 6px 12px;
+}
+
+#target {
+    width: 345px;
+}
+
+#foot {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
+    margin-top: 10%;
+}
+
+#coordenadas {
+    margin-top: 5%;
+    padding: 0;
+    color: aliceblue;
+}
+
+#encoded-polyline {
+    height: 100px;
+    width: 100%;
+}
+
+#floating-panel {
+    position: absolute;
+    color: red;
+    top: 543px;
+    left: 0%;
+    z-index: 5;
+    background-color: white;
+    padding: 5px;
+    border: 1px solid #999;
+    text-align: center;
+    font-family: 'Roboto','sans-serif';
+    line-height: 30px;
+    padding-left: 3px;
+}
+
+#formFiltrar {
+    font-size: 15px;
+    margin-left: 10px;
+}
+
+#formOtros {
+    font-size: 30px;
+    margin-left: 10px;
+    color: black;
+}
+
+#filtro_fecha {
+    width: 150px;
+}
+
+#filtro_fecha2 {
+    width: 150px;
+}
+
+#formparcelas {
+    background: white;
+    margin-top: 0px;
+    color: black;
+    border-color: #009688;
+    border-style: solid;
+}
+#formcrearfinca {
+    background: white;
+    margin-top: 0px;
+    margin-left: 10px;
+    color: black;
+}
+
+#formcrearparcela {
+    background: white;
+    margin-top: 0px;
+    margin-left: 10px;
+    color: black;
+    margin-bottom: 20px;
+}
+
+#formfiltrarparcela {
+    background: white;
+    margin-top: 0px;
+    border-color: #009688;
+    border-style: solid;
+    color: black;
+}
+
+#filtrar {
+    margin-top: 20px;
+    margin-left: 600px;
+    margin-bottom: 20px;
+    padding: 5px;
+    width: 150px;
+    height: 50px;
+}
+
+#conjunta {
+    margin-top: 1%;
+    width: 15%;
+    color: black;
+}
+
+.filtro_Input {
+    margin: 5px;
+    padding: 0px;
+    width: 100px;
+    height: 20px;
+}
+
+.tablas {
+    padding: 5% 5% 5% 5%;
+    width: 100%;
+}
+
+.Grid {
+    border: 1px solid black;
+    border-collapse: collapse;
+    color: black;
+}
+
+.Grid th {
+    background-color: #F7F7F7;
+    font-weight: bold;
+    padding: 15px;
+}
+
+.Grid th, .Grid td {
+    padding: 15px;
+    border: 1px solid black;
+    width: 500px;
+}
+
+.Grid, .Grid table td {
+    border: 0px solid black;
+}
+
+.Grid th a, .Grid th a:visited {
+    color: #333;
+}
+
+.campo2 {
+    margin-top: 10px;
+    width: 20%;
+    text-transform: uppercase;
+    color: black;
+    padding-left: 0.5%;
+}
