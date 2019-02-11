@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="180dp">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:background="#ffae62"
+        android:paddingTop="15dp"
+        android:text="Observaciones"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/cajaComentarios"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:hint="Observaciones"
+        android:inputType="textCapSentences|textAutoCorrect"
+        android:maxLength="300"
+        android:text=""
+        android:textColorHint="#494949"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+
+    <Button
+        android:id="@+id/BotonAceptarObservacion"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorAccent2"
+        android:text="Aceptar"
+        android:textColor="#ffffff"
+        android:textSize="8sp"
+        app:layout_constraintEnd_toStartOf="@+id/BotonCancelarObservacion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cajaComentarios" />
+
+    <Button
+        android:id="@+id/BotonCancelarObservacion"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorAccent5"
+        android:text="Cancelar"
+        android:textColor="#ffffff"
+        android:textSize="8sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/BotonAceptarObservacion"
+        app:layout_constraintTop_toBottomOf="@+id/cajaComentarios" />
+
+
+</android.support.constraint.ConstraintLayout>
