@@ -15,9 +15,10 @@ namespace POM.Models.DB
     public partial class CONJUNTO_ARTICULOS
     {
         public int CODIGO { get; set; }
-        public string NOMBRE { get; set; }
+        public string OPERACION { get; set; }
         public string ARTICULO { get; set; }
     
         public virtual ARTICULO ARTICULO1 { get; set; }
+        public virtual OPERACION OPERACION1 { get; set; }
     }
 }

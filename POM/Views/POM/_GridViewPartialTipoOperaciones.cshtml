@@ -22,7 +22,11 @@
         settings.SettingsPager.Visible = true;
         settings.Settings.ShowGroupPanel = false;
         settings.Settings.ShowFilterRow = true;
-        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = false;
+        settings.CommandColumn.ShowApplyFilterButton = false;
+        settings.SettingsBehavior.FilterRowMode = GridViewFilterRowMode.Auto;
+        settings.CommandColumn.ShowClearFilterButton = true;
 
         settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
         settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
@@ -30,8 +34,18 @@
         settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
         settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
 
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "CODIGO";
+            c.Caption = "CODIGO";
+            c.ReadOnly = true;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
 
-        settings.Columns.Add("NOMBRE");
+        settings.Columns.Add(c=> {
+            c.FieldName = "NOMBRE";
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
         settings.Columns.Add(c =>
         {
 
@@ -56,6 +70,33 @@
                 p.DataSource = POM.Controllers.POMController.getColores();
             });
         });
+
+        settings.CustomJSProperties = (s, e) =>
+        {
+            if (ViewData[POM.Controllers.POMController.EditResultKey] != null)
+            {
+                e.Properties["cpMessage"] = ViewData[POM.Controllers.POMController.EditResultKey].ToString();
+            }
+        };
+
+        settings.ClientSideEvents.EndCallback = "OnEndCallback";
+
+        settings.HtmlDataCellPrepared = (s, e) =>
+        {
+            if (e.DataColumn.FieldName != "COLOR") return;
+            string color = e.GetValue("COLOR").ToString();
+            switch (color)
+            {
+                case "AZUL": e.Cell.BackColor = System.Drawing.Color.Blue; e.Cell.ForeColor = System.Drawing.Color.White; break;
+                case "VERDE": e.Cell.BackColor = System.Drawing.Color.Green; e.Cell.ForeColor = System.Drawing.Color.White; break;
+                case "AMARILLO": e.Cell.BackColor = System.Drawing.Color.Yellow; break;
+                case "ROJO": e.Cell.BackColor = System.Drawing.Color.Red; e.Cell.ForeColor = System.Drawing.Color.White; break;
+                case "CYAN": e.Cell.BackColor = System.Drawing.Color.Cyan; break;
+                case "MAGENTA": e.Cell.BackColor = System.Drawing.Color.Magenta; break;
+                case "BLANCO": e.Cell.BackColor = System.Drawing.Color.White; break;
+                case "NEGRO": e.Cell.BackColor = System.Drawing.Color.Black; e.Cell.ForeColor = System.Drawing.Color.White; break;
+            }
+        };
     });
     if (ViewData["EditError"] != null){
         grid.SetEditErrorText((string)ViewData["EditError"]);

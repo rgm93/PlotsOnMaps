@@ -1,5 +1,6 @@
 @{
-    var grid = Html.DevExpress().GridView(settings => {
+    var grid = Html.DevExpress().GridView(settings =>
+    {
         settings.Name = "GridViewParcelas";
         settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
         settings.Height = System.Web.UI.WebControls.Unit.Percentage(100);
@@ -21,7 +22,11 @@
         settings.SettingsPager.Visible = true;
         settings.Settings.ShowGroupPanel = false;
         settings.Settings.ShowFilterRow = true;
-        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = false;
+        settings.CommandColumn.ShowApplyFilterButton = false;
+        settings.SettingsBehavior.FilterRowMode = GridViewFilterRowMode.Auto;
+        settings.CommandColumn.ShowClearFilterButton = true;
 
         settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.HideDataCellsWindowLimit;
         settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Left;
@@ -29,26 +34,53 @@
         settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
         settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
 
-        settings.Columns.Add(column =>
+        settings.Columns.Add(c =>
         {
-            column.FieldName = "CODIGO";
-            column.ReadOnly = true;
+            c.FieldName = "CODIGO";
+            c.Caption = "CODIGO";
+            c.ReadOnly = true;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
         });
-        settings.Columns.Add("NOMBRE");
-        settings.Columns.Add(column =>
+
+        settings.Columns.Add(c=>
         {
-            column.FieldName = "CONJUNTA";
-            column.ReadOnly = true;
+            c.FieldName = "NOMBRE";
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
         });
-        settings.Columns.Add("VARIEDAD");
+
+        settings.Columns.Add(c =>
+        {
+
+            settings.Name = "ComboVariedad";
+            c.FieldName = "VARIEDAD";
+            c.Caption = "VARIEDAD";
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
+
         settings.Columns.Add(column =>
         {
             column.FieldName = "FINCA";
             column.ReadOnly = true;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
         });
+
+        settings.CustomJSProperties = (s, e) =>
+        {
+            if (ViewData[POM.Controllers.POMController.EditResultKey] != null)
+            {
+                e.Properties["cpMessage"] = ViewData[POM.Controllers.POMController.EditResultKey].ToString();
+            }
+        };
+
+        settings.ClientSideEvents.EndCallback = "OnEndCallback";
     });
-    if (ViewData["EditError"] != null){
+    if (ViewData["EditError"] != null)
+    {
         grid.SetEditErrorText((string)ViewData["EditError"]);
     }
 }
 @grid.Bind(Model).GetHtml()
+
+@functions {
+    GridViewEditingMode EditMode { get { return ViewBag.EditMode; } }
+}

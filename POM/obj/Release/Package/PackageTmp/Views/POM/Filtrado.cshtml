@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="~/CSS/w3.css">
     <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="~/Scripts/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="~/JS/jquery.js"></script>
     <script type="text/javascript" src="~/JS/function.js"></script>
     <script type="text/javascript" src="~/JS/Home.js"></script>
@@ -82,17 +83,22 @@
     <div id="map"></div>
 
 
+    @Html.DevExpress().Label(lbl => {
+    lbl.Name = "lblDevExpress";
+    lbl.Properties.EnableClientSideAPI = true;
+    }).GetHtml()
+
     <form class="login-form" id="formfiltrarparcela">
 
         <h3 id="formFiltrar" style="font-size: 30px;"> Filtrar Operaciones </h3>
 
-        <input class="filtrar" id="aplicarFiltro" type="button" value="Recargar Mapa" />
+        <input class="filtrar" id="aplicarFiltro" style="margin-top: 10px; margin-bottom: 10px; margin-left: 7px;" type="button" value="Recargar Mapa" />
 
         <script type="text/javascript">
             $(function () {
                 $("body").on("click", "#aplicarFiltro", function () {
                     var filtro = {};
-                    
+
                     $.ajax({
                         type: "POST",
                         url: "/POM/ObtenerFiltrado",
@@ -110,36 +116,13 @@
 
         </script>
 
-        @Html.Action("GridViewPartialFiltrado")
-
-
-
-
-
-        <!--<div id="dataTable_wrapper"></div>
-    <table id="dataTable" class="w3-table table-striped">
-        <thead>
-            <tr>
-                <th> CODIGO </th>
-                <th> NOMBRE </th>
-                <th> COLOR </th>
-                <th> TIPO DE OPERACIÓN </th>
-                <th> FECHA </th>
-                <th> ARTICULOS </th>
-                <th> OBSERVACIONES </th>
-                <th> PARCELA </th>
-                <th> FINCA </th>
-                <th> USUARIO </th>
-            </tr>
-        </thead>
-        <tbody id="SetOperaciones">
-            <tr id="LoadingStatus" style="color:red"></tr>
-        </tbody>
-    </table>-->
+        <div class="tablas">
+            @Html.Action("GridViewPartialFiltrado")
+        </div>
     </form>
 
 
-        <br /> <br />
+    <br /> <br />
     <script>
 
         var map, infowindow;
@@ -216,7 +199,7 @@
                     geodesic: true,
                     strokeColor: coordenadasparcelas[i][j-1].colorHex,
                     strokeOpacity: 1.0,
-                    strokeWeight: 5,
+                    strokeWeight: 4,
                     fillColor: '#FF0000',
                     fillOpacity: 0.35
                 }));
@@ -252,11 +235,11 @@
                                 path: arrLL,
                                 strokeColor: coordenadasoperaciones[i][j-1].colorHex,
                                 strokeOpacity: 1.0,
-                                strokeWeight: 5,
+                                strokeWeight: 3,
                                 fillOpacity: 0.35,
                             });
-                            
-                            createInfoWindow(polys, "Operación: " + operaciones[i].NOMBRE);
+
+                            createInfoWindow(polys, "Operación: " + operaciones[i].NOMBRE + " - fecha: " + operaciones[i].FECHA);
                             polys.setMap(map);
                             partir = true;
                         }
@@ -268,10 +251,10 @@
                             path: arrLL,
                             strokeColor: coordenadasoperaciones[i][j - 1].colorHex,
                             strokeOpacity: 1.0,
-                            strokeWeight: 5,
+                            strokeWeight: 3,
                             fillOpacity: 0.35,
                         });
-                        
+
                         createInfoWindow(polys, "Operación: " + operaciones[i].NOMBRE);
                         polys.setMap(map);
                     }
@@ -371,7 +354,7 @@
                     geodesic: true,
                     strokeColor: coordenadasparcelas[i][j-1].colorHex,
                     strokeOpacity: 1.0,
-                    strokeWeight: 5,
+                    strokeWeight: 4,
                     fillColor: coordenadasparcelas[i][j-1].colorHex,
                     fillOpacity: 0.35
                 }));
@@ -405,7 +388,7 @@
                                 path: arrLL,
                                 strokeColor: coordenadasoperaciones[i][j-1].colorHex,
                                 strokeOpacity: 1.0,
-                                strokeWeight: 5,
+                                strokeWeight: 3,
                                 fillColor: coordenadasoperaciones[i][j-1].colorHex,
                                 fillOpacity: 0.35,
                             });
@@ -422,7 +405,7 @@
                             path: arrLL,
                             strokeColor: coordenadasoperaciones[i][j - 1].colorHex,
                             strokeOpacity: 1.0,
-                            strokeWeight: 5,
+                            strokeWeight: 3,
                             fillColor: coordenadasoperaciones[i][j - 1].colorHex,
                             fillOpacity: 0.35,
                         });

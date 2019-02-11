@@ -19,6 +19,7 @@ namespace POM.Models
             builder.UserID = "rgm93@plotsonmaps";
             builder.Password = "Ruben07091993plotsonmaps";
             builder.InitialCatalog = "PlotsOnMapsDB";
+            builder.MultipleActiveResultSets = true;
             connection = new SqlConnection(builder.ConnectionString);
         }
 
@@ -572,6 +573,7 @@ namespace POM.Models
         {
             bool borrado = false;
             StringBuilder sb = new StringBuilder();
+            sb.Append("DELETE [CONJUNTO_PARCELAS] WHERE OPERACION = '" + nombre + "';");
             sb.Append("DELETE [COORDENADAS_OPERACION] WHERE OPERACION = '" + nombre + "';");
             sb.Append("DELETE [OPERACION] WHERE CODIGO = '" + nombre + "';");
             String sql = sb.ToString();
@@ -814,7 +816,7 @@ namespace POM.Models
                     while (reader.Read())
                     {
                         //String color = obtenerColor(reader.GetInt32(2));
-                        dibujos.Add(new Dibujo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetString(6), reader.GetInt32(7), reader.GetString(8), reader.GetString(9), reader.GetString(10)));
+                        dibujos.Add(new Dibujo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetString(6), reader.GetString(7), reader.GetInt32(8), reader.GetString(9), reader.GetString(10), reader.GetString(11))); ;
                     }
                 }
             }
@@ -838,7 +840,63 @@ namespace POM.Models
             StringBuilder sb1 = new StringBuilder();
             String sql1 = "";
 
-            sb1.Append("SELECT * FROM [OPERACION] WHERE CODIGO LIKE '%" + f.codigo + "' AND NOMBRE LIKE '%" + f.nombre + "' AND TIPO LIKE '%" + f.tipoOperacion + "' AND FECHA LIKE '%" + f.fecha + "' AND ARTICULOS LIKE '%" + f.articulo + "' AND PARCELA LIKE '%" + f.parcela + "' AND FINCA LIKE '%" + f.finca + "' AND USUARIO LIKE '%" + f.usuario + "'");
+            String cod = "", parcela = "", finca = "", tipo = "", articulo = "", color = "", usuario = "";
+            /*if(f.codigo != null) cod = obtenerCodigo(f.codigo, "OPERACION", "CODIGO");
+            if (f.parcela != null) parcela = obtenerCodigo(f.parcela, "OPERACION", "PARCELA");
+            if (parcela.Equals("")) parcela = obtenerCodigo(f.parcela, "PARCELA", "NOMBRE");
+            if (f.finca != null) finca = obtenerCodigo(f.finca, "FINCA", "NOMBRE");
+            if (f.tipoOperacion != null) tipo = obtenerCodigo(f.tipoOperacion, "TIPO_OPERACION", "NOMBRE");
+            if (f.articulo != null) articulo = obtenerCodigo(f.articulo, "ARTICULO", "NOMBRE");
+            if (articulo.Equals("")) articulo = f.articulo;
+            if (f.color != null) color = obtenerColorInt(f.color);
+            if (f.usuario != null) usuario = obtenerCodigo(f.usuario, "USUARIO", "NOMBRE");*/
+
+            bool esConjunta = false, esConjunta2 = false;
+            if (f.codigo != null) cod = f.codigo;
+            if (f.parcela != null)
+            {
+                parcela = obtenerNombreCPdeOperacion(f.parcela, "OPERACION", "PARCELA"); //obtenerCodigo(f.parcela, "PARCELA", "NOMBRE");
+                if(!parcela.Equals("")) esConjunta = true;
+                if (!esConjunta)
+                {
+                    parcela = obtenerCodigo(f.parcela, "PARCELA", "NOMBRE");
+                    if (parcela.Equals("")) parcela = f.parcela;
+                }
+
+                else parcela = f.parcela;
+            }
+            
+            
+            if (f.finca != null) finca = obtenerCodigo(f.finca, "FINCA", "NOMBRE");
+            if (f.tipoOperacion != null) tipo = obtenerCodigo(f.tipoOperacion, "TIPO_OPERACION", "NOMBRE");
+
+            if (f.articulo != null)
+            {
+                articulo = obtenerNombreCPdeOperacion(f.articulo, "OPERACION", "ARTICULOS"); //obtenerCodigo(f.parcela, "PARCELA", "NOMBRE");
+                if (!articulo.Equals("")) esConjunta2 = true;
+
+                if (!esConjunta2)
+            {
+                articulo = obtenerCodigo(f.articulo, "ARTICULO", "NOMBRE");
+                if (articulo.Equals("")) articulo = f.articulo;
+            }
+
+            else articulo = f.articulo;
+            }
+            
+
+            //if (f.articulo != null) articulo = obtenerCodigo(f.articulo, "ARTICULO", "NOMBRE");
+            //if (articulo.Equals("")) articulo = f.articulo;
+            if (f.color != null) color = obtenerColorInt(f.color);
+            if (f.usuario != null) usuario = obtenerCodigo(f.usuario, "USUARIO", "NOMBRE");
+
+            String sentencia = "";
+            if (f.fecha != null && f.fecha2 != null) sentencia = "SELECT * FROM [OPERACION] WHERE CODIGO LIKE '%" + cod + "%' AND NOMBRE LIKE '%" + f.nombre + "%' AND COLOR LIKE '%" + color + "%' AND TIPO LIKE '%" + tipo + "%' AND FECHA >= '" + f.fecha + "' AND FECHA2 <= '" + f.fecha2 + "' AND ARTICULOS LIKE '%" + articulo + "%' AND PARCELA LIKE '%" + parcela + "%' AND FINCA LIKE '%" + finca + "%' AND USUARIO LIKE '%" + usuario + "%'";
+            else if (f.fecha != null && f.fecha2 == null) sentencia = "SELECT * FROM [OPERACION] WHERE CODIGO LIKE '%" + cod + "%' AND NOMBRE LIKE '%" + f.nombre + "%' AND COLOR LIKE '%" + color + "%' AND TIPO LIKE '%" + tipo + "%' AND FECHA >= '" + f.fecha + "' AND ARTICULOS LIKE '%" + articulo + "%' AND PARCELA LIKE '%" + parcela + "%' AND FINCA LIKE '%" + finca + "%' AND USUARIO LIKE '%" + usuario + "%'";
+            else if (f.fecha == null && f.fecha2 != null) sentencia = "SELECT * FROM [OPERACION] WHERE CODIGO LIKE '%" + cod + "%' AND NOMBRE LIKE '%" + f.nombre + "%' AND COLOR LIKE '%" + color + "%' AND TIPO LIKE '%" + tipo + "%' AND FECHA2 <= '" + f.fecha2 + "' AND ARTICULOS LIKE '%" + articulo + "%' AND PARCELA LIKE '%" + parcela + "%' AND FINCA LIKE '%" + finca + "%' AND USUARIO LIKE '%" + usuario + "%'";
+            else sentencia = "SELECT * FROM [OPERACION] WHERE CODIGO LIKE '%" + cod + "%' AND NOMBRE LIKE '%" + f.nombre + "%' AND COLOR LIKE '%" + color + "%' AND TIPO LIKE '%" + tipo + "%' AND ARTICULOS LIKE '%" + articulo + "%' AND PARCELA LIKE '%" + parcela + "%' AND FINCA LIKE '%" + finca + "%' AND USUARIO LIKE '%" + usuario + "%'";
+            
+            sb1.Append(sentencia);
             sql1 = sb1.ToString();
             using (SqlCommand command = new SqlCommand(sql1, connection))
             {
@@ -847,12 +905,36 @@ namespace POM.Models
                     while (reader.Read())
                     {
                         //String color = obtenerColor(reader.GetInt32(2));
-                        dibujos.Add(new Dibujo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetString(6), reader.GetInt32(7), reader.GetString(8), reader.GetString(9), reader.GetString(10)));
+                        dibujos.Add(new Dibujo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetString(6), reader.GetString(7), reader.GetInt32(8), reader.GetString(9), reader.GetString(10), reader.GetString(11)));
                     }
                 }
             }
             
 
+            return dibujos;
+        }
+
+        public List<Dibujo> filtrarOperacionesSinFiltro()
+        {
+            List<Dibujo> dibujos = new List<Dibujo>();
+
+            StringBuilder sb1 = new StringBuilder();
+            String sql1 = "";
+
+            sb1.Append("SELECT * FROM [OPERACION] ");
+            sql1 = sb1.ToString();
+            using (SqlCommand command = new SqlCommand(sql1, connection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        //String color = obtenerColor(reader.GetInt32(2));
+                        dibujos.Add(new Dibujo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4), reader.GetString(5), reader.GetString(6), reader.GetString(7), reader.GetInt32(8), reader.GetString(9), reader.GetString(10), reader.GetString(11)));
+                    }
+                }
+            }
+            
             return dibujos;
         }
 
@@ -925,7 +1007,7 @@ namespace POM.Models
                         while (reader4.Read())
                         {
                             //String color = obtenerColor(reader4.GetInt32(2));
-                            dibujos.Add(new Dibujo(reader4.GetString(0), reader4.GetString(1), reader4.GetString(2), reader4.GetString(3), reader4.GetString(4), reader4.GetString(5), reader4.GetString(6), reader4.GetInt32(7), reader4.GetString(8), reader4.GetString(9), reader4.GetString(10)));
+                            dibujos.Add(new Dibujo(reader4.GetString(0), reader4.GetString(1), reader4.GetString(2), reader4.GetString(3), reader4.GetString(4), reader4.GetString(5), reader4.GetString(6), reader4.GetString(7), reader4.GetInt32(8), reader4.GetString(9), reader4.GetString(10), reader4.GetString(11)));
                         }
 
                         reader4.Close();
@@ -949,7 +1031,7 @@ namespace POM.Models
                                 while (reader5.Read())
                                 {
                                     //String color = obtenerColor(reader5.GetInt32(2));
-                                    dibujos.Add(new Dibujo(reader5.GetString(0), reader5.GetString(1), reader5.GetString(2), reader5.GetString(3), reader5.GetString(4), reader5.GetString(5), reader5.GetString(6), reader5.GetInt32(7), reader5.GetString(8), reader5.GetString(9), reader5.GetString(10)));
+                                    dibujos.Add(new Dibujo(reader5.GetString(0), reader5.GetString(1), reader5.GetString(2), reader5.GetString(3), reader5.GetString(4), reader5.GetString(5), reader5.GetString(6), reader5.GetString(7), reader5.GetInt32(8), reader5.GetString(9), reader5.GetString(10), reader5.GetString(11)));
                                 }
 
                                 reader5.Close();
@@ -1058,13 +1140,11 @@ namespace POM.Models
             return encontrado;
         }
 
-        public String obtenerCodigo(String nombre, String tabla)
+        public String obtenerNombreCPdeOperacion(String nombre, String tabla, String columna)
         {
             String codigoAux = "";
             StringBuilder sb = new StringBuilder();
-            String columna = "NOMBRE";
-            if (tabla.Equals("USUARIO")) columna = "USERNAME";
-            sb.Append("SELECT * FROM [" + tabla + "] WHERE " + columna + " = '" + nombre + "'");
+            sb.Append("SELECT * FROM [" + tabla + "] WHERE " + columna + " LIKE '%" + nombre + "%'");
             String sql = sb.ToString();
 
             using (SqlCommand command = new SqlCommand(sql, connection))
@@ -1073,7 +1153,43 @@ namespace POM.Models
                 {
                     while (reader.Read())
                     {
-                        codigoAux = reader.GetString(0);
+                        if (columna.Equals("PARCELA"))
+                        {
+                            codigoAux = reader.GetString(9);
+                        }
+                        else if(columna.Equals("ARTICULOS"))
+                        {
+                            codigoAux = reader.GetString(7);
+                        }
+                    }
+                    reader.Close();
+                }
+            }
+            return codigoAux;
+        }
+
+        public String obtenerCodigo(String nombre, String tabla, String columna)
+        {
+            String codigoAux = "";
+            StringBuilder sb = new StringBuilder();
+            if (tabla.Equals("USUARIO")) columna = "USERNAME";
+            sb.Append("SELECT * FROM [" + tabla + "] WHERE " + columna + " LIKE '%" + nombre + "%'");
+            String sql = sb.ToString();
+
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if(tabla.Equals("CONJUNTO_PARCELAS") || tabla.Equals("CONJUNTO_ARTICULOS"))
+                        {
+                            codigoAux = reader.GetString(1);
+                        }
+                        else
+                        {
+                            codigoAux = reader.GetString(0);
+                        }
                     }
                     reader.Close();
                 }
@@ -1111,7 +1227,8 @@ namespace POM.Models
             sb.Append("SELECT * FROM [COORDENADAS_PARCELA] WHERE PARCELA = '" + p.codigo + "'");
             String sql = sb.ToString();
 
-            String c = obtenerFinca(p.finca).color;
+            int c = Int32.Parse(obtenerFinca(p.finca).color);
+            
 
             using (SqlCommand command = new SqlCommand(sql, connection))
             {
@@ -1120,6 +1237,7 @@ namespace POM.Models
                     while (reader.Read())
                     {
                         cp.Add(new CoordenadasParcela(reader.GetInt32(0), reader.GetDouble(1), reader.GetDouble(2), reader.GetString(3)));
+                        cp[cp.Count - 1].colorHex = obtenerColorHex(c);
                         //cp[cp.Count - 1].colorHex = obtenerColorHex(c);
                     }
                     reader.Close();
@@ -1168,7 +1286,7 @@ namespace POM.Models
                 {
                     while (reader.Read())
                     {
-                        color = reader.GetInt32(2);
+                        color = Int32.Parse(reader.GetString(2));
                     }
                     reader.Close();
                 }
@@ -1247,7 +1365,7 @@ namespace POM.Models
                 }
             }
 
-            if (nombre.Equals("")) nombre = obtenerNombreConjuntoParcela(codigo);
+           //if (nombre.Equals("")) nombre = obtenerNombreConjuntoParcela(codigo);
             return nombre;
         }
 
@@ -1366,22 +1484,23 @@ namespace POM.Models
             else if (numero.Equals("-256")) nombre = "AMARILLO";
             else if (numero.Equals("-65281")) nombre = "MAGENTA";
             else if (numero.Equals("-16711681")) nombre = "CYAN";
-            else if (numero.Equals("-16777216")) nombre = "BLANCO";
-            else if (numero.Equals("-1")) nombre = "NEGRO";
+            else if (numero.Equals("-16777216")) nombre = "NEGRO";
+            else if (numero.Equals("-1")) nombre = "BLANCO";
             return nombre;
         }
 
         public String obtenerColorInt(String numero)
         {
             String nombre = "";
+            if (numero == null) numero = "";
             if (numero.Equals("ROJO")) nombre = "-65536";
             else if (numero.Equals("VERDE")) nombre = "-16711936";
             else if (numero.Equals("AZUL")) nombre = "-16776961";
             else if (numero.Equals("AMARILLO")) nombre = "-256";
             else if (numero.Equals("MAGENTA")) nombre = "-65281";
             else if (numero.Equals("CYAN")) nombre = "-16711681";
-            else if (numero.Equals("BLANCO")) nombre = "-16777216";
-            else if (numero.Equals("NEGRO")) nombre = "-1";
+            else if (numero.Equals("NEGRO")) nombre = "-16777216";
+            else if (numero.Equals("BLANCO")) nombre = "-1";
             return nombre;
         }
 
@@ -1390,23 +1509,6 @@ namespace POM.Models
             String hex = "";
             System.Drawing.Color c = System.Drawing.ColorTranslator.FromWin32(numeroAux);
             hex = "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
-            Console.Write(hex);
-            /*switch (hex){
-                case "FF0000":
-                    hex = "#0000FF";
-                    break;
-                case "0000FF":
-                    hex = "#FF0000";
-                    break;
-                case "00FFFF":
-                    hex = "##FFFF00";
-                    break;
-                case "FFFF00":
-                    hex = "##FFFF00";
-                    break;
-
-
-            }*/
             if (hex.Equals("#FF0000")) hex = "#0000FF"; // RED to BLUE
             else if (hex.Equals("#0000FF")) hex = "#FF0000"; // BLUE to RED
             else if (hex.Equals("#00FFFF")) hex = "#FFFF00";  // CYAN to YELLOW
@@ -1424,7 +1526,7 @@ namespace POM.Models
             for (int i = 0; i < f.Count; i++)
             {
                 DB.OPERACION d = f[i];
-                dibujos.Add(new Dibujo(d.CODIGO, d.NOMBRE,  d.COLOR.ToString(), d.TIPO, d.FECHA, d.ARTICULOS, d.OBSERVACIONES, d.TROZOS, d.PARCELA, d.FINCA, d.USUARIO));
+                dibujos.Add(new Dibujo(d.CODIGO, d.NOMBRE,  d.COLOR.ToString(), d.TIPO, d.FECHA, d.FECHA2, d.ARTICULOS, d.OBSERVACIONES, d.TROZOS, d.PARCELA, d.FINCA, d.USUARIO));
             }
 
             for (int j = 0; j < dibujos.Count; j++)
@@ -1437,6 +1539,27 @@ namespace POM.Models
             }
 
             return dibujos;
+        }
+
+        public Boolean hayArticulosEnTOP(String tipo)
+        {
+            bool encontrado = false;
+            StringBuilder sb = new StringBuilder();
+            sb.Append("SELECT * FROM [TIPO_OPERACION] WHERE NOMBRE = '" + tipo + "'");
+            String sql = sb.ToString();
+
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if(reader.GetString(2).Equals("1"))  encontrado = true;
+                    }
+                }
+            }
+
+            return encontrado;
         }
     }
 }

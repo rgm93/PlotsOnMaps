@@ -1,0 +1,346 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PlotsOnMapsDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="ARTICULO">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CONJUNTO_ARTICULOS">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OPERACION" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="ARTICULO" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CONJUNTO_PARCELAS">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OPERACION" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="PARCELA" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="COORDENADAS_OPERACION">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LAT" Type="float" Nullable="false" />
+    <Property Name="LONG" Type="float" Nullable="false" />
+    <Property Name="TROZO" Type="int" Nullable="false" />
+    <Property Name="OPERACION" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="COORDENADAS_PARCELA">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LAT" Type="float" Nullable="false" />
+    <Property Name="LONG" Type="float" Nullable="false" />
+    <Property Name="PARCELA" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="FINCA">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="COLOR" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="USUARIO" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OPERACION">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="COLOR" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="TIPO" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="FECHA" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="FECHA2" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="ARTICULOS" Type="varchar" MaxLength="300" Nullable="false" />
+    <Property Name="OBSERVACIONES" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="TROZOS" Type="int" Nullable="false" />
+    <Property Name="PARCELA" Type="varchar" MaxLength="300" Nullable="false" />
+    <Property Name="FINCA" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="USUARIO" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PARCELA">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="CONJUNTA" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="VARIEDAD" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="FINCA" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TIPO_OPERACION">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="TIENE_ARTICULOS" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="COLOR" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <EntityType Name="USUARIO">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="USERNAME" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="PASS" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="TIPO" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="ACTIVADO" Type="varchar" MaxLength="5" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VARIEDAD">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+    </Key>
+    <Property Name="CODIGO" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PlotsOnMapsDB.dbo.lstvariedades' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+  <EntityType Name="lstvariedades">
+    <Key>
+      <PropertyRef Name="CODIGO" />
+      <PropertyRef Name="NOMBRE" />
+    </Key>
+    <Property Name="CODIGO" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="NOMBRE" Type="varchar" MaxLength="20" Nullable="false" />
+  </EntityType>
+  <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+  <EntityType Name="database_firewall_rules">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="name" />
+      <PropertyRef Name="start_ip_address" />
+      <PropertyRef Name="end_ip_address" />
+      <PropertyRef Name="create_date" />
+      <PropertyRef Name="modify_date" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="start_ip_address" Type="varchar" MaxLength="45" Nullable="false" />
+    <Property Name="end_ip_address" Type="varchar" MaxLength="45" Nullable="false" />
+    <Property Name="create_date" Type="datetime" Nullable="false" />
+    <Property Name="modify_date" Type="datetime" Nullable="false" />
+  </EntityType>
+  <Association Name="FK__CONJUNTO___ARTIC__23893F36">
+    <End Role="ARTICULO" Type="Self.ARTICULO" Multiplicity="1" />
+    <End Role="CONJUNTO_ARTICULOS" Type="Self.CONJUNTO_ARTICULOS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ARTICULO">
+        <PropertyRef Name="CODIGO" />
+      </Principal>
+      <Dependent Role="CONJUNTO_ARTICULOS">
+        <PropertyRef Name="ARTICULO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__CONJUNTO___OPERA__1EC48A19">
+    <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="1" />
+    <End Role="CONJUNTO_PARCELAS" Type="Self.CONJUNTO_PARCELAS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OPERACION">
+        <PropertyRef Name="CODIGO" />
+      </Principal>
+      <Dependent Role="CONJUNTO_PARCELAS">
+        <PropertyRef Name="OPERACION" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__CONJUNTO___OPERA__22951AFD">
+    <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="1" />
+    <End Role="CONJUNTO_ARTICULOS" Type="Self.CONJUNTO_ARTICULOS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OPERACION">
+        <PropertyRef Name="CODIGO" />
+      </Principal>
+      <Dependent Role="CONJUNTO_ARTICULOS">
+        <PropertyRef Name="OPERACION" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__CONJUNTO___PARCE__1FB8AE52">
+    <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="1" />
+    <End Role="CONJUNTO_PARCELAS" Type="Self.CONJUNTO_PARCELAS" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PARCELA">
+        <PropertyRef Name="CODIGO" />
+      </Principal>
+      <Dependent Role="CONJUNTO_PARCELAS">
+        <PropertyRef Name="PARCELA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__COORDENAD__OPERA__2665ABE1">
+    <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="1" />
+    <End Role="COORDENADAS_OPERACION" Type="Self.COORDENADAS_OPERACION" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OPERACION">
+        <PropertyRef Name="CODIGO" />
+      </Principal>
+      <Dependent Role="COORDENADAS_OPERACION">
+        <PropertyRef Name="OPERACION" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__COORDENAD__PARCE__77AABCF8">
+    <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="1" />
+    <End Role="COORDENADAS_PARCELA" Type="Self.COORDENADAS_PARCELA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PARCELA">
+        <PropertyRef Name="CODIGO" />
+      </Principal>
+      <Dependent Role="COORDENADAS_PARCELA">
+        <PropertyRef Name="PARCELA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__FINCA__USUARIO__70FDBF69">
+    <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
+    <End Role="FINCA" Type="Self.FINCA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USUARIO">
+        <PropertyRef Name="CODIGO" />
+      </Principal>
+      <Dependent Role="FINCA">
+        <PropertyRef Name="USUARIO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__OPERACION__TIPO__1AF3F935">
+    <End Role="TIPO_OPERACION" Type="Self.TIPO_OPERACION" Multiplicity="1" />
+    <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TIPO_OPERACION">
+        <PropertyRef Name="CODIGO" />
+      </Principal>
+      <Dependent Role="OPERACION">
+        <PropertyRef Name="TIPO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__OPERACION__USUAR__1BE81D6E">
+    <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
+    <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="USUARIO">
+        <PropertyRef Name="CODIGO" />
+      </Principal>
+      <Dependent Role="OPERACION">
+        <PropertyRef Name="USUARIO" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PARCELA__FINCA__74CE504D">
+    <End Role="FINCA" Type="Self.FINCA" Multiplicity="1" />
+    <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="FINCA">
+        <PropertyRef Name="CODIGO" />
+      </Principal>
+      <Dependent Role="PARCELA">
+        <PropertyRef Name="FINCA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__PARCELA__VARIEDA__73DA2C14">
+    <End Role="VARIEDAD" Type="Self.VARIEDAD" Multiplicity="1" />
+    <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="VARIEDAD">
+        <PropertyRef Name="CODIGO" />
+      </Principal>
+      <Dependent Role="PARCELA">
+        <PropertyRef Name="VARIEDAD" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="obtenerarticulos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar(max)">
+    <Parameter Name="codigo" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="obtenerparcelas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar(max)">
+    <Parameter Name="codigo" Type="nvarchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="PlotsOnMapsDBModelStoreContainer">
+    <EntitySet Name="ARTICULO" EntityType="Self.ARTICULO" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CONJUNTO_ARTICULOS" EntityType="Self.CONJUNTO_ARTICULOS" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CONJUNTO_PARCELAS" EntityType="Self.CONJUNTO_PARCELAS" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="COORDENADAS_OPERACION" EntityType="Self.COORDENADAS_OPERACION" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="COORDENADAS_PARCELA" EntityType="Self.COORDENADAS_PARCELA" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="FINCA" EntityType="Self.FINCA" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="OPERACION" EntityType="Self.OPERACION" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PARCELA" EntityType="Self.PARCELA" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TIPO_OPERACION" EntityType="Self.TIPO_OPERACION" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="USUARIO" EntityType="Self.USUARIO" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VARIEDAD" EntityType="Self.VARIEDAD" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="lstvariedades" EntityType="Self.lstvariedades" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [lstvariedades].[CODIGO] AS [CODIGO], 
+    [lstvariedades].[NOMBRE] AS [NOMBRE]
+    FROM [dbo].[lstvariedades] AS [lstvariedades]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="database_firewall_rules" EntityType="Self.database_firewall_rules" store:Type="Views" store:Schema="sys">
+      <DefiningQuery>SELECT 
+    [database_firewall_rules].[id] AS [id], 
+    [database_firewall_rules].[name] AS [name], 
+    [database_firewall_rules].[start_ip_address] AS [start_ip_address], 
+    [database_firewall_rules].[end_ip_address] AS [end_ip_address], 
+    [database_firewall_rules].[create_date] AS [create_date], 
+    [database_firewall_rules].[modify_date] AS [modify_date]
+    FROM [sys].[database_firewall_rules] AS [database_firewall_rules]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK__CONJUNTO___ARTIC__23893F36" Association="Self.FK__CONJUNTO___ARTIC__23893F36">
+      <End Role="ARTICULO" EntitySet="ARTICULO" />
+      <End Role="CONJUNTO_ARTICULOS" EntitySet="CONJUNTO_ARTICULOS" />
+    </AssociationSet>
+    <AssociationSet Name="FK__CONJUNTO___OPERA__1EC48A19" Association="Self.FK__CONJUNTO___OPERA__1EC48A19">
+      <End Role="OPERACION" EntitySet="OPERACION" />
+      <End Role="CONJUNTO_PARCELAS" EntitySet="CONJUNTO_PARCELAS" />
+    </AssociationSet>
+    <AssociationSet Name="FK__CONJUNTO___OPERA__22951AFD" Association="Self.FK__CONJUNTO___OPERA__22951AFD">
+      <End Role="OPERACION" EntitySet="OPERACION" />
+      <End Role="CONJUNTO_ARTICULOS" EntitySet="CONJUNTO_ARTICULOS" />
+    </AssociationSet>
+    <AssociationSet Name="FK__CONJUNTO___PARCE__1FB8AE52" Association="Self.FK__CONJUNTO___PARCE__1FB8AE52">
+      <End Role="PARCELA" EntitySet="PARCELA" />
+      <End Role="CONJUNTO_PARCELAS" EntitySet="CONJUNTO_PARCELAS" />
+    </AssociationSet>
+    <AssociationSet Name="FK__COORDENAD__OPERA__2665ABE1" Association="Self.FK__COORDENAD__OPERA__2665ABE1">
+      <End Role="OPERACION" EntitySet="OPERACION" />
+      <End Role="COORDENADAS_OPERACION" EntitySet="COORDENADAS_OPERACION" />
+    </AssociationSet>
+    <AssociationSet Name="FK__COORDENAD__PARCE__77AABCF8" Association="Self.FK__COORDENAD__PARCE__77AABCF8">
+      <End Role="PARCELA" EntitySet="PARCELA" />
+      <End Role="COORDENADAS_PARCELA" EntitySet="COORDENADAS_PARCELA" />
+    </AssociationSet>
+    <AssociationSet Name="FK__FINCA__USUARIO__70FDBF69" Association="Self.FK__FINCA__USUARIO__70FDBF69">
+      <End Role="USUARIO" EntitySet="USUARIO" />
+      <End Role="FINCA" EntitySet="FINCA" />
+    </AssociationSet>
+    <AssociationSet Name="FK__OPERACION__TIPO__1AF3F935" Association="Self.FK__OPERACION__TIPO__1AF3F935">
+      <End Role="TIPO_OPERACION" EntitySet="TIPO_OPERACION" />
+      <End Role="OPERACION" EntitySet="OPERACION" />
+    </AssociationSet>
+    <AssociationSet Name="FK__OPERACION__USUAR__1BE81D6E" Association="Self.FK__OPERACION__USUAR__1BE81D6E">
+      <End Role="USUARIO" EntitySet="USUARIO" />
+      <End Role="OPERACION" EntitySet="OPERACION" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PARCELA__FINCA__74CE504D" Association="Self.FK__PARCELA__FINCA__74CE504D">
+      <End Role="FINCA" EntitySet="FINCA" />
+      <End Role="PARCELA" EntitySet="PARCELA" />
+    </AssociationSet>
+    <AssociationSet Name="FK__PARCELA__VARIEDA__73DA2C14" Association="Self.FK__PARCELA__VARIEDA__73DA2C14">
+      <End Role="VARIEDAD" EntitySet="VARIEDAD" />
+      <End Role="PARCELA" EntitySet="PARCELA" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

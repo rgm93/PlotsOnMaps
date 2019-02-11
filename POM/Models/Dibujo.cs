@@ -13,6 +13,7 @@ namespace POM.Models
         public String COLOR { get; set; }
         public String TIPO { get; set; }
         public String FECHA { get; set; }
+        public String FECHA2 { get; set; }
         public String ARTICULOS { get; set; }
         public String OBSERVACIONES { get; set; }
         public int TROZOS { get; set; }
@@ -23,13 +24,14 @@ namespace POM.Models
 
         public Dibujo() {}
 
-        public Dibujo(String codigo, String nombre, String color, String tipo, String fecha, String articulos, String observaciones, int trozos, String parcela, String finca, String usuario)
+        public Dibujo(String codigo, String nombre, String color, String tipo, String fecha, String fecha2, String articulos, String observaciones, int trozos, String parcela, String finca, String usuario)
         {
             this.CODIGO = codigo;
             this.NOMBRE = nombre;
             this.COLOR = color;
             this.TIPO = tipo;
             this.FECHA = fecha;
+            this.FECHA2 = fecha2;
             this.ARTICULOS = articulos;
             this.OBSERVACIONES = observaciones;
             this.TROZOS = trozos;

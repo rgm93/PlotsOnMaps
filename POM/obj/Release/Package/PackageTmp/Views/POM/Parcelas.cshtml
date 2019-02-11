@@ -1,5 +1,4 @@
-﻿
-@using POM.Models
+﻿@using POM.Models
 
 @{
     Layout = null;
@@ -81,6 +80,21 @@
         <input onclick="removeLine();" type=button value="Eliminar Parcela Dibujada del Mapa" style="background-color: white">
     </div>
 
+    <script type="text/javascript">
+        function OnEndCallback(s, e) {
+            if (s.cpMessage) {
+                alert(s.cpMessage);
+                delete s.cpMessage;
+            }
+        }
+    </script>
+
+    @Html.DevExpress().Label(lbl => {
+    lbl.Name = "lblDevExpress";
+    lbl.Properties.EnableClientSideAPI = true;
+    }).GetHtml()
+
+    <label id="lblStandard"></label>
 
     <div id="formparcelas">
         <div class="tablas">
@@ -94,15 +108,15 @@
                 <input class="campo2" id="codigoFinca" name="codigo" type="text" placeholder="Código" />
                 <input class="campo2" id="nombreFinca" name="nombre" type="text" placeholder="Nombre" />
                 <select id="colorFinca" name="color">
-                    <option value="X">Elige un color</option>
+                    <option value="X"> Elige un color </option>
                     <option value="-16776961">AZUL</option>
                     <option value="-16711936">VERDE</option>
                     <option value="-65536">ROJO</option>
                     <option value="-256">AMARILLO</option>
                     <option value="-65281">MAGENTA</option>
                     <option value="-16711681">CYAN</option>
-                    <option value="-16777216">BLACK</option>
-                    <option value="-1">WHITE</option>
+                    <option value="-1">BLANCO</option>
+                    <option value="-16777216">NEGRO</option>
                 </select>
                 <input id="crearFinca" type="button" name="enviar" value="Crear Finca" />
                 <script>
@@ -127,18 +141,19 @@
                                         cache: false,
                                         traditional: true,
                                         success: function (data) {
-                                            $("#FincaPL").empty();
+                                            /*$("#FincaPL").empty();
                                             var options = '';
                                             for (var i = 0; i < data.length; i++) {
                                                 options += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
                                             }
-                                            $('#FincaPL').append(options);
+                                            $('#FincaPL').append(options);*/
                                             alert("¡Finca creada con éxito!");
                                             document.getElementById('codigoFinca').value = ''
                                             document.getElementById('nombreFinca').value = ''
+                                            document.getElementById('colorFinca').value = 'Elige un color'
                                             location.reload();
                                         },
-                                        error: function (xhr, status, error) { alert("Fallo en la operación"); }
+                                        error: function (xhr, status, error) { alert("El código de la Finca ya existe en la base de datos."); }
                                     });
                                 }
                             });
@@ -171,11 +186,6 @@
                 <h3> Añadir Parcela </h3>
                 <input class="campo2" id="codigo" name="codigo" type="text" placeholder="Código" />
                 <input class="campo2" id="nombre" name="nombre" type="text" placeholder="Nombre" />
-                <select id="conjunta" name="conjunta">
-                    <option value="X"> ¿Parcela conjunta? </option>
-                    <option value="1">SI</option>
-                    <option value="0">NO</option>
-                </select>
                 @Html.DropDownList("VariedadPL", ViewData["Variedades"] as List<SelectListItem>)
                 <span id="select_variedad" name="sv" style="visibility: hidden"></span>
                 <script>
@@ -204,10 +214,10 @@
                         $(function () {
                             $('#crear').click(function (event) {
 
+                                var con = 1;
                                 var parcela = {
                                     codigo: $('#codigo').val(),
                                     nombre: $('#nombre').val(),
-                                    conjunta: $('#conjunta').val(),
                                     variedad: $('#VariedadPL').val(),
                                     finca: $('#FincaPL').val(),
                                     coordenadas: $('#output').val()
@@ -225,11 +235,18 @@
                                         traditional: true,
                                         success: function (data) {
                                             //cargarTabla2(data);
-                                            alert("Parcela creada exitósamente");
-                                            document.getElementById('codigo').value = ''
-                                            document.getElementById('nombre').value = ''
-                                            //initMap2(data.coordenadas);*/
-                                            location.reload();
+                                            console.log("Data: " + JSON.stringify(data));
+                                            if (data != "'Success':'false'") {
+                                                alert("¡Parcela creada exitósamente!");
+                                                document.getElementById('codigo').value = ''
+                                                document.getElementById('nombre').value = ''
+                                                document.getElementById('VariedadPL').value = 'Selecciona una variedad'
+                                                document.getElementById('FincaPL').value = 'Selecciona una finca'
+                                                document.getElementById('output').value = ''
+                                                //initMap2(data.coordenadas);*/
+                                                location.reload();
+                                            }
+                                            else alert("Ya existe una parcela con el código escrito.")
                                         },
                                         error: function (xhr, status, error) { alert("Fallo en la operación"); }
                                     });
@@ -243,22 +260,20 @@
                             if (parcela.codigo != "") {
                                 console.log(parcela.codigo);
                                 if (parcela.nombre != "") {
-                                    if (parcela.conjunta != "X") {
-                                        if (parcela.variedad != 0) {
-                                            console.log(parcela.variedad);
-                                            if (parcela.finca != 0) {
-                                                console.log(parcela.finca);
-                                                if (parcela.coordenadas != "") {
-                                                    console.log(parcela.coordenadas);
-                                                    devolver = true;
-                                                }
-                                                else alert("Falta por definir el trazo de la parcela");
+                                    if (parcela.variedad != 0) {
+                                        console.log(parcela.variedad);
+                                        if (parcela.finca != 0) {
+                                            console.log(parcela.finca);
+                                            console.log("OYE TU: " + JSON.stringify(parcela.coordenadas));
+                                            if (parcela.coordenadas != "") {
+                                                console.log(parcela.coordenadas);
+                                                devolver = true;
                                             }
-                                            else alert("Falta por definir la finca a que pertenece la parcela");
+                                            else alert("Falta por definir el trazo de la parcela");
                                         }
-                                        else alert("Falta por definir la variedad de la parcela");
+                                        else alert("Falta por definir la finca a que pertenece la parcela");
                                     }
-                                    else alert("Falta por definir si la parcela está conjunta");
+                                    else alert("Falta por definir la variedad de la parcela");
                                 }
                                 else alert("Falta por definir el nombre de la parcela");
                             }
@@ -274,128 +289,130 @@
             </form>
         </div>
 
-        <input class="filtrar" id="aplicarFiltro" type="button" value="Recargar Mapa" />
+        <div class="tablas" style="margin-top: -8%;">
+            <input class="filtrar" id="aplicarFiltro" type="button" style="margin: auto; padding: initial; align-content:center;" value="Recargar Mapa" />
+        </div>
 
-        <script type="text/javascript">
-            $(function () {
-                $("body").on("click", "#aplicarFiltro", function () {
-                    location.reload();
+            <script type="text/javascript">
+                $(function () {
+                    $("body").on("click", "#aplicarFiltro", function () {
+                        location.reload();
+                    });
                 });
-            });
 
-        </script>
-        <!--<form id="formcrearparcela" class="login-form" method="post">
-        <h1 id="formOtros"> Eliminar Parcela </h1>
-        @Html.DropDownList("FincaPL2", ViewData["Fincas"] as List<SelectListItem>)
-        <script>
-            $(document).ready(function () {
-                $("#FincaPL2").change(function () {
-                    var filtrar = {
-                        finca: $('#FincaPL2 Option:Selected').val()
+            </script>
+            <!--<form id="formcrearparcela" class="login-form" method="post">
+            <h1 id="formOtros"> Eliminar Parcela </h1>
+            @Html.DropDownList("FincaPL2", ViewData["Fincas"] as List<SelectListItem>)
+            <script>
+                $(document).ready(function () {
+                    $("#FincaPL2").change(function () {
+                        var filtrar = {
+                            finca: $('#FincaPL2 Option:Selected').val()
+                        };
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/POM/ObtenerParcelasDeFinca",
+                            contentType: "application/json",
+                            data: JSON.stringify(filtrar),
+                            dataType: "json",
+                            async: false,
+                            cache: false,
+                            traditional: true,
+                            success: function (data) {
+                                var select = $("#ParcelaPL");
+                                select.empty();
+                                select.append($('<option/>', {
+                                    value: 0,
+                                    text: "Todas las parcelas"
+                                }));
+                                $.each(data, function (index, itemData) {
+                                    select.append($('<option/>', {
+                                        text: itemData.nombre
+                                    }));
+                                });
+                            },
+                        });
+
+                    })
+                })
+            </script>
+            @Html.DropDownList("ParcelaPL", ViewData["Parcelas"] as List<SelectListItem>)
+            <input id="borrarParcela" type="button" name="eliminar" value="Eliminar" />
+            <script>
+                $(document).ready(function () {
+                    $("#ParcelasPL").change(function () {
+                        var n = $('#ParcelasPL Option:Selected').text();
+                        $("#select_eliminar_parcela").text(n);
+                    })
+                })
+
+                $('#borrarParcela').click(function (event) {
+                    var parcela = {
+                        codigo: $('#ParcelaPL Option:Selected').val()
                     };
 
                     $.ajax({
                         type: "POST",
-                        url: "/POM/ObtenerParcelasDeFinca",
+                        url: "/POM/EliminarParcela",
                         contentType: "application/json",
-                        data: JSON.stringify(filtrar),
+                        data: JSON.stringify(parcela),
                         dataType: "json",
                         async: false,
                         cache: false,
                         traditional: true,
                         success: function (data) {
-                            var select = $("#ParcelaPL");
-                            select.empty();
-                            select.append($('<option/>', {
-                                value: 0,
-                                text: "Todas las parcelas"
-                            }));
-                            $.each(data, function (index, itemData) {
-                                select.append($('<option/>', {
-                                    text: itemData.nombre
-                                }));
-                            });
-                        },
-                    });
+                            if (data.eliminado) {
+                                alert("¡Parcela borrada!");
+                                location.reload();
+                                /*var filtrar = {
+                                    finca: $('#FincaPL2 Option:Selected').val()
+                                };
 
-                })
-            })
-        </script>
-        @Html.DropDownList("ParcelaPL", ViewData["Parcelas"] as List<SelectListItem>)
-        <input id="borrarParcela" type="button" name="eliminar" value="Eliminar" />
-        <script>
-            $(document).ready(function () {
-                $("#ParcelasPL").change(function () {
-                    var n = $('#ParcelasPL Option:Selected').text();
-                    $("#select_eliminar_parcela").text(n);
-                })
-            })
-
-            $('#borrarParcela').click(function (event) {
-                var parcela = {
-                    codigo: $('#ParcelaPL Option:Selected').val()
-                };
-
-                $.ajax({
-                    type: "POST",
-                    url: "/POM/EliminarParcela",
-                    contentType: "application/json",
-                    data: JSON.stringify(parcela),
-                    dataType: "json",
-                    async: false,
-                    cache: false,
-                    traditional: true,
-                    success: function (data) {
-                        if (data.eliminado) {
-                            alert("¡Parcela borrada!");
-                            location.reload();
-                            /*var filtrar = {
-                                finca: $('#FincaPL2 Option:Selected').val()
-                            };
-
-                            $.ajax({
-                                type: "POST",
-                                url: "/POM/ObtenerParcelasDeFinca",
-                                contentType: "application/json",
-                                data: JSON.stringify(filtrar),
-                                dataType: "json",
-                                async: false,
-                                cache: false,
-                                traditional: true,
-                                success: function (data) {
-                                    var select = $("#ParcelaPL");
-                                    select.empty();
-                                    select.append($('<option/>', {
-                                        value: 0,
-                                        text: "Todas las parcelas"
-                                    }));
-                                    $.each(data, function (index, itemData) {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/POM/ObtenerParcelasDeFinca",
+                                    contentType: "application/json",
+                                    data: JSON.stringify(filtrar),
+                                    dataType: "json",
+                                    async: false,
+                                    cache: false,
+                                    traditional: true,
+                                    success: function (data) {
+                                        var select = $("#ParcelaPL");
+                                        select.empty();
                                         select.append($('<option/>', {
-                                            text: itemData.nombre
+                                            value: 0,
+                                            text: "Todas las parcelas"
                                         }));
-                                    });
-                                    cargarTabla2(data);
-                                },
+                                        $.each(data, function (index, itemData) {
+                                            select.append($('<option/>', {
+                                                text: itemData.nombre
+                                            }));
+                                        });
+                                        cargarTabla2(data);
+                                    },
 
-                            });
-                            initMap2(data.coordenadas);*/
-                        }
-                        else alert("No se puede borrar la parcela");
+                                });
+                                initMap2(data.coordenadas);*/
+                            }
+                            else alert("No se puede borrar la parcela");
 
-                    },
-                    error: function (xhr, status, error) { alert("No se puede borrar la parcela"); }
+                        },
+                        error: function (xhr, status, error) { alert("No se puede borrar la parcela"); }
+                    });
                 });
-            });
-        </script>
-    </form>
-    <form id="formcrearparcela" class="login-form">
-        <h1 id="formOtros"> Listado de Parcelas </h1>
-        <table id="tbParcelas" class="Grid" width="800" runat="server" clientidmode="Static">
-            <thead><tr><th>Id</th><th>Nombre</th><th>Conjunta</th><th>Variedad</th><th>Finca</th></tr></thead>
-            <tbody></tbody>
-        </table>
-    </form>-->
-        <script>
+            </script>
+        </form>
+        <form id="formcrearparcela" class="login-form">
+            <h1 id="formOtros"> Listado de Parcelas </h1>
+            <table id="tbParcelas" class="Grid" width="800" runat="server" clientidmode="Static">
+                <thead><tr><th>Id</th><th>Nombre</th><th>Conjunta</th><th>Variedad</th><th>Finca</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </form>-->
+            <script>
             $(document).ready(function () {
                 cargarTabla();
             });
@@ -427,8 +444,8 @@
                 $("#tbParcelas tbody").append(row);
             }
 
-        </script>
-    </div>
+            </script>
+        </div>
 
 
 
@@ -527,7 +544,7 @@
                     geodesic: true,
                     strokeColor: coordenadasparcelas[i][j-1].colorHex,
                     strokeOpacity: 1.0,
-                    strokeWeight: 5,
+                    strokeWeight: 4,
                     fillColor: coordenadasparcelas[i][j-1].colorHex,
                     fillOpacity: 0.35
                 }));
@@ -635,7 +652,7 @@
                     geodesic: true,
                     strokeColor: coordenadasparcelas[i][j-1].colorHex,
                     strokeOpacity: 1.0,
-                    strokeWeight: 5,
+                    strokeWeight: 4,
                     fillColor: coordenadasparcelas[i][j-1].colorHex,
                     fillOpacity: 0.35
                 }));

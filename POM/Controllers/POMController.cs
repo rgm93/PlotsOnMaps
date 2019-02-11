@@ -12,9 +12,9 @@ using System.Collections;
 
 namespace POM.Controllers
 {
-
     public class POMController : Controller
     {
+        public const string EditResultKey = "EditResult";
         Usuario usuario;
 
         public POMController() { }
@@ -132,64 +132,72 @@ namespace POM.Controllers
         public ActionResult ObtenerFiltrado(Filtrar filter)
         {
             string filtrado = (string)Session["query"];
-            string[] v = filtrado.Split('[', ']', ' ', ')', '\'');
-            List<String> cadena = new List<String>();
-
-            for (int i = 0; i < v.Count(); i++)
+            if (filtrado != null)
             {
-                cadena.Add(v[i]);
-            }
+                string[] v = filtrado.Split('[', ']', ' ', ')', '\'', '>', '<', '=');
+                List<String> cadena = new List<String>();
 
-            /*cadena.RemoveAll("StartsWith(");
-            cadena.RemoveAll(",");
-            cadena.RemoveAll(" ");*/
-
-            for (int i = 0; i < cadena.Count; i++)
-            {
-                if (cadena[i] == "" || cadena[i] == "StartsWith(" || cadena[i] == "," || cadena[i] == "And" || cadena[i] == " ")
+                for (int i = 0; i < v.Count(); i++)
                 {
-                    cadena.RemoveAt(i);
-                    i--;
+                    cadena.Add(v[i]);
                 }
-            }
 
-            for (int i = 0; i < cadena.Count; i++)
-            {
-                switch (cadena[i])
+                /*cadena.RemoveAll("StartsWith(");
+                cadena.RemoveAll(",");
+                cadena.RemoveAll(" ");*/
+
+                for (int i = 0; i < cadena.Count; i++)
                 {
-                    case "CODIGO":
-                        filter.codigo = cadena[i + 1];
-                        break;
-                    case "NOMBRE":
-                        filter.nombre = cadena[i + 1];
-                        break;
-                    case "TIPO":
-                        filter.tipoOperacion = cadena[i + 1];
-                        break;
-                    case "ARTICULOS":
-                        filter.articulo = cadena[i + 1];
-                        break;
-                    case "FECHA":
-                        filter.fecha = cadena[i + 1];
-                        break;
-                    case "PARCELA":
-                        filter.parcela = cadena[i + 1];
-                        break;
-                    case "FINCA":
-                        filter.finca = cadena[i + 1];
-                        break;
-                    case "USUARIO":
-                        filter.usuario = cadena[i + 1];
-                        break;
+                    if (cadena[i] == "" || cadena[i] == "Contains(" || cadena[i] == "," || cadena[i] == "And" || cadena[i] == " " || cadena[i] == "=")
+                    {
+                        cadena.RemoveAt(i);
+                        i--;
+                    }
                 }
-                i++;
-            }
 
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
+                for (int i = 0; i < cadena.Count; i++)
+                {
+                    switch (cadena[i])
+                    {
+                        case "CODIGO":
+                            filter.codigo = cadena[i + 1];
+                            break;
+                        case "NOMBRE":
+                            filter.nombre = cadena[i + 1];
+                            break;
+                        case "COLOR":
+                            filter.color = cadena[i + 1];
+                            break;
+                        case "TIPO":
+                            filter.tipoOperacion = cadena[i + 1];
+                            break;
+                        case "ARTICULOS":
+                            filter.articulo = cadena[i + 1];
+                            break;
+                        case "FECHA":
+                            filter.fecha = cadena[i + 1];
+                            break;
+                        case "FECHA2":
+                            filter.fecha2 = cadena[i + 1];
+                            break;
+                        case "PARCELA":
+                            filter.parcela = cadena[i + 1];
+                            break;
+                        case "FINCA":
+                            filter.finca = cadena[i + 1];
+                            break;
+                        case "USUARIO":
+                            filter.usuario = cadena[i + 1];
+                            break;
+                    }
+                    i++;
+                }
 
-            Filtrar faux = Filtrar(filter);
-            CargarFiltrado cf = cargarOperacionesEnMapa(faux);
+                AzureDB azure = new AzureDB();
+                azure.Conectar();
+
+                Filtrar faux = Filtrar(filter);
+                CargarFiltrado cf = cargarOperacionesEnMapa(faux);
 
                 //Filtrado(f);
 
@@ -197,10 +205,17 @@ namespace POM.Controllers
                 resultados.Add(ViewBag.PomsOP);
                 resultados.Add(ViewBag.PomsNDibujos);
                 resultados.Add(ViewBag.Operaciones);*/
-                
+
                 //return PartialView("Filtrado", f);
                 //return Json(resultados);
-            return Json(cf, JsonRequestBehavior.AllowGet);
+                Session["query"] = "";
+                return Json(cf, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                CargarFiltrado cf = cargarOperacionesEnMapaSinFiltro();
+                return Json(cf, JsonRequestBehavior.AllowGet);
+            }
         }
 
 
@@ -241,7 +256,7 @@ namespace POM.Controllers
                     li3.Add(new SelectListItem { Text = parcelas[i].nombre, Value = (i + 1).ToString() });
                 }
 
-                PlotsOnMapsDBEntities2 pmd = new PlotsOnMapsDBEntities2();
+                PlotsOnMapsDBEntities4 pmd = new PlotsOnMapsDBEntities4();
                 for (int i = 0; i < parcelas.Count; i++)
                 {
                     FINCA f = pmd.FINCA.Find(parcelas[i].finca);
@@ -309,6 +324,20 @@ namespace POM.Controllers
 
             }
 
+            for (int i = 0; i < operaciones.Count(); i++)
+            {
+                operaciones[i].FINCA = azure.obtenerNombreFinca(operaciones[i].FINCA);
+                String parcN = azure.obtenerNombreParcela(operaciones[i].PARCELA);
+                if(!parcN.Equals(""))  operaciones[i].PARCELA = parcN;
+                operaciones[i].TIPO = azure.obtenerNombreTipoOperacion(operaciones[i].TIPO);
+            }
+
+            for (int i = 0; i < parcelas.Count(); i++)
+            {
+                parcelas[i].finca = azure.obtenerNombreFinca(parcelas[i].finca);
+                parcelas[i].variedad = azure.obtenerNombreVariedad(parcelas[i].variedad);
+            }
+
             ViewBag.PomsParcelas = parcelas;
             ViewBag.PomsOP = cp;
             ViewBag.PomsNDibujos = nDibujos;
@@ -329,6 +358,41 @@ namespace POM.Controllers
                 nDibujos.Add(azure.obtenerNumDibujos(operaciones[i]));
 
             }
+
+            for (int i = 0; i < operaciones.Count(); i++)
+            {
+                operaciones[i].FINCA = azure.obtenerNombreFinca(operaciones[i].FINCA);
+                String parcN = azure.obtenerNombreParcela(operaciones[i].PARCELA);
+                if (!parcN.Equals("")) operaciones[i].PARCELA = parcN;
+                operaciones[i].TIPO = azure.obtenerNombreTipoOperacion(operaciones[i].TIPO);
+            }
+
+            return new CargarFiltrado(cp, nDibujos, operaciones, parcelas);
+        }
+
+        public CargarFiltrado cargarOperacionesEnMapaSinFiltro()
+        {
+            AzureDB azure = new AzureDB();
+            azure.Conectar();
+            List<Parcela> parcelas = azure.filtrarParcelas();
+            List<int> nDibujos = new List<int>();
+            List<Dibujo> operaciones = azure.filtrarOperacionesSinFiltro();
+            List<List<CoordenadasOperaciones>> cp = ObtenerOperaciones(operaciones);
+
+            for (int i = 0; i < cp.Count; i++)
+            {
+                nDibujos.Add(azure.obtenerNumDibujos(operaciones[i]));
+
+            }
+
+            for (int i = 0; i < operaciones.Count(); i++)
+            {
+                operaciones[i].FINCA = azure.obtenerNombreFinca(operaciones[i].FINCA);
+                String parcN = azure.obtenerNombreParcela(operaciones[i].PARCELA);
+                if (!parcN.Equals("")) operaciones[i].PARCELA = parcN;
+                operaciones[i].TIPO = azure.obtenerNombreTipoOperacion(operaciones[i].TIPO);
+            }
+
             return new CargarFiltrado(cp, nDibujos, operaciones, parcelas);
         }
 
@@ -378,7 +442,7 @@ namespace POM.Controllers
                     li.Add(new SelectListItem { Text = usuarios[i].username, Value = (i + 1).ToString() });
                 }
                 ViewData["Usuarios"] = li;
-                PlotsOnMapsDBEntities2 pomdb = new PlotsOnMapsDBEntities2();
+                PlotsOnMapsDBEntities4 pomdb = new PlotsOnMapsDBEntities4();
                 return View(pomdb.USUARIO);
             }
 
@@ -420,7 +484,7 @@ namespace POM.Controllers
                 li.Add(new SelectListItem { Text = variedades[i].nombre, Value = (i + 1).ToString() });
             }
             ViewData["Variedades"] = li;
-            PlotsOnMapsDBEntities2 pomdb = new PlotsOnMapsDBEntities2();
+            PlotsOnMapsDBEntities4 pomdb = new PlotsOnMapsDBEntities4();
             return View(pomdb.VARIEDAD);
             }
             
@@ -444,7 +508,7 @@ namespace POM.Controllers
                     li.Add(new SelectListItem { Text = articulos[i].nombre, Value = (i + 1).ToString() });
                 }
                 ViewData["Articulos"] = li;
-                PlotsOnMapsDBEntities2 pomdb = new PlotsOnMapsDBEntities2();
+                PlotsOnMapsDBEntities4 pomdb = new PlotsOnMapsDBEntities4();
                 return View(pomdb.ARTICULO);
             }
 
@@ -468,7 +532,7 @@ namespace POM.Controllers
                     li.Add(new SelectListItem { Text = operaciones[i].nombre, Value = (i + 1).ToString() });
                 }
                 ViewData["Operaciones"] = li;
-                PlotsOnMapsDBEntities2 pomdb = new PlotsOnMapsDBEntities2();
+                PlotsOnMapsDBEntities4 pomdb = new PlotsOnMapsDBEntities4();
                 return View(pomdb.TIPO_OPERACION);
             }
             
@@ -565,7 +629,7 @@ namespace POM.Controllers
             cf.eliminado = false;
             if(!p.codigo.Equals("0"))
             {
-                String cod = azure.obtenerCodigo(p.codigo, "PARCELA");
+                String cod = azure.obtenerCodigo(p.codigo, "PARCELA", "CODIGO");
                 if (!azure.contieneOperacionCampo(cod, "PARCELA"))
                 {
                     cf.eliminado = azure.eliminarParcela(cod);
@@ -806,8 +870,7 @@ namespace POM.Controllers
         {
             AzureDB azure = new AzureDB();
             azure.Conectar();
-
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 var model = entities.FINCA;
                 if (!azure.obtenerCODParcela(f.codigo))
@@ -979,10 +1042,10 @@ namespace POM.Controllers
                 listaCoordenadas.Add(coord);
             }
 
-            if (!azure.obtenerCODParcela(p.codigo))
+            if (!azure.obtenerCODParcela(p.codigo) && listaCoordenadas.Count() != 0)
             {
                 Parcela parc = new Parcela(p.codigo, p.nombre, p.conjunta, p.variedad, p.finca, p.coordenadas);
-                bool creado = azure.crearParcela(p.codigo, p.nombre, p.conjunta, variedad_selected, finca_selected, listaCoordenadas);
+                bool creado = azure.crearParcela(p.codigo, p.nombre, "1", variedad_selected, finca_selected, listaCoordenadas);
                 if (!creado)
                 {
                     Console.WriteLine("Parcela creada");
@@ -1183,7 +1246,7 @@ namespace POM.Controllers
             }*/
 
             Filtrar faux;
-            faux = new Filtrar(f.finca, f.parcela, f.variedad, f.fecha, f.tipoOperacion, f.articulo, f.usuario, f.nombre, f.codigo);
+            faux = new Filtrar(f.finca, f.parcela, f.color, f.variedad, f.fecha, f.fecha2, f.tipoOperacion, f.articulo, f.usuario, f.nombre, f.codigo);
             return faux;
         }
 
@@ -1191,7 +1254,7 @@ namespace POM.Controllers
         public JsonResult InsertarUsuario(USUARIO objeto)
         {
             bool insertado = false;
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 USUARIO existe = entities.USUARIO.Find(objeto.CODIGO);
                 var objetos = entities.USUARIO;
@@ -1218,7 +1281,7 @@ namespace POM.Controllers
         public ActionResult ActualizarUsuario(USUARIO objeto)
         {
             bool actualizado = false;
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 USUARIO updated = entities.USUARIO.Find(objeto.CODIGO);
                 var objetos = entities.USUARIO;
@@ -1251,7 +1314,7 @@ namespace POM.Controllers
         public ActionResult EliminarUsuario(USUARIO objeto)
         {
             bool encontrado = false;
-            PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2();
+            PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4();
             USUARIO removedUsuario = entities.USUARIO.Find(objeto.CODIGO);
             OPERACION existe = entities.OPERACION.Find(objeto.CODIGO);
             if (existe == null)
@@ -1281,7 +1344,7 @@ namespace POM.Controllers
         public JsonResult InsertarVariedad(VARIEDAD objeto)
         {
             bool insertado = false;
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 VARIEDAD existe = entities.VARIEDAD.Find(objeto.CODIGO);
                 var objetos = entities.VARIEDAD;
@@ -1310,7 +1373,7 @@ namespace POM.Controllers
         public ActionResult ActualizarVariedad(VARIEDAD objeto)
         {
             bool encontrado = false;
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 VARIEDAD updated = entities.VARIEDAD.Find(objeto.CODIGO);
                 var objetos = entities.VARIEDAD;
@@ -1341,7 +1404,7 @@ namespace POM.Controllers
         public ActionResult EliminarVariedad(VARIEDAD objeto)
         {
             bool encontrado = false;
-            PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2();
+            PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4();
             VARIEDAD removed = entities.VARIEDAD.Find(objeto.CODIGO);
             PARCELA existe = entities.PARCELA.Find(objeto.CODIGO);
             if (existe == null)
@@ -1388,7 +1451,7 @@ namespace POM.Controllers
         public JsonResult InsertarArticulo(ARTICULO objeto)
         {
             bool insertado = false;
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 ARTICULO existe = entities.ARTICULO.Find(objeto.CODIGO);
                 var objetos = entities.ARTICULO;
@@ -1418,7 +1481,7 @@ namespace POM.Controllers
         public ActionResult ActualizarArticulo(ARTICULO objeto)
         {
             bool actualizado = false;
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 ARTICULO updated = entities.ARTICULO.Find(objeto.CODIGO);
                 var objetos = entities.ARTICULO;
@@ -1449,7 +1512,7 @@ namespace POM.Controllers
         public ActionResult EliminarArticulo(ARTICULO objeto)
         {
             bool encontrado = false;
-            PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2();
+            PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4();
             ARTICULO removed = entities.ARTICULO.Find(objeto.CODIGO);
             OPERACION existe = entities.OPERACION.Find(objeto.CODIGO);
             if (existe == null)
@@ -1479,7 +1542,7 @@ namespace POM.Controllers
         public JsonResult InsertarTipoOperacion(TIPO_OPERACION objeto)
         {
             bool insertado = false;
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 TIPO_OPERACION existe = entities.TIPO_OPERACION.Find(objeto.CODIGO);
                 var objetos = entities.TIPO_OPERACION;
@@ -1509,7 +1572,7 @@ namespace POM.Controllers
         public ActionResult ActualizarOperacionFiltrado(OPERACION objeto)
         {
             bool actualizado = false;
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 OPERACION updated = entities.OPERACION.Find(objeto.CODIGO);
                 var objetos = entities.OPERACION;
@@ -1546,7 +1609,7 @@ namespace POM.Controllers
         public ActionResult ActualizarTipoOperacion(TIPO_OPERACION objeto)
         {
             bool actualizado = false;
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 TIPO_OPERACION updated = entities.TIPO_OPERACION.Find(objeto.CODIGO);
                 var objetos = entities.TIPO_OPERACION;
@@ -1568,11 +1631,18 @@ namespace POM.Controllers
                     updated.NOMBRE = objeto.NOMBRE;
                     updated.TIENE_ARTICULOS = objeto.TIENE_ARTICULOS == "SI" ? "1" : "0";
                     updated.COLOR = azure.obtenerColorInt(objeto.COLOR);
+
+                    String codtipo = objeto.CODIGO.ToString();
+                    string codop = entities.Database.SqlQuery<string>("select CODIGO from OPERACION where TIPO = '" + codtipo + "'").FirstOrDefault();
+                    OPERACION updated2 = entities.OPERACION.Find(codop);
+                    updated2.COLOR = azure.obtenerColorInt(objeto.COLOR);
                     entities.SaveChanges();
                     actualizado = true;
                     azure.Cerrar();
                 }
-                    
+
+               
+
             }
 
             return Json(actualizado);
@@ -1582,7 +1652,7 @@ namespace POM.Controllers
         public ActionResult EliminarTipoOperacion(TIPO_OPERACION objeto)
         {
             bool encontrado = false;
-            PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2();
+            PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4();
             TIPO_OPERACION removed = entities.TIPO_OPERACION.Find(objeto.CODIGO);
             OPERACION existe = entities.OPERACION.Find(objeto.CODIGO);
             if (existe == null)
@@ -1612,7 +1682,7 @@ namespace POM.Controllers
         public ActionResult ActualizarFinca(FINCA objeto)
         {
             bool actualizado = false;
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 FINCA updated = entities.FINCA.Find(objeto.CODIGO);
                 var objetos = entities.FINCA;
@@ -1647,7 +1717,7 @@ namespace POM.Controllers
         public ActionResult ActualizarParcela(PARCELA objeto)
         {
             bool actualizado = false;
-            using (PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2())
+            using (PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4())
             {
                 AzureDB azure = new AzureDB();
                 azure.Conectar();
@@ -1668,7 +1738,8 @@ namespace POM.Controllers
                 {
                     updated.NOMBRE = objeto.NOMBRE;
                     updated.CONJUNTA = objeto.CONJUNTA;
-                    updated.VARIEDAD = azure.obtenerCodigo(objeto.VARIEDAD, "VARIEDAD");
+                    updated.VARIEDAD = azure.obtenerCodigo(objeto.VARIEDAD, "VARIEDAD", "NOMBRE");
+                    updated.CONJUNTA = objeto.CONJUNTA == "SI" ? "1" : "0";
                     entities.SaveChanges();
                     actualizado = true;
                 }
@@ -1680,7 +1751,7 @@ namespace POM.Controllers
 
         // ¿Borrar las funciones anteriores?
 
-        PlotsOnMapsDBEntities2 db = new PlotsOnMapsDBEntities2();
+        PlotsOnMapsDBEntities4 db = new PlotsOnMapsDBEntities4();
 
         [ValidateInput(false)]
         public ActionResult GridViewPartialUsuarios()
@@ -1707,13 +1778,17 @@ namespace POM.Controllers
                 {
                     try
                     {
-                        ActualizarUsuario(item);
                         var modelItem = model.FirstOrDefault(it => it.CODIGO == item.CODIGO);
                         if (modelItem != null)
                         {
-                            UpdateModel(modelItem);
+                            item.USERNAME = item.USERNAME.ToUpper();
+                            ActualizarUsuario(item);
+                            model = db.USUARIO;
+                            UpdateModel(model);
                             db.SaveChanges();
+                            ViewData[EditResultKey] = string.Format("Actualizado el usuario: '{0}' - Recarga la página para ver los cambios", item.USERNAME);
                         }
+                        else ViewData[EditResultKey] = string.Format("No es posible actualizar el usuario: '{0}'", item.USERNAME);
                     }
                     catch (Exception e)
                     {
@@ -1721,8 +1796,7 @@ namespace POM.Controllers
                     }
                 }
             }
-            else
-                ViewData["EditError"] = "Please, correct all errors.";
+            
             return PartialView("_GridViewPartialUsuarios", model.ToList());
         }
         [HttpPost, ValidateInput(false)]
@@ -1744,7 +1818,9 @@ namespace POM.Controllers
                     {
                         model.Remove(itemDelete);
                         db.SaveChanges();
+                        ViewData[EditResultKey] = string.Format("Eliminado el usuario: '{0}'", itemDelete.USERNAME);
                     }
+                    else ViewData[EditResultKey] = string.Format("No es posible eliminar el usuario: '{0}'", itemDelete.USERNAME);
                 }
                 catch (Exception e)
                 {
@@ -1755,7 +1831,7 @@ namespace POM.Controllers
             return PartialView("_GridViewPartialUsuarios", model.ToList());
         }
 
-        PlotsOnMapsDBEntities2 db1 = new PlotsOnMapsDBEntities2();
+        PlotsOnMapsDBEntities4 db1 = new PlotsOnMapsDBEntities4();
 
         [ValidateInput(false)]
         public ActionResult GridViewPartialFincas()
@@ -1778,12 +1854,11 @@ namespace POM.Controllers
         public ActionResult GridViewPartialFincasUpdate([ModelBinder(typeof(DevExpressEditorsBinder))] FINCA item)
         {
             var model = db1.FINCA;
-            AzureDB azure = new AzureDB();
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var modelItem = model.FirstOrDefault(it => it.NOMBRE == item.NOMBRE);
+                    /*var modelItem = model.FirstOrDefault(it => it.NOMBRE == item.NOMBRE);
                     if (modelItem != null)
                     {
                         item.NOMBRE = item.NOMBRE.ToUpper();
@@ -1791,26 +1866,53 @@ namespace POM.Controllers
                         model = db1.FINCA;
                         UpdateModel(model);
                         db1.SaveChanges();
+                    }*/
+
+                    ActualizarFinca(item);
+                    AzureDB azure = new AzureDB();
+                    azure.Conectar();
+                    List<FINCA> p = model.ToList();
+                    for (int i = 0; i < model.Count(); i++)
+                    {
+                        p[i].COLOR = azure.obtenerColor(p[i].COLOR);
+                        p[i].USUARIO = azure.obtenerNombreUsuario(p[i].USUARIO);
                     }
+                    azure.Cerrar();
+                    ViewData[EditResultKey] = string.Format("Actualizada la finca: '{0}', recarga el mapa para ver los cambios", item.NOMBRE);
+
                 }
                 catch (Exception e)
                 {
                     ViewData["EditError"] = e.Message;
                 }
             }
-            else
-                ViewData["EditError"] = "Please, correct all errors.";
+            else ViewData[EditResultKey] = string.Format("No es posible actualizar la finca: '{0}'", item.NOMBRE);
 
-            model = db1.FINCA;
-            List<FINCA> p = model.ToList();
+            /*List<FINCA> p = model.ToList();
+            AzureDB azure = new AzureDB();
             azure.Conectar();
             for (int i = 0; i < model.Count(); i++)
             {
                 p[i].COLOR = azure.obtenerColor(p[i].COLOR);
                 p[i].USUARIO = azure.obtenerNombreUsuario(p[i].USUARIO);
             }
-            azure.Cerrar();
-            return PartialView("_GridViewPartialFincas", p.ToList());
+            azure.Cerrar();*/
+            return PartialView("_GridViewPartialFincas", model.ToList());
+
+
+
+            /*
+                    ActualizarParcela(item);
+                    AzureDB azure = new AzureDB();
+                    azure.Conectar();
+                    List<PARCELA> p = model.ToList();
+                    for (int i = 0; i < model.Count(); i++)
+                    {
+                        p[i].FINCA = azure.obtenerNombreFinca(p[i].FINCA);
+                        p[i].VARIEDAD = azure.obtenerNombreVariedad(p[i].VARIEDAD);
+                    }
+                    azure.Cerrar();
+             */
         }
         [HttpPost, ValidateInput(false)]
         public ActionResult GridViewPartialFincasDelete([ModelBinder(typeof(DevExpressEditorsBinder))] FINCA item)
@@ -1829,17 +1931,30 @@ namespace POM.Controllers
                     {
                         model.Remove(itemDelete);
                         db1.SaveChanges();
+                        ViewData[EditResultKey] = string.Format("Eliminada la finca: '{0}', recarga el mapa para ver los cambios", itemDelete.NOMBRE);
                     }
+                    else ViewData[EditResultKey] = string.Format("No es posible eliminar la finca: '{0}'", itemDelete.NOMBRE);
+                     AzureDB azure = new AzureDB();
+                    azure.Conectar();
+                    List<FINCA> p = model.ToList();
+                    for (int i = 0; i < model.Count(); i++)
+                    {
+                        p[i].COLOR = azure.obtenerColor(p[i].COLOR);
+                        p[i].USUARIO = azure.obtenerNombreUsuario(p[i].USUARIO);
+                    }
+                    azure.Cerrar();
+                    
                 }
                 catch (Exception e)
                 {
+                   
                     ViewData["EditError"] = e.Message;
                 }
             }
             return PartialView("_GridViewPartialFincas", model.ToList());
         }
 
-        PlotsOnMapsDBEntities2 db2 = new PlotsOnMapsDBEntities2();
+        PlotsOnMapsDBEntities4 db2 = new PlotsOnMapsDBEntities4();
 
         [ValidateInput(false)]
         public ActionResult GridViewPartialParcelas()
@@ -1852,6 +1967,8 @@ namespace POM.Controllers
             {
                 p[i].FINCA = azure.obtenerNombreFinca(p[i].FINCA);
                 p[i].VARIEDAD = azure.obtenerNombreVariedad(p[i].VARIEDAD);
+                p[i].CONJUNTA = p[i].CONJUNTA == "1" ? "SI" : "NO";
+
             }
             azure.Cerrar();
             return PartialView("_GridViewPartialParcelas", p.ToList());
@@ -1873,8 +1990,10 @@ namespace POM.Controllers
                     {
                         p[i].FINCA = azure.obtenerNombreFinca(p[i].FINCA);
                         p[i].VARIEDAD = azure.obtenerNombreVariedad(p[i].VARIEDAD);
+                        p[i].CONJUNTA = p[i].CONJUNTA == "1" ? "SI" : "NO";
                     }
                     azure.Cerrar();
+                    ViewData[EditResultKey] = string.Format("Actualizada la parcela: '{0}'", item.NOMBRE);
                     //GridViewPartialParcelas.grid.JSProperties["cpMessage"] = string.Format("Recargue el mapa para ver los resultados");
 
                     /*var modelItem = model.FirstOrDefault(it => it.CODIGO == item.CODIGO);
@@ -1889,8 +2008,7 @@ namespace POM.Controllers
                     ViewData["EditError"] = e.Message;
                 }
             }
-            else
-                ViewData["EditError"] = "Please, correct all errors.";
+            else ViewData[EditResultKey] = string.Format("No es posible actualizar la parcela: '{0}'", item.NOMBRE);
             return PartialView("_GridViewPartialParcelas", model.ToList());
         }
 
@@ -1913,8 +2031,19 @@ namespace POM.Controllers
                         //modelCoordenadas.Remove(itemDelete2);
                         //model.Remove(itemDelete);
                         db2.SaveChanges();
+                        model = db2.PARCELA;
+                        List<PARCELA> p = model.ToList();
+                        for (int i = 0; i < model.Count(); i++)
+                        {
+                            p[i].FINCA = azure.obtenerNombreFinca(p[i].FINCA);
+                            p[i].VARIEDAD = azure.obtenerNombreVariedad(p[i].VARIEDAD);
+                            p[i].CONJUNTA = p[i].CONJUNTA == "1" ? "SI" : "NO";
+
+                        }
                         azure.Cerrar();
+                        ViewData[EditResultKey] = string.Format("Eliminada la parcela: '{0}'", itemDelete.NOMBRE);
                     }
+                    else ViewData[EditResultKey] = string.Format("No es posible eliminar la parcela: '{0}'", itemDelete.NOMBRE);
                 }
                 catch (Exception e)
                 {
@@ -1924,7 +2053,7 @@ namespace POM.Controllers
             return PartialView("_GridViewPartialParcelas", model.ToList());
         }
 
-        PlotsOnMapsDBEntities2 db3 = new PlotsOnMapsDBEntities2();
+        PlotsOnMapsDBEntities4 db3 = new PlotsOnMapsDBEntities4();
 
         [ValidateInput(false)]
         public ActionResult GridViewPartialVariedades()
@@ -1953,11 +2082,11 @@ namespace POM.Controllers
                 }
                 catch (Exception e)
                 {
+                    ViewData[EditResultKey] = string.Format("Actualizada la variedad: '{0}'", item.NOMBRE);
                     ViewData["EditError"] = e.Message;
                 }
             }
-            else
-                ViewData["EditError"] = "Please, correct all errors.";
+            else ViewData[EditResultKey] = string.Format("No es posible actualizar la variedad: '{0}'", item.NOMBRE);
             return PartialView("_GridViewPartialVariedades", model.ToList());
         }
         [HttpPost, ValidateInput(false)]
@@ -1975,7 +2104,9 @@ namespace POM.Controllers
                     {
                         model.Remove(itemDelete);
                         db3.SaveChanges();
+                        ViewData[EditResultKey] = string.Format("Eliminada la variedad: '{0}'", itemDelete.NOMBRE);
                     }
+                    else ViewData[EditResultKey] = string.Format("No es posible eliminar la variedad: '{0}'", itemDelete.NOMBRE);
                 }
                 catch (Exception e)
                 {
@@ -1985,7 +2116,7 @@ namespace POM.Controllers
             return PartialView("_GridViewPartialVariedades", model.ToList());
         }
 
-       PlotsOnMapsDBEntities2 db4 = new PlotsOnMapsDBEntities2();
+        PlotsOnMapsDBEntities4 db4 = new PlotsOnMapsDBEntities4();
 
         [ValidateInput(false)]
         public ActionResult GridViewPartialArticulos()
@@ -2010,15 +2141,15 @@ namespace POM.Controllers
                         model = db4.ARTICULO;
                         UpdateModel(model);
                         db4.SaveChanges();
+                        ViewData[EditResultKey] = string.Format("Actualizado el artículo: '{0}'", item.NOMBRE);
                     }
+                    else ViewData[EditResultKey] = string.Format("No es posible actualizar el artículo: '{0}'", item.NOMBRE);
                 }
                 catch (Exception e)
                 {
                     ViewData["EditError"] = e.Message;
                 }
             }
-            else
-                ViewData["EditError"] = "Please, correct all errors.";
             return PartialView("_GridViewPartialArticulos", model.ToList());
         }
         [HttpPost, ValidateInput(false)]
@@ -2038,7 +2169,9 @@ namespace POM.Controllers
                     {
                         model.Remove(itemDelete);
                         db4.SaveChanges();
+                        ViewData[EditResultKey] = string.Format("Eliminado el artículo: '{0}'", itemDelete.NOMBRE);
                     }
+                    else ViewData[EditResultKey] = string.Format("No es posible eliminar el artículo: '{0}'", itemDelete.NOMBRE);
                 }
                 catch (Exception e)
                 {
@@ -2048,7 +2181,64 @@ namespace POM.Controllers
             return PartialView("_GridViewPartialArticulos", model.ToList());
         }
 
-        PlotsOnMapsDBEntities2 db5 = new PlotsOnMapsDBEntities2();
+        //PlotsOnMapsDBEntities4 db4 = new PlotsOnMapsDBEntities4();
+
+        [ValidateInput(false)]
+        public ActionResult GridViewPartialConjuntoArticulos()
+        {
+            AzureDB azure = new AzureDB();
+            azure.Conectar();
+            var model = db4.CONJUNTO_ARTICULOS;
+            List<CONJUNTO_ARTICULOS> p = model.ToList();
+            for (int i = 0; i < model.Count(); i++)
+            {
+                p[i].ARTICULO = azure.obtenerNombreArticulo(p[i].ARTICULO);
+
+            }
+            azure.Cerrar();
+            return PartialView("_GridViewPartialConjuntoArticulos", p.ToList());
+        }
+        
+        [HttpPost, ValidateInput(false)]
+        public ActionResult GridViewPartialConjuntoArticulosDelete([ModelBinder(typeof(DevExpressEditorsBinder))] CONJUNTO_ARTICULOS item)
+        {
+            var modelOperacion = db4.OPERACION;
+            var modelConjuntoArticulos = db4.CONJUNTO_ARTICULOS;
+            if (item.CODIGO != null)
+            {
+                try
+                {
+                    var itemDelete2 = modelOperacion.FirstOrDefault(it => it.ARTICULOS.Equals(item.ARTICULO));
+                    var itemDelete3 = modelConjuntoArticulos.FirstOrDefault(it => it.CODIGO.Equals(item.CODIGO));
+                    if (itemDelete2 == null && itemDelete3 == null)
+                    {
+                        modelConjuntoArticulos.Remove(itemDelete3);
+                        db4.SaveChanges();
+                        
+                        ViewData[EditResultKey] = string.Format("Eliminado el artículo: '{0}'", itemDelete3.ARTICULO);
+                    }
+                    else ViewData[EditResultKey] = string.Format("No es posible eliminar el conjunto: '{0}'", itemDelete3.ARTICULO);
+                }
+                catch (Exception e)
+                {
+                    ViewData["EditError"] = e.Message;
+                }
+            }
+
+            AzureDB azure = new AzureDB();
+            azure.Conectar();
+            var modelc = db4.CONJUNTO_ARTICULOS;
+            List<CONJUNTO_ARTICULOS> p = modelc.ToList();
+            for (int i = 0; i < modelc.Count(); i++)
+            {
+                p[i].ARTICULO = azure.obtenerNombreArticulo(p[i].ARTICULO);
+
+            }
+            azure.Cerrar();
+            return PartialView("_GridViewPartialConjuntoArticulos", p.ToList());
+        }
+
+        PlotsOnMapsDBEntities4 db5 = new PlotsOnMapsDBEntities4();
 
         [ValidateInput(false)]
         public ActionResult GridViewPartialTipoOperaciones()
@@ -2082,15 +2272,15 @@ namespace POM.Controllers
                         model = db4.TIPO_OPERACION;
                         UpdateModel(model);
                         db4.SaveChanges();
+                        ViewData[EditResultKey] = string.Format("Actualizado el tipo de operación: '{0}'", item.NOMBRE);
                     }
+                    else ViewData[EditResultKey] = string.Format("No es posible actualizar el tipo de operación: '{0}'", item.NOMBRE);
                 }
                 catch (Exception e)
                 {
                     ViewData["EditError"] = e.Message;
                 }
             }
-            else
-                ViewData["EditError"] = "Please, correct all errors.";
 
             List<TIPO_OPERACION> p = model.ToList();
             AzureDB azure = new AzureDB();
@@ -2118,7 +2308,9 @@ namespace POM.Controllers
                     {
                         model.Remove(itemDelete);
                         db5.SaveChanges();
+                        ViewData[EditResultKey] = string.Format("Eliminado el tipo de operación: '{0}'", itemDelete.NOMBRE);
                     }
+                    else ViewData[EditResultKey] = string.Format("No es posible eliminar el tipo de operación: '{0}'", itemDelete.NOMBRE);
                 }
                 catch (Exception e)
                 {
@@ -2128,14 +2320,38 @@ namespace POM.Controllers
             return PartialView("_GridViewPartialTipoOperaciones", model.ToList());
         }
 
-        PlotsOnMapsDBEntities2 db6 = new PlotsOnMapsDBEntities2();
+        PlotsOnMapsDBEntities4 db6 = new PlotsOnMapsDBEntities4();
 
         [ValidateInput(false)]
         public ActionResult GridViewPartialFiltrado(List<OPERACION> filter)
         {
-
+            AzureDB azure = new AzureDB();
+            var query = Session["query"];
+            azure.Conectar();
             var model = db6.OPERACION;
-            return PartialView("_GridViewPartialFiltrado", model.ToList());
+            List<OPERACION> p = model.ToList();
+            for (int i = 0; i < model.Count(); i++)
+            {
+                p[i].FINCA = azure.obtenerNombreFinca(p[i].FINCA);
+                String parcN = azure.obtenerNombreParcela(p[i].PARCELA);
+                if (!parcN.Equals("")) p[i].PARCELA = parcN;
+                p[i].COLOR = azure.obtenerColor(p[i].COLOR);
+                p[i].TIPO = azure.obtenerNombreTipoOperacion(p[i].TIPO);
+                if(azure.hayArticulosEnTOP(p[i].TIPO))
+                {
+                    String comp = azure.obtenerNombreArticulo(p[i].ARTICULOS);
+                    if(!comp.Equals(""))
+                    {
+                        p[i].ARTICULOS = azure.obtenerNombreArticulo(p[i].ARTICULOS);
+                    }
+                } else p[i].ARTICULOS = " - ";
+
+                p[i].USUARIO = azure.obtenerNombreUsuario(p[i].USUARIO);
+
+            }
+            azure.Cerrar();
+            ViewData[EditResultKey] = string.Format("Recargue el mapa para ver los resultados del filtrado");
+            return PartialView("_GridViewPartialFiltrado", p.ToList());
         }
 
 
@@ -2180,13 +2396,31 @@ namespace POM.Controllers
             }
             else
                 ViewData["EditError"] = "Please, correct all errors.";
-            return PartialView("_GridViewPartialFiltrado", model.ToList());
+
+            AzureDB azure = new AzureDB();
+            azure.Conectar();
+            model = db6.OPERACION;
+            List<OPERACION> p = model.ToList();
+            for (int i = 0; i < model.Count(); i++)
+            {
+                p[i].FINCA = azure.obtenerNombreFinca(p[i].FINCA);
+                p[i].PARCELA = azure.obtenerNombreParcela(p[i].PARCELA);
+                p[i].COLOR = azure.obtenerColor(p[i].COLOR);
+                p[i].TIPO = azure.obtenerNombreTipoOperacion(p[i].TIPO);
+                p[i].ARTICULOS = azure.obtenerNombreArticulo(p[i].ARTICULOS);
+                p[i].USUARIO = azure.obtenerNombreUsuario(p[i].USUARIO);
+
+            }
+            azure.Cerrar();
+            return PartialView("_GridViewPartialFiltrado", p.ToList());
         }
         [HttpPost, ValidateInput(false)]
         public ActionResult GridViewPartialFiltradoDelete([ModelBinder(typeof(DevExpressEditorsBinder))] OPERACION item)
         {
             var model = db6.OPERACION;
             var modelCoordenadas = db6.COORDENADAS_OPERACION;
+            AzureDB azure = new AzureDB();
+            azure.Conectar();
             if (item.CODIGO != null)
             {
                 try
@@ -2195,25 +2429,47 @@ namespace POM.Controllers
                     var itemDelete2 = modelCoordenadas.FirstOrDefault(it => it.OPERACION == item.CODIGO);
                     if (itemDelete != null && itemDelete2 != null)
                     {
-                        AzureDB azure = new AzureDB();
-                        azure.Conectar();
                         azure.eliminarFiltradoOperacion(item.CODIGO);
                         //model.Remove(itemDelete);
                         db6.SaveChanges();
-                        azure.Cerrar();
+                        ViewData[EditResultKey] = string.Format("Eliminado la operación: '{0}'", itemDelete.NOMBRE);
                     }
+                    else ViewData[EditResultKey] = string.Format("No es posible eliminar la operación: '{0}'", itemDelete.NOMBRE);
                 }
                 catch (Exception e)
                 {
                     ViewData["EditError"] = e.Message;
                 }
             }
-            return PartialView("_GridViewPartialFiltrado", model.ToList());
+
+            List<OPERACION> p = model.ToList();
+            for (int i = 0; i < model.Count(); i++)
+            {
+                p[i].FINCA = azure.obtenerNombreFinca(p[i].FINCA);
+                String parcN = azure.obtenerNombreParcela(p[i].PARCELA);
+                if (!parcN.Equals("")) p[i].PARCELA = parcN;
+                p[i].COLOR = azure.obtenerColor(p[i].COLOR);
+                p[i].TIPO = azure.obtenerNombreTipoOperacion(p[i].TIPO);
+                if (azure.hayArticulosEnTOP(p[i].TIPO))
+                {
+                    String comp = azure.obtenerNombreArticulo(p[i].ARTICULOS);
+                    if (!comp.Equals(""))
+                    {
+                        p[i].ARTICULOS = azure.obtenerNombreArticulo(p[i].ARTICULOS);
+                    }
+                }
+                else p[i].ARTICULOS = " - ";
+
+                p[i].USUARIO = azure.obtenerNombreUsuario(p[i].USUARIO);
+
+            }
+            azure.Cerrar();
+            return PartialView("_GridViewPartialFiltrado", p.ToList());
         }
 
         public bool existeArticulo(TIPO_OPERACION objeto)
         {
-            PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2();
+            PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4();
             var objetos = entities.TIPO_OPERACION;
             bool existe = false;
             foreach (var item in objetos)
@@ -2232,7 +2488,7 @@ namespace POM.Controllers
 
         public bool existeVariedad(VARIEDAD objeto)
         {
-            PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2();
+            PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4();
             var objetos = entities.VARIEDAD;
             bool existe = false;
             foreach (var item in objetos)
@@ -2251,7 +2507,7 @@ namespace POM.Controllers
 
         public bool existeTipoOperacion(TIPO_OPERACION objeto)
         {
-            PlotsOnMapsDBEntities2 entities = new PlotsOnMapsDBEntities2();
+            PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4();
             var objetos = entities.TIPO_OPERACION;
             bool existe = false;
             foreach (var item in objetos)
@@ -2272,7 +2528,7 @@ namespace POM.Controllers
         public void ObtenerFiltradoDVExpress(Filtrar filter)
         {
             string filtrado = (string) Session["query"];
-            string[] v = filtrado.Split('[', ']', ' ', ')', '\'');
+            string[] v = filtrado.Split('[', ']', ' ', ')', '\'', '>', '<', '=');
             List<String> cadena = new List<String>();
 
             for (int i = 0; i < v.Count(); i++)
@@ -2312,6 +2568,9 @@ namespace POM.Controllers
                     case "FECHA":
                         filter.codigo = cadena[i + 1];
                         break;
+                    case "FECHA2":
+                        filter.codigo = cadena[i + 1];
+                        break;
                     case "PARCELA":
                         filter.codigo = cadena[i + 1];
                         break;
@@ -2342,6 +2601,14 @@ namespace POM.Controllers
                 nDibujos.Add(azure.obtenerNumDibujos(operaciones[i]));
 
             }
+
+            for (int i = 0; i < operaciones.Count(); i++)
+            {
+                operaciones[i].FINCA = azure.obtenerNombreFinca(operaciones[i].FINCA);
+                operaciones[i].PARCELA = azure.obtenerNombreParcela(operaciones[i].PARCELA);
+                operaciones[i].TIPO = azure.obtenerNombreTipoOperacion(operaciones[i].TIPO);
+            }
+
             azure.Cerrar();
             return new CargarFiltrado(cp, nDibujos, operaciones, parcelas);
         }
@@ -2378,9 +2645,48 @@ namespace POM.Controllers
 
         static public String[] getVariedades()
         {
-            PlotsOnMapsDBEntities2 db = new PlotsOnMapsDBEntities2();
+            PlotsOnMapsDBEntities4 db = new PlotsOnMapsDBEntities4();
             String[] variedades = db.VARIEDAD.Select(x => x.NOMBRE).ToArray();
             return variedades;
+        }
+
+        static public String[] getTipoOperaciones()
+        {
+            PlotsOnMapsDBEntities4 db = new PlotsOnMapsDBEntities4();
+            String[] tipo_operaciones = db.TIPO_OPERACION.Select(x => x.NOMBRE).ToArray();
+            return tipo_operaciones;
+        }
+
+        static public String[] getArticulos()
+        {
+            PlotsOnMapsDBEntities4 db = new PlotsOnMapsDBEntities4();
+            String[] articulos = db.ARTICULO.Select(x => x.NOMBRE).ToArray();
+            //String[] articulos_c = db.CONJUNTO_ARTICULOS.Select(x => x.ARTICULO).Distinct().ToArray();
+            //String[] a = articulos.Concat(articulos_c).ToArray();
+            return articulos;
+        }
+
+        static public String[] getParcelas()
+        {
+            PlotsOnMapsDBEntities4 db = new PlotsOnMapsDBEntities4();
+            String[] parcelas = db.PARCELA.Select(x => x.NOMBRE).Distinct().ToArray();
+           // String[] parcelas_c = db.CONJUNTO_PARCELAS.Select(x => x.PARCELA).Distinct().ToArray();
+           // String[] p = parcelas.Concat(parcelas_c).ToArray();
+            return parcelas;
+        }
+
+        static public String[] getFincas()
+        {
+            PlotsOnMapsDBEntities4 db = new PlotsOnMapsDBEntities4();
+            String[] fincas = db.FINCA.Select(x => x.NOMBRE).ToArray();
+            return fincas;
+        }
+
+        static public String[] getUsuarios()
+        {
+            PlotsOnMapsDBEntities4 db = new PlotsOnMapsDBEntities4();
+            String[] usuarios = db.USUARIO.Where(x => x.TIPO.Equals("TECNICO")).Select(x => x.USERNAME).ToArray();
+            return usuarios;
         }
     }
 }

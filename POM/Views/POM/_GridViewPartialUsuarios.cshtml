@@ -8,7 +8,8 @@
         //settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "POM", Action = "GridViewPartialUsuariosAddNew" };
         settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "POM", Action = "GridViewPartialUsuariosUpdate" };
         settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "POM", Action = "GridViewPartialUsuariosDelete" };
-        settings.SettingsEditing.Mode = GridViewEditingMode.EditForm; //EditFormAndDisplayRow;
+
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow; ; //EditFormAndDisplayRow;
         settings.SettingsBehavior.ConfirmDelete = true;
 
         settings.CommandColumn.Visible = true;
@@ -21,26 +22,40 @@
         settings.SettingsPager.Visible = true;
         settings.Settings.ShowGroupPanel = false;
         settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
         settings.SettingsBehavior.AllowSelectByRowClick = false;
+        settings.CommandColumn.ShowApplyFilterButton = false;
+        settings.SettingsBehavior.FilterRowMode = GridViewFilterRowMode.Auto;
+        settings.CommandColumn.ShowClearFilterButton = true;
 
-        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.HideDataCellsWindowLimit;
-        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Left;
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
         settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
         settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
         settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
 
         settings.Styles.HeaderFilterItem.CssClass = "MVCxGridViewHeader1";
         settings.Styles.Header.CssClass = "MVCxGridViewHeader1";
-        
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "CODIGO";
+            c.Caption = "CODIGO";
+            c.ReadOnly = true;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
+
         settings.Columns.Add(c =>
         {
             c.FieldName = "USERNAME";
-            c.Caption = "Usuario";
+            c.Caption = "USUARIO";
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
         });
         settings.Columns.Add(c =>
         {
             c.FieldName = "PASS";
-            c.Caption = "Contraseña";
+            c.Caption = "CONTRASEÑA";
+            c.Settings.AllowAutoFilter = DefaultBoolean.False;
             var tbSettings = c.PropertiesEdit as TextBoxProperties;
             tbSettings.Password = true;
         });
@@ -68,10 +83,22 @@
                 p.ValueType = typeof(string);
                 p.DataSource = POM.Controllers.POMController.getUsuarioHabilitado();
             });
+
+            settings.CustomJSProperties = (s, e) =>
+            {
+                if (ViewData[POM.Controllers.POMController.EditResultKey] != null)
+                {
+                    e.Properties["cpMessage"] = ViewData[POM.Controllers.POMController.EditResultKey].ToString();
+                }
+            };
+
+            settings.ClientSideEvents.EndCallback = "OnEndCallback";
         });
+
+
     });
     if (ViewData["EditError"] != null){
-        
+
         grid.SetEditErrorText((string)ViewData["EditError"]);
     }
 }

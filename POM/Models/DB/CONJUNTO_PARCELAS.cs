@@ -15,9 +15,10 @@ namespace POM.Models.DB
     public partial class CONJUNTO_PARCELAS
     {
         public int CODIGO { get; set; }
-        public string NOMBRE { get; set; }
+        public string OPERACION { get; set; }
         public string PARCELA { get; set; }
     
+        public virtual OPERACION OPERACION1 { get; set; }
         public virtual PARCELA PARCELA1 { get; set; }
     }
 }

@@ -73,6 +73,20 @@
         </div>
     </div>
 
+    <script type="text/javascript">
+        function OnEndCallback(s, e) {
+            if (s.cpMessage) {
+                alert(s.cpMessage);
+                delete s.cpMessage;
+            }
+        }
+    </script>
+
+    @Html.DevExpress().Label(lbl => {
+    lbl.Name = "lblDevExpress";
+    lbl.Properties.EnableClientSideAPI = true;
+    }).GetHtml()
+
     <div class="row">
         <div id="map" style="background-color: white;">
             <div class="tablas">
@@ -94,8 +108,8 @@
                         <option value="-256">AMARILLO</option>
                         <option value="-65281">MAGENTA</option>
                         <option value="-16711681">CYAN</option>
-                        <option value="-16777216">BLANCO</option>
-                        <option value="-1">NEGRO</option>
+                        <option value="-1">BLANCO</option>
+                        <option value="-16777216">NEGRO</option>
                     </select>
                     <input id="addDB" type="button" name="enviar" value="Añadir" />
                 </span>

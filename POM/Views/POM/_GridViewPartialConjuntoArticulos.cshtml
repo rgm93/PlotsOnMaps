@@ -1,0 +1,59 @@
+@{
+    var grid = Html.DevExpress().GridView(settings => {
+        settings.Name = "GridViewConjuntoArticulos";
+        settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.Height = System.Web.UI.WebControls.Unit.Percentage(100);
+        settings.CallbackRouteValues = new { Controller = "POM", Action = "GridViewPartialConjuntoArticulos" };
+
+        //settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "POM", Action = "GridViewPartialArticulosAddNew" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "POM", Action = "GridViewPartialConjuntoArticulosDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        //settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+
+        settings.KeyFieldName = "CODIGO";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = false;
+        settings.Settings.ShowFilterRow = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = false;
+        settings.CommandColumn.ShowApplyFilterButton = false;
+        settings.SettingsBehavior.FilterRowMode = GridViewFilterRowMode.Auto;
+        settings.CommandColumn.ShowClearFilterButton = true;
+
+        settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
+        settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
+        settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
+        settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
+        settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
+
+        settings.Columns.Add(c=> {
+            c.FieldName = "OPERACION";
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
+        settings.Columns.Add(c=> {
+            c.FieldName = "ARTICULO";
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
+
+        settings.CustomJSProperties = (s, e) =>
+        {
+            if (ViewData[POM.Controllers.POMController.EditResultKey] != null)
+            {
+                e.Properties["cpMessage"] = ViewData[POM.Controllers.POMController.EditResultKey].ToString();
+            }
+        };
+
+        settings.ClientSideEvents.EndCallback = "OnEndCallback";
+    });
+
+
+    if (ViewData["EditError"] != null){
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

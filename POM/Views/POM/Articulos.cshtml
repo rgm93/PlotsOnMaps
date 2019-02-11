@@ -73,9 +73,24 @@
         </div>
     </div>
 
+    <script type="text/javascript">
+        function OnEndCallback(s, e) {
+            if (s.cpMessage) {
+                alert(s.cpMessage);
+                delete s.cpMessage;
+            }
+        }
+    </script>
+
+    @Html.DevExpress().Label(lbl => {
+    lbl.Name = "lblDevExpress";
+    lbl.Properties.EnableClientSideAPI = true;
+    }).GetHtml()
+
     <div class="row">
         <div id="map" style="background-color: white;">
             <div class="tablas">
+                <h2> Artículos </h2>
                 @Html.Action("GridViewPartialArticulos")
 
                 <span class="FormularioInsertar">
@@ -84,200 +99,205 @@
                     <input class="campo2" id="nombre" name="nombre" type="text" placeholder="Nombre" maxlength="20" />
                     <input id="addDB" type="button" name="enviar" value="Añadir" />
                 </span>
-            </div>
 
-            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-            <script type="text/javascript" src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
-            <script type="text/javascript">
+                <div class="tablas">
+                    <h2> Conjunto de Artículos </h2>
+                    @Html.Action("GridViewPartialConjuntoArticulos")
+                </div>
+                </div>
 
-                //Add event handler.
-                $("body").on("click", "#addDB", function () {
-                    var objeto = {
-                        codigo: $("#codigo").val(),
-                        nombre: $("#nombre").val()
-                    };
+                <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+                <script type="text/javascript" src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+                <script type="text/javascript">
 
-                    if (comprobarDatos(objeto)) {
+                    //Add event handler.
+                    $("body").on("click", "#addDB", function () {
+                        var objeto = {
+                            codigo: $("#codigo").val(),
+                            nombre: $("#nombre").val()
+                        };
+
+                        if (comprobarDatos(objeto)) {
+                            $.ajax({
+                                type: "POST",
+                                url: "/POM/InsertarArticulo",
+                                data: JSON.stringify(objeto),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (data) {
+                                    if (data) {
+                                        location.reload();
+                                        document.getElementById('codigo').value = ''
+                                        document.getElementById('nombre').value = ''
+                                    }
+                                    else alert("El articulo ya existe");
+                                }
+                            });
+                        }
+                    });
+
+                    function comprobarDatos(objeto) {
+                        var devolver = false;
+                        if (objeto.codigo != "") {
+                            if (objeto.nombre != "") {
+                                devolver = true;
+                            }
+                            else alert("Falta elegir el nombre del artículo.")
+                        }
+                        else alert("Falta elegir el código del artículo.")
+                        return devolver;
+                    }
+
+                    $("body").on("click", "#buscarObjeto", function () {
+                        var busqueda = $("#cajaBusqueda").val();
+                        var webGrid = $("#WebGrid");
+                        var row = webGrid.find("tr").eq(1);
                         $.ajax({
                             type: "POST",
-                            url: "/POM/InsertarArticulo",
-                            data: JSON.stringify(objeto),
+                            url: "/POM/BuscarArticulo",
+                            data: '{busqueda:' + JSON.stringify(busqueda) + '}',
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (data) {
                                 if (data) {
-                                    location.reload();
-                                    document.getElementById('codigo').value = ''
-                                    document.getElementById('nombre').value = ''
+                                    console.log(data);
+                                    $.each(data, function () {
+                                        $("#WebGrid TBODY").empty();
+                                        for (i = 0; i <= data.length - 1; i++) {
+                                            $("#WebGrid TBODY").append("<tr><td>" + data[i].codigo + "</td><td>" + data[i].nombre + "</td><td> <span class=\"link\">" +
+                                                "<a class=\"Edit\"> Editar </a><a class=\"Delete\"> Eliminar </a><a class=\"Update\" style=\"display: none\">Actualizar</a>" +
+                                                "<a class=\"Cancel\" style = \"display:none\"> Cancelar </a></td></tr>");
+                                        }
+                                    });
                                 }
-                                else alert("El articulo ya existe");
                             }
                         });
-                    }
-                });
+                    });
 
-                function comprobarDatos(objeto) {
-                    var devolver = false;
-                    if (objeto.codigo != "") {
-                        if (objeto.nombre != "") {
-                            devolver = true;
-                        }
-                        else alert("Falta elegir el nombre del artículo.")
-                    }
-                    else alert("Falta elegir el código del artículo.")
-                    return devolver;
-                }
-
-                $("body").on("click", "#buscarObjeto", function () {
-                    var busqueda = $("#cajaBusqueda").val();
-                    var webGrid = $("#WebGrid");
-                    var row = webGrid.find("tr").eq(1);
-                    $.ajax({
-                        type: "POST",
-                        url: "/POM/BuscarArticulo",
-                        data: '{busqueda:' + JSON.stringify(busqueda) + '}',
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (data) {
-                            if (data) {
-                                console.log(data);
-                                $.each(data, function () {
-                                    $("#WebGrid TBODY").empty();
-                                    for (i = 0; i <= data.length - 1; i++) {
-                                        $("#WebGrid TBODY").append("<tr><td>" + data[i].codigo + "</td><td>" + data[i].nombre + "</td><td> <span class=\"link\">" +
-                                            "<a class=\"Edit\"> Editar </a><a class=\"Delete\"> Eliminar </a><a class=\"Update\" style=\"display: none\">Actualizar</a>" +
-                                            "<a class=\"Cancel\" style = \"display:none\"> Cancelar </a></td></tr>");
-                                    }
-                                });
+                    //Edit event handler.
+                    $("body").on("click", "#WebGrid TBODY .Edit", function () {
+                        var row = $(this).closest("tr");
+                        $("td", row).each(function () {
+                            if ($(this).find(".text").length > 0) {
+                                $(this).find(".text").show();
+                                $(this).find(".label").hide();
                             }
-                        }
-                    });
-                });
-
-                //Edit event handler.
-                $("body").on("click", "#WebGrid TBODY .Edit", function () {
-                    var row = $(this).closest("tr");
-                    $("td", row).each(function () {
-                        if ($(this).find(".text").length > 0) {
-                            $(this).find(".text").show();
-                            $(this).find(".label").hide();
-                        }
-                    });
-                    row.find(".Update").show();
-                    row.find(".Cancel").show();
-                    row.find(".Delete").hide();
-                    $(this).hide();
-                });
-
-                var span;
-                var input;
-
-                var objetoAux = {};
-
-
-                $("body").on("click", "#WebGrid TBODY .Update", function () {
-                    var row = $(this).closest("tr");
-                    objetoAux.codigo = row.find(".Id").find(".label").html();
-                    objetoAux.nombre = row.find(".Nombre").find(".label").html();
-                    $("td", row).each(function () {
-                        if ($(this).find(".text").length > 0) {
-                            span = $(this).find(".label");
-                            input = $(this).find(".text");
-                            span.html(input.val());
-                            span.show();
-                            input.hide();
-                        }
+                        });
+                        row.find(".Update").show();
+                        row.find(".Cancel").show();
+                        row.find(".Delete").hide();
+                        $(this).hide();
                     });
 
-                    row.find(".Edit").show();
-                    row.find(".Delete").show();
-                    row.find(".Update").hide();
-                    row.find(".Cancel").hide();
+                    var span;
+                    var input;
 
-                    var objeto = {};
-                    objeto.codigo = row.find(".Id").find(".label").html();
-                    objeto.nombre = row.find(".Nombre").find(".label").html();
-                    $.ajax({
-                        type: "POST",
-                        url: "/POM/ActualizarArticulo",
-                        data: '{objeto:' + JSON.stringify(objeto) + '}',
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (data) {
-                            if (!data) {
-                                alert("La variedad ya existe.");
-                                row.find(".Nombre").find(".label").text(objetoAux.nombre);
-                                row.find(".Cancel").click();
+                    var objetoAux = {};
+
+
+                    $("body").on("click", "#WebGrid TBODY .Update", function () {
+                        var row = $(this).closest("tr");
+                        objetoAux.codigo = row.find(".Id").find(".label").html();
+                        objetoAux.nombre = row.find(".Nombre").find(".label").html();
+                        $("td", row).each(function () {
+                            if ($(this).find(".text").length > 0) {
+                                span = $(this).find(".label");
+                                input = $(this).find(".text");
+                                span.html(input.val());
+                                span.show();
+                                input.hide();
                             }
-                            else {
-                                row.find(".Edit").show();
-                                row.find(".Delete").show();
-                                row.find(".Update").hide();
-                                row.find(".Cancel").hide();
-                                $(this).hide();
-                            }
-                        }
-                    });
-                });
+                        });
 
-                //Delete event handler.
-                $("body").on("click", "#WebGrid TBODY .Delete", function () {
-                    var row = $(this).closest("tr");
-                    $("td", row).each(function () {
-                        if ($(this).find(".text").length > 0) {
-                            var span = $(this).find(".label");
-                            var input = $(this).find(".text");
-                            span.html(input.val());
-                            span.show();
-                            input.hide();
-                        }
-                    });
+                        row.find(".Edit").show();
+                        row.find(".Delete").show();
+                        row.find(".Update").hide();
+                        row.find(".Cancel").hide();
 
-                    var objeto = {};
-                    objeto.codigo = row.find(".Id").find(".label").html();
-                    objeto.nombre = row.find(".Nombre").find(".label").html();
-                    $.ajax({
-                        type: "POST",
-                        url: "/POM/EliminarArticulo",
-                        data: '{objeto:' + JSON.stringify(objeto) + '}',
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function (data) {
-                            if (data) {
-                                if ($("#tblDB tr").length > 1) {
-                                    row.remove();
-                                } else {
-                                    row.find(".Edit").hide();
-                                    row.find(".Delete").hide();
-                                    row.find("span").html('&nbsp;');
-                                    row.remove();
+                        var objeto = {};
+                        objeto.codigo = row.find(".Id").find(".label").html();
+                        objeto.nombre = row.find(".Nombre").find(".label").html();
+                        $.ajax({
+                            type: "POST",
+                            url: "/POM/ActualizarArticulo",
+                            data: '{objeto:' + JSON.stringify(objeto) + '}',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (data) {
+                                if (!data) {
+                                    alert("La variedad ya existe.");
+                                    row.find(".Nombre").find(".label").text(objetoAux.nombre);
+                                    row.find(".Cancel").click();
+                                }
+                                else {
+                                    row.find(".Edit").show();
+                                    row.find(".Delete").show();
+                                    row.find(".Update").hide();
+                                    row.find(".Cancel").hide();
+                                    $(this).hide();
                                 }
                             }
-                            else alert("El artículo no puede eliminarse.");
-
-                        }
+                        });
                     });
-                });
 
-                //Cancel event handler.
-                $("body").on("click", "#WebGrid TBODY .Cancel", function () {
-                    var row = $(this).closest("tr");
-                    $("td", row).each(function () {
-                        if ($(this).find(".text").length > 0) {
-                            var span = $(this).find(".label");
-                            var input = $(this).find(".text");
-                            input.val(span.html());
-                            span.show();
-                            input.hide();
-                        }
+                    //Delete event handler.
+                    $("body").on("click", "#WebGrid TBODY .Delete", function () {
+                        var row = $(this).closest("tr");
+                        $("td", row).each(function () {
+                            if ($(this).find(".text").length > 0) {
+                                var span = $(this).find(".label");
+                                var input = $(this).find(".text");
+                                span.html(input.val());
+                                span.show();
+                                input.hide();
+                            }
+                        });
+
+                        var objeto = {};
+                        objeto.codigo = row.find(".Id").find(".label").html();
+                        objeto.nombre = row.find(".Nombre").find(".label").html();
+                        $.ajax({
+                            type: "POST",
+                            url: "/POM/EliminarArticulo",
+                            data: '{objeto:' + JSON.stringify(objeto) + '}',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (data) {
+                                if (data) {
+                                    if ($("#tblDB tr").length > 1) {
+                                        row.remove();
+                                    } else {
+                                        row.find(".Edit").hide();
+                                        row.find(".Delete").hide();
+                                        row.find("span").html('&nbsp;');
+                                        row.remove();
+                                    }
+                                }
+                                else alert("El artículo no puede eliminarse.");
+
+                            }
+                        });
                     });
-                    row.find(".Edit").show();
-                    row.find(".Delete").show();
-                    row.find(".Update").hide();
-                    $(this).hide();
-                });
-            </script>
-        </div>
+
+                    //Cancel event handler.
+                    $("body").on("click", "#WebGrid TBODY .Cancel", function () {
+                        var row = $(this).closest("tr");
+                        $("td", row).each(function () {
+                            if ($(this).find(".text").length > 0) {
+                                var span = $(this).find(".label");
+                                var input = $(this).find(".text");
+                                input.val(span.html());
+                                span.show();
+                                input.hide();
+                            }
+                        });
+                        row.find(".Edit").show();
+                        row.find(".Delete").show();
+                        row.find(".Update").hide();
+                        $(this).hide();
+                    });
+                </script>
+            </div>
     </div>
     <footer class="w3-container w3-padding-32 w3-theme-d1 w3-center foot">
         <p> © 2018 PlotsOnMaps - Rubén González Membrilla </p>

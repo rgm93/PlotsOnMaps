@@ -22,7 +22,11 @@
         settings.SettingsPager.Visible = true;
         settings.Settings.ShowGroupPanel = false;
         settings.Settings.ShowFilterRow = true;
-        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.Settings.ShowFilterRowMenu = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = false;
+        settings.CommandColumn.ShowApplyFilterButton = false;
+        settings.SettingsBehavior.FilterRowMode = GridViewFilterRowMode.Auto;
+        settings.CommandColumn.ShowClearFilterButton = true;
 
         settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.HideDataCellsWindowLimit;
         settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Left;
@@ -30,19 +34,18 @@
         settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
         settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
 
-        settings.Columns.Add("NOMBRE");
-
         settings.Columns.Add(c =>
         {
+            c.FieldName = "CODIGO";
+            c.Caption = "CODIGO";
+            c.ReadOnly = true;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
 
-            settings.Name = "ComboParcelaConjunta";
-            c.FieldName = "CONJUNTA";
-            c.Caption = "PARCELA CONJUNTA";
-            c.EditorProperties().ComboBox(p =>
-            {
-                p.ValueType = typeof(string);
-                p.DataSource = POM.Controllers.POMController.getParcelaConjunta();
-            });
+        settings.Columns.Add(c=>
+        {
+            c.FieldName = "NOMBRE";
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
         });
 
         settings.Columns.Add(c =>
@@ -51,18 +54,25 @@
             settings.Name = "ComboVariedad";
             c.FieldName = "VARIEDAD";
             c.Caption = "VARIEDAD";
-            c.EditorProperties().ComboBox(p =>
-            {
-                p.ValueType = typeof(string);
-                p.DataSource = POM.Controllers.POMController.getVariedades();
-            });
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
         });
-        
+
         settings.Columns.Add(column =>
         {
             column.FieldName = "FINCA";
             column.ReadOnly = true;
+            column.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
         });
+
+        settings.CustomJSProperties = (s, e) =>
+        {
+            if (ViewData[POM.Controllers.POMController.EditResultKey] != null)
+            {
+                e.Properties["cpMessage"] = ViewData[POM.Controllers.POMController.EditResultKey].ToString();
+            }
+        };
+
+        settings.ClientSideEvents.EndCallback = "OnEndCallback";
     });
     if (ViewData["EditError"] != null)
     {

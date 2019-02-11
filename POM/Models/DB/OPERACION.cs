@@ -17,7 +17,8 @@ namespace POM.Models.DB
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OPERACION()
         {
-            this.CONJUNTO_OPERACIONES = new HashSet<CONJUNTO_OPERACIONES>();
+            this.CONJUNTO_ARTICULOS = new HashSet<CONJUNTO_ARTICULOS>();
+            this.CONJUNTO_PARCELAS = new HashSet<CONJUNTO_PARCELAS>();
             this.COORDENADAS_OPERACION = new HashSet<COORDENADAS_OPERACION>();
         }
     
@@ -26,6 +27,7 @@ namespace POM.Models.DB
         public string COLOR { get; set; }
         public string TIPO { get; set; }
         public string FECHA { get; set; }
+        public string FECHA2 { get; set; }
         public string ARTICULOS { get; set; }
         public string OBSERVACIONES { get; set; }
         public int TROZOS { get; set; }
@@ -34,7 +36,9 @@ namespace POM.Models.DB
         public string USUARIO { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<CONJUNTO_OPERACIONES> CONJUNTO_OPERACIONES { get; set; }
+        public virtual ICollection<CONJUNTO_ARTICULOS> CONJUNTO_ARTICULOS { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<CONJUNTO_PARCELAS> CONJUNTO_PARCELAS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<COORDENADAS_OPERACION> COORDENADAS_OPERACION { get; set; }
         public virtual TIPO_OPERACION TIPO_OPERACION { get; set; }

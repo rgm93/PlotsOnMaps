@@ -13,10 +13,10 @@ namespace POM.Models.DB
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class PlotsOnMapsDBEntities2 : DbContext
+    public partial class PlotsOnMapsDBEntities4 : DbContext
     {
-        public PlotsOnMapsDBEntities2()
-            : base("name=PlotsOnMapsDBEntities2")
+        public PlotsOnMapsDBEntities4()
+            : base("name=PlotsOnMapsDBEntities4")
         {
         }
     
@@ -27,7 +27,6 @@ namespace POM.Models.DB
     
         public virtual DbSet<ARTICULO> ARTICULO { get; set; }
         public virtual DbSet<CONJUNTO_ARTICULOS> CONJUNTO_ARTICULOS { get; set; }
-        public virtual DbSet<CONJUNTO_OPERACIONES> CONJUNTO_OPERACIONES { get; set; }
         public virtual DbSet<CONJUNTO_PARCELAS> CONJUNTO_PARCELAS { get; set; }
         public virtual DbSet<COORDENADAS_OPERACION> COORDENADAS_OPERACION { get; set; }
         public virtual DbSet<COORDENADAS_PARCELA> COORDENADAS_PARCELA { get; set; }

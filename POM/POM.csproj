@@ -151,6 +151,8 @@
     <Content Include="Content\dx.win10.white.css" />
     <Content Include="Content\dx.win8.black.css" />
     <Content Include="Content\dx.win8.white.css" />
+    <Content Include="Content\gridmvc.datepicker.css" />
+    <Content Include="Content\gridmvc.datepicker.min.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -213,26 +215,27 @@
     <Content Include="Content\icons\dxicons.woff" />
     <Content Include="Content\icons\dxiconsios.ttf" />
     <Content Include="Content\icons\dxiconsios.woff" />
-    <EntityDeploy Include="Models\DB\POMDBM.edmx">
+    <EntityDeploy Include="Models\DB\Model1.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>POMDBM.Designer.cs</LastGenOutput>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="Models\DB\POMDBM.edmx.diagram">
-      <DependentUpon>POMDBM.edmx</DependentUpon>
+    <Content Include="Models\DB\Model1.edmx.diagram">
+      <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\PlotsOnMaps - Web Deploy.pubxml" />
-    <Content Include="Models\DB\POMDBM.Context.tt">
+    <Content Include="Models\DB\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>POMDBM.edmx</DependentUpon>
-      <LastGenOutput>POMDBM.Context.cs</LastGenOutput>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="Models\DB\POMDBM.tt">
+    <Content Include="Models\DB\Model1.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>POMDBM.edmx</DependentUpon>
-      <LastGenOutput>POMDBM.cs</LastGenOutput>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\aspnet\dx.aspnet.data.js" />
     <Content Include="Scripts\aspnet\dx.aspnet.mvc.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\cldr.js" />
     <Content Include="Scripts\cldr.min.js" />
     <Content Include="Scripts\cldr\event.js" />
@@ -308,61 +311,58 @@
     <Compile Include="Models\CoordenadasOperaciones.cs" />
     <Compile Include="Models\CoordenadasParcela.cs" />
     <Compile Include="Models\DB\ARTICULO.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\CONJUNTO_ARTICULOS.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DB\CONJUNTO_OPERACIONES.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\CONJUNTO_PARCELAS.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\COORDENADAS_OPERACION.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\COORDENADAS_PARCELA.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\database_firewall_rules.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\FINCA.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\lstvariedades.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\Model1.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\Model1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DB\Model1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\OPERACION.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\PARCELA.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DB\POMDBM.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>POMDBM.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DB\POMDBM.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>POMDBM.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\DB\POMDBM.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>POMDBM.edmx</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\TIPO_OPERACION.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\USUARIO.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DB\VARIEDAD.cs">
-      <DependentUpon>POMDBM.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Dibujo.cs" />
     <Compile Include="Models\CargarFiltrado.cs" />
@@ -404,6 +404,7 @@
     <Content Include="Views\POM\_GridViewPartialArticulos.cshtml" />
     <Content Include="Views\POM\_GridViewPartialTipoOperaciones.cshtml" />
     <Content Include="Views\POM\_GridViewPartialFiltrado.cshtml" />
+    <Content Include="Views\POM\_GridViewPartialConjuntoArticulos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

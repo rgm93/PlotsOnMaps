@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="PlotsOnMapsDBModeloOne.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="PlotsOnMapsDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ARTICULO">
           <Key>
             <PropertyRef Name="CODIGO" />
@@ -17,23 +17,15 @@
             <PropertyRef Name="CODIGO" />
           </Key>
           <Property Name="CODIGO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NOMBRE" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="ARTICULO" Type="varchar" MaxLength="20" Nullable="false" />
-        </EntityType>
-        <EntityType Name="CONJUNTO_OPERACIONES">
-          <Key>
-            <PropertyRef Name="CODIGO" />
-          </Key>
-          <Property Name="CODIGO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NOMBRE" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="OPERACION" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ARTICULO" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="CONJUNTO_PARCELAS">
           <Key>
             <PropertyRef Name="CODIGO" />
           </Key>
           <Property Name="CODIGO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NOMBRE" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="OPERACION" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="PARCELA" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="COORDENADAS_OPERACION">
@@ -73,10 +65,11 @@
           <Property Name="COLOR" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="TIPO" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="FECHA" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="ARTICULOS" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="FECHA2" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ARTICULOS" Type="varchar" MaxLength="300" Nullable="false" />
           <Property Name="OBSERVACIONES" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="TROZOS" Type="int" Nullable="false" />
-          <Property Name="PARCELA" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PARCELA" Type="varchar" MaxLength="300" Nullable="false" />
           <Property Name="FINCA" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="USUARIO" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
@@ -144,7 +137,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
           <Property Name="create_date" Type="datetime" Nullable="false" />
           <Property Name="modify_date" Type="datetime" Nullable="false" />
         </EntityType>
-        <Association Name="FK__CONJUNTO___ARTIC__47FBA9D6">
+        <Association Name="FK__CONJUNTO___ARTIC__23893F36">
           <End Role="ARTICULO" Type="Self.ARTICULO" Multiplicity="1" />
           <End Role="CONJUNTO_ARTICULOS" Type="Self.CONJUNTO_ARTICULOS" Multiplicity="*" />
           <ReferentialConstraint>
@@ -156,19 +149,31 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CONJUNTO___OPERA__5CF6C6BC">
+        <Association Name="FK__CONJUNTO___OPERA__1EC48A19">
           <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="1" />
-          <End Role="CONJUNTO_OPERACIONES" Type="Self.CONJUNTO_OPERACIONES" Multiplicity="*" />
+          <End Role="CONJUNTO_PARCELAS" Type="Self.CONJUNTO_PARCELAS" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="OPERACION">
               <PropertyRef Name="CODIGO" />
             </Principal>
-            <Dependent Role="CONJUNTO_OPERACIONES">
+            <Dependent Role="CONJUNTO_PARCELAS">
               <PropertyRef Name="OPERACION" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CONJUNTO___PARCE__536D5C82">
+        <Association Name="FK__CONJUNTO___OPERA__22951AFD">
+          <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="1" />
+          <End Role="CONJUNTO_ARTICULOS" Type="Self.CONJUNTO_ARTICULOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPERACION">
+              <PropertyRef Name="CODIGO" />
+            </Principal>
+            <Dependent Role="CONJUNTO_ARTICULOS">
+              <PropertyRef Name="OPERACION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CONJUNTO___PARCE__1FB8AE52">
           <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="1" />
           <End Role="CONJUNTO_PARCELAS" Type="Self.CONJUNTO_PARCELAS" Multiplicity="*" />
           <ReferentialConstraint>
@@ -180,7 +185,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__COORDENAD__OPERA__5A1A5A11">
+        <Association Name="FK__COORDENAD__OPERA__2665ABE1">
           <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="1" />
           <End Role="COORDENADAS_OPERACION" Type="Self.COORDENADAS_OPERACION" Multiplicity="*" />
           <ReferentialConstraint>
@@ -192,7 +197,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__COORDENAD__PARCE__5090EFD7">
+        <Association Name="FK__COORDENAD__PARCE__77AABCF8">
           <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="1" />
           <End Role="COORDENADAS_PARCELA" Type="Self.COORDENADAS_PARCELA" Multiplicity="*" />
           <ReferentialConstraint>
@@ -204,7 +209,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__FINCA__USUARIO__414EAC47">
+        <Association Name="FK__FINCA__USUARIO__70FDBF69">
           <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
           <End Role="FINCA" Type="Self.FINCA" Multiplicity="*" />
           <ReferentialConstraint>
@@ -216,7 +221,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OPERACION__TIPO__5649C92D">
+        <Association Name="FK__OPERACION__TIPO__1AF3F935">
           <End Role="TIPO_OPERACION" Type="Self.TIPO_OPERACION" Multiplicity="1" />
           <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="*" />
           <ReferentialConstraint>
@@ -228,7 +233,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OPERACION__USUAR__573DED66">
+        <Association Name="FK__OPERACION__USUAR__1BE81D6E">
           <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
           <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="*" />
           <ReferentialConstraint>
@@ -240,7 +245,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PARCELA__FINCA__4DB4832C">
+        <Association Name="FK__PARCELA__FINCA__74CE504D">
           <End Role="FINCA" Type="Self.FINCA" Multiplicity="1" />
           <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="*" />
           <ReferentialConstraint>
@@ -252,7 +257,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PARCELA__VARIEDA__4CC05EF3">
+        <Association Name="FK__PARCELA__VARIEDA__73DA2C14">
           <End Role="VARIEDAD" Type="Self.VARIEDAD" Multiplicity="1" />
           <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="*" />
           <ReferentialConstraint>
@@ -267,10 +272,12 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
         <Function Name="obtenerarticulos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar(max)">
           <Parameter Name="codigo" Type="nvarchar" Mode="In" />
         </Function>
-        <EntityContainer Name="PlotsOnMapsDBModeloOneStoreContainer">
+        <Function Name="obtenerparcelas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="nvarchar(max)">
+          <Parameter Name="codigo" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="PlotsOnMapsDBModelStoreContainer">
           <EntitySet Name="ARTICULO" EntityType="Self.ARTICULO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONJUNTO_ARTICULOS" EntityType="Self.CONJUNTO_ARTICULOS" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="CONJUNTO_OPERACIONES" EntityType="Self.CONJUNTO_OPERACIONES" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONJUNTO_PARCELAS" EntityType="Self.CONJUNTO_PARCELAS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="COORDENADAS_OPERACION" EntityType="Self.COORDENADAS_OPERACION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="COORDENADAS_PARCELA" EntityType="Self.COORDENADAS_PARCELA" Schema="dbo" store:Type="Tables" />
@@ -296,43 +303,47 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
     [database_firewall_rules].[modify_date] AS [modify_date]
     FROM [sys].[database_firewall_rules] AS [database_firewall_rules]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK__CONJUNTO___ARTIC__47FBA9D6" Association="Self.FK__CONJUNTO___ARTIC__47FBA9D6">
+          <AssociationSet Name="FK__CONJUNTO___ARTIC__23893F36" Association="Self.FK__CONJUNTO___ARTIC__23893F36">
             <End Role="ARTICULO" EntitySet="ARTICULO" />
             <End Role="CONJUNTO_ARTICULOS" EntitySet="CONJUNTO_ARTICULOS" />
           </AssociationSet>
-          <AssociationSet Name="FK__CONJUNTO___OPERA__5CF6C6BC" Association="Self.FK__CONJUNTO___OPERA__5CF6C6BC">
+          <AssociationSet Name="FK__CONJUNTO___OPERA__1EC48A19" Association="Self.FK__CONJUNTO___OPERA__1EC48A19">
             <End Role="OPERACION" EntitySet="OPERACION" />
-            <End Role="CONJUNTO_OPERACIONES" EntitySet="CONJUNTO_OPERACIONES" />
+            <End Role="CONJUNTO_PARCELAS" EntitySet="CONJUNTO_PARCELAS" />
           </AssociationSet>
-          <AssociationSet Name="FK__CONJUNTO___PARCE__536D5C82" Association="Self.FK__CONJUNTO___PARCE__536D5C82">
+          <AssociationSet Name="FK__CONJUNTO___OPERA__22951AFD" Association="Self.FK__CONJUNTO___OPERA__22951AFD">
+            <End Role="OPERACION" EntitySet="OPERACION" />
+            <End Role="CONJUNTO_ARTICULOS" EntitySet="CONJUNTO_ARTICULOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CONJUNTO___PARCE__1FB8AE52" Association="Self.FK__CONJUNTO___PARCE__1FB8AE52">
             <End Role="PARCELA" EntitySet="PARCELA" />
             <End Role="CONJUNTO_PARCELAS" EntitySet="CONJUNTO_PARCELAS" />
           </AssociationSet>
-          <AssociationSet Name="FK__COORDENAD__OPERA__5A1A5A11" Association="Self.FK__COORDENAD__OPERA__5A1A5A11">
+          <AssociationSet Name="FK__COORDENAD__OPERA__2665ABE1" Association="Self.FK__COORDENAD__OPERA__2665ABE1">
             <End Role="OPERACION" EntitySet="OPERACION" />
             <End Role="COORDENADAS_OPERACION" EntitySet="COORDENADAS_OPERACION" />
           </AssociationSet>
-          <AssociationSet Name="FK__COORDENAD__PARCE__5090EFD7" Association="Self.FK__COORDENAD__PARCE__5090EFD7">
+          <AssociationSet Name="FK__COORDENAD__PARCE__77AABCF8" Association="Self.FK__COORDENAD__PARCE__77AABCF8">
             <End Role="PARCELA" EntitySet="PARCELA" />
             <End Role="COORDENADAS_PARCELA" EntitySet="COORDENADAS_PARCELA" />
           </AssociationSet>
-          <AssociationSet Name="FK__FINCA__USUARIO__414EAC47" Association="Self.FK__FINCA__USUARIO__414EAC47">
+          <AssociationSet Name="FK__FINCA__USUARIO__70FDBF69" Association="Self.FK__FINCA__USUARIO__70FDBF69">
             <End Role="USUARIO" EntitySet="USUARIO" />
             <End Role="FINCA" EntitySet="FINCA" />
           </AssociationSet>
-          <AssociationSet Name="FK__OPERACION__TIPO__5649C92D" Association="Self.FK__OPERACION__TIPO__5649C92D">
+          <AssociationSet Name="FK__OPERACION__TIPO__1AF3F935" Association="Self.FK__OPERACION__TIPO__1AF3F935">
             <End Role="TIPO_OPERACION" EntitySet="TIPO_OPERACION" />
             <End Role="OPERACION" EntitySet="OPERACION" />
           </AssociationSet>
-          <AssociationSet Name="FK__OPERACION__USUAR__573DED66" Association="Self.FK__OPERACION__USUAR__573DED66">
+          <AssociationSet Name="FK__OPERACION__USUAR__1BE81D6E" Association="Self.FK__OPERACION__USUAR__1BE81D6E">
             <End Role="USUARIO" EntitySet="USUARIO" />
             <End Role="OPERACION" EntitySet="OPERACION" />
           </AssociationSet>
-          <AssociationSet Name="FK__PARCELA__FINCA__4DB4832C" Association="Self.FK__PARCELA__FINCA__4DB4832C">
+          <AssociationSet Name="FK__PARCELA__FINCA__74CE504D" Association="Self.FK__PARCELA__FINCA__74CE504D">
             <End Role="FINCA" EntitySet="FINCA" />
             <End Role="PARCELA" EntitySet="PARCELA" />
           </AssociationSet>
-          <AssociationSet Name="FK__PARCELA__VARIEDA__4CC05EF3" Association="Self.FK__PARCELA__VARIEDA__4CC05EF3">
+          <AssociationSet Name="FK__PARCELA__VARIEDA__73DA2C14" Association="Self.FK__PARCELA__VARIEDA__73DA2C14">
             <End Role="VARIEDAD" EntitySet="VARIEDAD" />
             <End Role="PARCELA" EntitySet="PARCELA" />
           </AssociationSet>
@@ -341,41 +352,34 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="PlotsOnMapsDBModeloOne" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="PlotsOnMapsDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="ARTICULO">
           <Key>
             <PropertyRef Name="CODIGO" />
           </Key>
           <Property Name="CODIGO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="NOMBRE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="CONJUNTO_ARTICULOS" Relationship="Self.FK__CONJUNTO___ARTIC__47FBA9D6" FromRole="ARTICULO" ToRole="CONJUNTO_ARTICULOS" />
+          <NavigationProperty Name="CONJUNTO_ARTICULOS" Relationship="Self.FK__CONJUNTO___ARTIC__23893F36" FromRole="ARTICULO" ToRole="CONJUNTO_ARTICULOS" />
         </EntityType>
         <EntityType Name="CONJUNTO_ARTICULOS">
           <Key>
             <PropertyRef Name="CODIGO" />
           </Key>
           <Property Name="CODIGO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NOMBRE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ARTICULO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="ARTICULO1" Relationship="Self.FK__CONJUNTO___ARTIC__47FBA9D6" FromRole="CONJUNTO_ARTICULOS" ToRole="ARTICULO" />
-        </EntityType>
-        <EntityType Name="CONJUNTO_OPERACIONES">
-          <Key>
-            <PropertyRef Name="CODIGO" />
-          </Key>
-          <Property Name="CODIGO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NOMBRE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="OPERACION" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="OPERACION1" Relationship="Self.FK__CONJUNTO___OPERA__5CF6C6BC" FromRole="CONJUNTO_OPERACIONES" ToRole="OPERACION" />
+          <Property Name="ARTICULO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ARTICULO1" Relationship="Self.FK__CONJUNTO___ARTIC__23893F36" FromRole="CONJUNTO_ARTICULOS" ToRole="ARTICULO" />
+          <NavigationProperty Name="OPERACION1" Relationship="Self.FK__CONJUNTO___OPERA__22951AFD" FromRole="CONJUNTO_ARTICULOS" ToRole="OPERACION" />
         </EntityType>
         <EntityType Name="CONJUNTO_PARCELAS">
           <Key>
             <PropertyRef Name="CODIGO" />
           </Key>
           <Property Name="CODIGO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NOMBRE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OPERACION" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="PARCELA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="PARCELA1" Relationship="Self.FK__CONJUNTO___PARCE__536D5C82" FromRole="CONJUNTO_PARCELAS" ToRole="PARCELA" />
+          <NavigationProperty Name="OPERACION1" Relationship="Self.FK__CONJUNTO___OPERA__1EC48A19" FromRole="CONJUNTO_PARCELAS" ToRole="OPERACION" />
+          <NavigationProperty Name="PARCELA1" Relationship="Self.FK__CONJUNTO___PARCE__1FB8AE52" FromRole="CONJUNTO_PARCELAS" ToRole="PARCELA" />
         </EntityType>
         <EntityType Name="COORDENADAS_OPERACION">
           <Key>
@@ -386,7 +390,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
           <Property Name="LONG" Type="Double" Nullable="false" />
           <Property Name="TROZO" Type="Int32" Nullable="false" />
           <Property Name="OPERACION" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="OPERACION1" Relationship="Self.FK__COORDENAD__OPERA__5A1A5A11" FromRole="COORDENADAS_OPERACION" ToRole="OPERACION" />
+          <NavigationProperty Name="OPERACION1" Relationship="Self.FK__COORDENAD__OPERA__2665ABE1" FromRole="COORDENADAS_OPERACION" ToRole="OPERACION" />
         </EntityType>
         <EntityType Name="COORDENADAS_PARCELA">
           <Key>
@@ -396,7 +400,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
           <Property Name="LAT" Type="Double" Nullable="false" />
           <Property Name="LONG" Type="Double" Nullable="false" />
           <Property Name="PARCELA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="PARCELA1" Relationship="Self.FK__COORDENAD__PARCE__5090EFD7" FromRole="COORDENADAS_PARCELA" ToRole="PARCELA" />
+          <NavigationProperty Name="PARCELA1" Relationship="Self.FK__COORDENAD__PARCE__77AABCF8" FromRole="COORDENADAS_PARCELA" ToRole="PARCELA" />
         </EntityType>
         <EntityType Name="FINCA">
           <Key>
@@ -406,8 +410,8 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
           <Property Name="NOMBRE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="COLOR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="USUARIO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="USUARIO1" Relationship="Self.FK__FINCA__USUARIO__414EAC47" FromRole="FINCA" ToRole="USUARIO" />
-          <NavigationProperty Name="PARCELA" Relationship="Self.FK__PARCELA__FINCA__4DB4832C" FromRole="FINCA" ToRole="PARCELA" />
+          <NavigationProperty Name="USUARIO1" Relationship="Self.FK__FINCA__USUARIO__70FDBF69" FromRole="FINCA" ToRole="USUARIO" />
+          <NavigationProperty Name="PARCELA" Relationship="Self.FK__PARCELA__FINCA__74CE504D" FromRole="FINCA" ToRole="PARCELA" />
         </EntityType>
         <EntityType Name="OPERACION">
           <Key>
@@ -418,16 +422,18 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
           <Property Name="COLOR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="TIPO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="FECHA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ARTICULOS" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FECHA2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ARTICULOS" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="OBSERVACIONES" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="TROZOS" Type="Int32" Nullable="false" />
-          <Property Name="PARCELA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PARCELA" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="FINCA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="USUARIO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="CONJUNTO_OPERACIONES" Relationship="Self.FK__CONJUNTO___OPERA__5CF6C6BC" FromRole="OPERACION" ToRole="CONJUNTO_OPERACIONES" />
-          <NavigationProperty Name="COORDENADAS_OPERACION" Relationship="Self.FK__COORDENAD__OPERA__5A1A5A11" FromRole="OPERACION" ToRole="COORDENADAS_OPERACION" />
-          <NavigationProperty Name="TIPO_OPERACION" Relationship="Self.FK__OPERACION__TIPO__5649C92D" FromRole="OPERACION" ToRole="TIPO_OPERACION" />
-          <NavigationProperty Name="USUARIO1" Relationship="Self.FK__OPERACION__USUAR__573DED66" FromRole="OPERACION" ToRole="USUARIO" />
+          <NavigationProperty Name="CONJUNTO_ARTICULOS" Relationship="Self.FK__CONJUNTO___OPERA__22951AFD" FromRole="OPERACION" ToRole="CONJUNTO_ARTICULOS" />
+          <NavigationProperty Name="CONJUNTO_PARCELAS" Relationship="Self.FK__CONJUNTO___OPERA__1EC48A19" FromRole="OPERACION" ToRole="CONJUNTO_PARCELAS" />
+          <NavigationProperty Name="COORDENADAS_OPERACION" Relationship="Self.FK__COORDENAD__OPERA__2665ABE1" FromRole="OPERACION" ToRole="COORDENADAS_OPERACION" />
+          <NavigationProperty Name="TIPO_OPERACION" Relationship="Self.FK__OPERACION__TIPO__1AF3F935" FromRole="OPERACION" ToRole="TIPO_OPERACION" />
+          <NavigationProperty Name="USUARIO1" Relationship="Self.FK__OPERACION__USUAR__1BE81D6E" FromRole="OPERACION" ToRole="USUARIO" />
         </EntityType>
         <EntityType Name="PARCELA">
           <Key>
@@ -438,10 +444,10 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
           <Property Name="CONJUNTA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="VARIEDAD" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="FINCA" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="CONJUNTO_PARCELAS" Relationship="Self.FK__CONJUNTO___PARCE__536D5C82" FromRole="PARCELA" ToRole="CONJUNTO_PARCELAS" />
-          <NavigationProperty Name="COORDENADAS_PARCELA" Relationship="Self.FK__COORDENAD__PARCE__5090EFD7" FromRole="PARCELA" ToRole="COORDENADAS_PARCELA" />
-          <NavigationProperty Name="FINCA1" Relationship="Self.FK__PARCELA__FINCA__4DB4832C" FromRole="PARCELA" ToRole="FINCA" />
-          <NavigationProperty Name="VARIEDAD1" Relationship="Self.FK__PARCELA__VARIEDA__4CC05EF3" FromRole="PARCELA" ToRole="VARIEDAD" />
+          <NavigationProperty Name="CONJUNTO_PARCELAS" Relationship="Self.FK__CONJUNTO___PARCE__1FB8AE52" FromRole="PARCELA" ToRole="CONJUNTO_PARCELAS" />
+          <NavigationProperty Name="COORDENADAS_PARCELA" Relationship="Self.FK__COORDENAD__PARCE__77AABCF8" FromRole="PARCELA" ToRole="COORDENADAS_PARCELA" />
+          <NavigationProperty Name="FINCA1" Relationship="Self.FK__PARCELA__FINCA__74CE504D" FromRole="PARCELA" ToRole="FINCA" />
+          <NavigationProperty Name="VARIEDAD1" Relationship="Self.FK__PARCELA__VARIEDA__73DA2C14" FromRole="PARCELA" ToRole="VARIEDAD" />
         </EntityType>
         <EntityType Name="TIPO_OPERACION">
           <Key>
@@ -451,7 +457,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
           <Property Name="NOMBRE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="TIENE_ARTICULOS" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="COLOR" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="OPERACION" Relationship="Self.FK__OPERACION__TIPO__5649C92D" FromRole="TIPO_OPERACION" ToRole="OPERACION" />
+          <NavigationProperty Name="OPERACION" Relationship="Self.FK__OPERACION__TIPO__1AF3F935" FromRole="TIPO_OPERACION" ToRole="OPERACION" />
         </EntityType>
         <EntityType Name="USUARIO">
           <Key>
@@ -462,8 +468,8 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
           <Property Name="PASS" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="TIPO" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ACTIVADO" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="FINCA" Relationship="Self.FK__FINCA__USUARIO__414EAC47" FromRole="USUARIO" ToRole="FINCA" />
-          <NavigationProperty Name="OPERACION" Relationship="Self.FK__OPERACION__USUAR__573DED66" FromRole="USUARIO" ToRole="OPERACION" />
+          <NavigationProperty Name="FINCA" Relationship="Self.FK__FINCA__USUARIO__70FDBF69" FromRole="USUARIO" ToRole="FINCA" />
+          <NavigationProperty Name="OPERACION" Relationship="Self.FK__OPERACION__USUAR__1BE81D6E" FromRole="USUARIO" ToRole="OPERACION" />
         </EntityType>
         <EntityType Name="VARIEDAD">
           <Key>
@@ -471,7 +477,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
           </Key>
           <Property Name="CODIGO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="NOMBRE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="PARCELA" Relationship="Self.FK__PARCELA__VARIEDA__4CC05EF3" FromRole="VARIEDAD" ToRole="PARCELA" />
+          <NavigationProperty Name="PARCELA" Relationship="Self.FK__PARCELA__VARIEDA__73DA2C14" FromRole="VARIEDAD" ToRole="PARCELA" />
         </EntityType>
         <EntityType Name="lstvariedades">
           <Key>
@@ -497,7 +503,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
           <Property Name="create_date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="modify_date" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <Association Name="FK__CONJUNTO___ARTIC__47FBA9D6">
+        <Association Name="FK__CONJUNTO___ARTIC__23893F36">
           <End Role="ARTICULO" Type="Self.ARTICULO" Multiplicity="1" />
           <End Role="CONJUNTO_ARTICULOS" Type="Self.CONJUNTO_ARTICULOS" Multiplicity="*" />
           <ReferentialConstraint>
@@ -509,19 +515,31 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CONJUNTO___OPERA__5CF6C6BC">
+        <Association Name="FK__CONJUNTO___OPERA__22951AFD">
           <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="1" />
-          <End Role="CONJUNTO_OPERACIONES" Type="Self.CONJUNTO_OPERACIONES" Multiplicity="*" />
+          <End Role="CONJUNTO_ARTICULOS" Type="Self.CONJUNTO_ARTICULOS" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="OPERACION">
               <PropertyRef Name="CODIGO" />
             </Principal>
-            <Dependent Role="CONJUNTO_OPERACIONES">
+            <Dependent Role="CONJUNTO_ARTICULOS">
               <PropertyRef Name="OPERACION" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__CONJUNTO___PARCE__536D5C82">
+        <Association Name="FK__CONJUNTO___OPERA__1EC48A19">
+          <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="1" />
+          <End Role="CONJUNTO_PARCELAS" Type="Self.CONJUNTO_PARCELAS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OPERACION">
+              <PropertyRef Name="CODIGO" />
+            </Principal>
+            <Dependent Role="CONJUNTO_PARCELAS">
+              <PropertyRef Name="OPERACION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CONJUNTO___PARCE__1FB8AE52">
           <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="1" />
           <End Role="CONJUNTO_PARCELAS" Type="Self.CONJUNTO_PARCELAS" Multiplicity="*" />
           <ReferentialConstraint>
@@ -533,7 +551,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__COORDENAD__OPERA__5A1A5A11">
+        <Association Name="FK__COORDENAD__OPERA__2665ABE1">
           <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="1" />
           <End Role="COORDENADAS_OPERACION" Type="Self.COORDENADAS_OPERACION" Multiplicity="*" />
           <ReferentialConstraint>
@@ -545,7 +563,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__COORDENAD__PARCE__5090EFD7">
+        <Association Name="FK__COORDENAD__PARCE__77AABCF8">
           <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="1" />
           <End Role="COORDENADAS_PARCELA" Type="Self.COORDENADAS_PARCELA" Multiplicity="*" />
           <ReferentialConstraint>
@@ -557,7 +575,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__FINCA__USUARIO__414EAC47">
+        <Association Name="FK__FINCA__USUARIO__70FDBF69">
           <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
           <End Role="FINCA" Type="Self.FINCA" Multiplicity="*" />
           <ReferentialConstraint>
@@ -569,7 +587,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PARCELA__FINCA__4DB4832C">
+        <Association Name="FK__PARCELA__FINCA__74CE504D">
           <End Role="FINCA" Type="Self.FINCA" Multiplicity="1" />
           <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="*" />
           <ReferentialConstraint>
@@ -581,7 +599,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OPERACION__TIPO__5649C92D">
+        <Association Name="FK__OPERACION__TIPO__1AF3F935">
           <End Role="TIPO_OPERACION" Type="Self.TIPO_OPERACION" Multiplicity="1" />
           <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="*" />
           <ReferentialConstraint>
@@ -593,7 +611,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OPERACION__USUAR__573DED66">
+        <Association Name="FK__OPERACION__USUAR__1BE81D6E">
           <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="1" />
           <End Role="OPERACION" Type="Self.OPERACION" Multiplicity="*" />
           <ReferentialConstraint>
@@ -605,7 +623,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PARCELA__VARIEDA__4CC05EF3">
+        <Association Name="FK__PARCELA__VARIEDA__73DA2C14">
           <End Role="VARIEDAD" Type="Self.VARIEDAD" Multiplicity="1" />
           <End Role="PARCELA" Type="Self.PARCELA" Multiplicity="*" />
           <ReferentialConstraint>
@@ -617,10 +635,9 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="PlotsOnMapsDBEntities2" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="PlotsOnMapsDBEntities4" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="ARTICULO" EntityType="Self.ARTICULO" />
           <EntitySet Name="CONJUNTO_ARTICULOS" EntityType="Self.CONJUNTO_ARTICULOS" />
-          <EntitySet Name="CONJUNTO_OPERACIONES" EntityType="Self.CONJUNTO_OPERACIONES" />
           <EntitySet Name="CONJUNTO_PARCELAS" EntityType="Self.CONJUNTO_PARCELAS" />
           <EntitySet Name="COORDENADAS_OPERACION" EntityType="Self.COORDENADAS_OPERACION" />
           <EntitySet Name="COORDENADAS_PARCELA" EntityType="Self.COORDENADAS_PARCELA" />
@@ -632,43 +649,47 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
           <EntitySet Name="VARIEDAD" EntityType="Self.VARIEDAD" />
           <EntitySet Name="lstvariedades" EntityType="Self.lstvariedades" />
           <EntitySet Name="database_firewall_rules" EntityType="Self.database_firewall_rules" />
-          <AssociationSet Name="FK__CONJUNTO___ARTIC__47FBA9D6" Association="Self.FK__CONJUNTO___ARTIC__47FBA9D6">
+          <AssociationSet Name="FK__CONJUNTO___ARTIC__23893F36" Association="Self.FK__CONJUNTO___ARTIC__23893F36">
             <End Role="ARTICULO" EntitySet="ARTICULO" />
             <End Role="CONJUNTO_ARTICULOS" EntitySet="CONJUNTO_ARTICULOS" />
           </AssociationSet>
-          <AssociationSet Name="FK__CONJUNTO___OPERA__5CF6C6BC" Association="Self.FK__CONJUNTO___OPERA__5CF6C6BC">
+          <AssociationSet Name="FK__CONJUNTO___OPERA__22951AFD" Association="Self.FK__CONJUNTO___OPERA__22951AFD">
             <End Role="OPERACION" EntitySet="OPERACION" />
-            <End Role="CONJUNTO_OPERACIONES" EntitySet="CONJUNTO_OPERACIONES" />
+            <End Role="CONJUNTO_ARTICULOS" EntitySet="CONJUNTO_ARTICULOS" />
           </AssociationSet>
-          <AssociationSet Name="FK__CONJUNTO___PARCE__536D5C82" Association="Self.FK__CONJUNTO___PARCE__536D5C82">
+          <AssociationSet Name="FK__CONJUNTO___OPERA__1EC48A19" Association="Self.FK__CONJUNTO___OPERA__1EC48A19">
+            <End Role="OPERACION" EntitySet="OPERACION" />
+            <End Role="CONJUNTO_PARCELAS" EntitySet="CONJUNTO_PARCELAS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CONJUNTO___PARCE__1FB8AE52" Association="Self.FK__CONJUNTO___PARCE__1FB8AE52">
             <End Role="PARCELA" EntitySet="PARCELA" />
             <End Role="CONJUNTO_PARCELAS" EntitySet="CONJUNTO_PARCELAS" />
           </AssociationSet>
-          <AssociationSet Name="FK__COORDENAD__OPERA__5A1A5A11" Association="Self.FK__COORDENAD__OPERA__5A1A5A11">
+          <AssociationSet Name="FK__COORDENAD__OPERA__2665ABE1" Association="Self.FK__COORDENAD__OPERA__2665ABE1">
             <End Role="OPERACION" EntitySet="OPERACION" />
             <End Role="COORDENADAS_OPERACION" EntitySet="COORDENADAS_OPERACION" />
           </AssociationSet>
-          <AssociationSet Name="FK__COORDENAD__PARCE__5090EFD7" Association="Self.FK__COORDENAD__PARCE__5090EFD7">
+          <AssociationSet Name="FK__COORDENAD__PARCE__77AABCF8" Association="Self.FK__COORDENAD__PARCE__77AABCF8">
             <End Role="PARCELA" EntitySet="PARCELA" />
             <End Role="COORDENADAS_PARCELA" EntitySet="COORDENADAS_PARCELA" />
           </AssociationSet>
-          <AssociationSet Name="FK__FINCA__USUARIO__414EAC47" Association="Self.FK__FINCA__USUARIO__414EAC47">
+          <AssociationSet Name="FK__FINCA__USUARIO__70FDBF69" Association="Self.FK__FINCA__USUARIO__70FDBF69">
             <End Role="USUARIO" EntitySet="USUARIO" />
             <End Role="FINCA" EntitySet="FINCA" />
           </AssociationSet>
-          <AssociationSet Name="FK__PARCELA__FINCA__4DB4832C" Association="Self.FK__PARCELA__FINCA__4DB4832C">
+          <AssociationSet Name="FK__PARCELA__FINCA__74CE504D" Association="Self.FK__PARCELA__FINCA__74CE504D">
             <End Role="FINCA" EntitySet="FINCA" />
             <End Role="PARCELA" EntitySet="PARCELA" />
           </AssociationSet>
-          <AssociationSet Name="FK__OPERACION__TIPO__5649C92D" Association="Self.FK__OPERACION__TIPO__5649C92D">
+          <AssociationSet Name="FK__OPERACION__TIPO__1AF3F935" Association="Self.FK__OPERACION__TIPO__1AF3F935">
             <End Role="TIPO_OPERACION" EntitySet="TIPO_OPERACION" />
             <End Role="OPERACION" EntitySet="OPERACION" />
           </AssociationSet>
-          <AssociationSet Name="FK__OPERACION__USUAR__573DED66" Association="Self.FK__OPERACION__USUAR__573DED66">
+          <AssociationSet Name="FK__OPERACION__USUAR__1BE81D6E" Association="Self.FK__OPERACION__USUAR__1BE81D6E">
             <End Role="USUARIO" EntitySet="USUARIO" />
             <End Role="OPERACION" EntitySet="OPERACION" />
           </AssociationSet>
-          <AssociationSet Name="FK__PARCELA__VARIEDA__4CC05EF3" Association="Self.FK__PARCELA__VARIEDA__4CC05EF3">
+          <AssociationSet Name="FK__PARCELA__VARIEDA__73DA2C14" Association="Self.FK__PARCELA__VARIEDA__73DA2C14">
             <End Role="VARIEDAD" EntitySet="VARIEDAD" />
             <End Role="PARCELA" EntitySet="PARCELA" />
           </AssociationSet>
@@ -678,9 +699,9 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="PlotsOnMapsDBModeloOneStoreContainer" CdmEntityContainer="PlotsOnMapsDBEntities2">
+        <EntityContainerMapping StorageEntityContainer="PlotsOnMapsDBModelStoreContainer" CdmEntityContainer="PlotsOnMapsDBEntities4">
           <EntitySetMapping Name="ARTICULO">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.ARTICULO">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.ARTICULO">
               <MappingFragment StoreEntitySet="ARTICULO">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
@@ -688,34 +709,25 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CONJUNTO_ARTICULOS">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.CONJUNTO_ARTICULOS">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.CONJUNTO_ARTICULOS">
               <MappingFragment StoreEntitySet="CONJUNTO_ARTICULOS">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
-                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="OPERACION" ColumnName="OPERACION" />
                 <ScalarProperty Name="ARTICULO" ColumnName="ARTICULO" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CONJUNTO_OPERACIONES">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.CONJUNTO_OPERACIONES">
-              <MappingFragment StoreEntitySet="CONJUNTO_OPERACIONES">
-                <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
-                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
-                <ScalarProperty Name="OPERACION" ColumnName="OPERACION" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="CONJUNTO_PARCELAS">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.CONJUNTO_PARCELAS">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.CONJUNTO_PARCELAS">
               <MappingFragment StoreEntitySet="CONJUNTO_PARCELAS">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
-                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="OPERACION" ColumnName="OPERACION" />
                 <ScalarProperty Name="PARCELA" ColumnName="PARCELA" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="COORDENADAS_OPERACION">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.COORDENADAS_OPERACION">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.COORDENADAS_OPERACION">
               <MappingFragment StoreEntitySet="COORDENADAS_OPERACION">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
                 <ScalarProperty Name="LAT" ColumnName="LAT" />
@@ -726,7 +738,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="COORDENADAS_PARCELA">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.COORDENADAS_PARCELA">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.COORDENADAS_PARCELA">
               <MappingFragment StoreEntitySet="COORDENADAS_PARCELA">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
                 <ScalarProperty Name="LAT" ColumnName="LAT" />
@@ -736,7 +748,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="FINCA">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.FINCA">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.FINCA">
               <MappingFragment StoreEntitySet="FINCA">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
@@ -746,13 +758,14 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="OPERACION">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.OPERACION">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.OPERACION">
               <MappingFragment StoreEntitySet="OPERACION">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
                 <ScalarProperty Name="COLOR" ColumnName="COLOR" />
                 <ScalarProperty Name="TIPO" ColumnName="TIPO" />
                 <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+                <ScalarProperty Name="FECHA2" ColumnName="FECHA2" />
                 <ScalarProperty Name="ARTICULOS" ColumnName="ARTICULOS" />
                 <ScalarProperty Name="OBSERVACIONES" ColumnName="OBSERVACIONES" />
                 <ScalarProperty Name="TROZOS" ColumnName="TROZOS" />
@@ -763,7 +776,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="PARCELA">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.PARCELA">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.PARCELA">
               <MappingFragment StoreEntitySet="PARCELA">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
@@ -774,7 +787,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TIPO_OPERACION">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.TIPO_OPERACION">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.TIPO_OPERACION">
               <MappingFragment StoreEntitySet="TIPO_OPERACION">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
@@ -784,7 +797,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="USUARIO">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.USUARIO">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.USUARIO">
               <MappingFragment StoreEntitySet="USUARIO">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
                 <ScalarProperty Name="USERNAME" ColumnName="USERNAME" />
@@ -795,7 +808,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="VARIEDAD">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.VARIEDAD">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.VARIEDAD">
               <MappingFragment StoreEntitySet="VARIEDAD">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
@@ -803,7 +816,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="lstvariedades">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.lstvariedades">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.lstvariedades">
               <MappingFragment StoreEntitySet="lstvariedades">
                 <ScalarProperty Name="CODIGO" ColumnName="CODIGO" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
@@ -811,7 +824,7 @@ advertencia 6002: La tabla o vista 'PlotsOnMapsDB.sys.database_firewall_rules' n
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="database_firewall_rules">
-            <EntityTypeMapping TypeName="PlotsOnMapsDBModeloOne.database_firewall_rules">
+            <EntityTypeMapping TypeName="PlotsOnMapsDBModel.database_firewall_rules">
               <MappingFragment StoreEntitySet="database_firewall_rules">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />

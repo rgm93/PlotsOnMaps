@@ -1,11 +1,15 @@
 @{
-    var grid = Html.DevExpress().GridView(settings => {
+    var grid = Html.DevExpress().GridView(settings =>
+    {
         settings.Name = "GridViewFiltrado";
         settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
         settings.Height = System.Web.UI.WebControls.Unit.Percentage(100);
-        settings.CallbackRouteValues = new { Controller = "POM", Action = "GridViewPartialFiltrado" };
+        settings.CallbackRouteValues = new
+        {
+            Controller = "POM",
+            Action = "GridViewPartialFiltrado"
+        };
 
-        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "POM", Action = "GridViewPartialFiltradoUpdate" };
         settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "POM", Action = "GridViewPartialFiltradoDelete" };
 
         settings.SettingsEditing.Mode = GridViewEditingMode.EditForm;
@@ -13,67 +17,125 @@
 
         settings.CommandColumn.Visible = true;
         settings.CommandColumn.ShowDeleteButton = true;
-        settings.CommandColumn.ShowEditButton = true;
 
         settings.KeyFieldName = "CODIGO";
 
-        settings.SettingsPager.Visible = true;
         settings.Settings.ShowGroupPanel = false;
         settings.Settings.ShowFilterRow = true;
         settings.SettingsBehavior.AllowSelectByRowClick = false;
-        settings.CommandColumn.ShowApplyFilterButton = true;
-        settings.SettingsBehavior.FilterRowMode = GridViewFilterRowMode.OnClick;
+        settings.CommandColumn.ShowApplyFilterButton = false;
+        settings.SettingsBehavior.FilterRowMode = GridViewFilterRowMode.Auto;
+        settings.CommandColumn.ShowClearFilterButton = true;
 
         settings.SettingsAdaptivity.AdaptivityMode = GridViewAdaptivityMode.Off;
         settings.SettingsAdaptivity.AdaptiveColumnPosition = GridViewAdaptiveColumnPosition.Right;
         settings.SettingsAdaptivity.AdaptiveDetailColumnCount = 1;
         settings.SettingsAdaptivity.AllowOnlyOneAdaptiveDetailExpanded = false;
         settings.SettingsAdaptivity.HideDataCellsAtWindowInnerWidth = 0;
-        
-        settings.Columns.Add("NOMBRE");
+
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "CODIGO";
+            c.Caption = "CODIGO";
+            c.ReadOnly = true;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
+
+        settings.Columns.Add(c=> {
+            c.FieldName = "NOMBRE";
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
         settings.Columns.Add(c =>
         {
 
             settings.Name = "ComboColor";
             c.FieldName = "COLOR";
             c.Caption = "COLOR";
+            c.ReadOnly = true;
             c.EditorProperties().ComboBox(p =>
             {
                 p.ValueType = typeof(string);
                 p.DataSource = POM.Controllers.POMController.getColores();
             });
         });
-        settings.Columns.Add(column =>
+
+        settings.Columns.Add(c =>
         {
-            column.FieldName = "TIPO";
-            column.ReadOnly = true;
+
+            settings.Name = "ComboTipo";
+            c.FieldName = "TIPO";
+            c.Caption = "TIPO";
+            c.ReadOnly = true;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
         });
-        settings.Columns.Add("FECHA");
-        settings.Columns.Add(column =>
+
+        settings.Columns.Add(c =>
         {
-            column.FieldName = "ARTICULOS";
-            column.ReadOnly = true;
+            c.FieldName = "FECHA";
+            c.Caption = "FECHA INICIAL";
+            c.PropertiesEdit.DisplayFormatString = "dd/MM/yyyy";
+            //c.Settings.AllowAutoFilterTextInputTimer = DefaultBoolean.False;
+            //c.Settings.FilterMode = ColumnFilterMode.DisplayText;
+            c.Settings.ShowFilterRowMenu = DefaultBoolean.False;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.GreaterOrEqual;
         });
+        settings.Columns.Add(c =>
+        {
+            c.FieldName = "FECHA2";
+            c.Caption = "FECHA FINAL";
+            c.PropertiesEdit.DisplayFormatString = "dd/MM/yyyy";
+            //c.Settings.AllowAutoFilterTextInputTimer = DefaultBoolean.False;
+            //c.UnboundType = DevExpress.Data.UnboundColumnType.String;
+            //c.Settings.FilterMode = ColumnFilterMode.DisplayText;
+            c.Settings.ShowFilterRowMenu = DefaultBoolean.False;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.LessOrEqual;
+        });
+
+        settings.Columns.Add(c =>
+        {
+
+            settings.Name = "ComboArticulos";
+            c.FieldName = "ARTICULOS";
+            c.Caption = "ARTICULO";
+            c.ReadOnly = true;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
+
+        settings.Columns.Add(c =>
+        {
+
+            settings.Name = "ComboParcelas";
+            c.FieldName = "PARCELA";
+            c.Caption = "PARCELA";
+            c.ReadOnly = true;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
+
+        settings.Columns.Add(c =>
+        {
+
+            settings.Name = "ComboFinca";
+            c.FieldName = "FINCA";
+            c.Caption = "FINCA";
+            c.ReadOnly = true;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
+
+        settings.Columns.Add(c =>
+        {
+
+            settings.Name = "ComboUsuarios";
+            c.FieldName = "USUARIO";
+            c.Caption = "USUARIO";
+            c.ReadOnly = true;
+            c.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        });
+
         settings.Columns.Add("OBSERVACIONES").Settings.AllowAutoFilter = DefaultBoolean.False;
         settings.Columns.Add(column =>
         {
             column.FieldName = "TROZOS";
             column.Settings.AllowAutoFilter = DefaultBoolean.False;
-            column.ReadOnly = true;
-        });
-        settings.Columns.Add(column =>
-        {
-            column.FieldName = "PARCELA";
-            column.ReadOnly = true;
-        });
-        settings.Columns.Add(column =>
-        {
-            column.FieldName = "FINCA";
-            column.ReadOnly = true;
-        });
-        settings.Columns.Add(column =>
-        {
-            column.FieldName = "USUARIO";
             column.ReadOnly = true;
         });
 
@@ -106,8 +168,8 @@
         };
     });
 
-
-    if (ViewData["EditError"] != null){
+    if (ViewData["EditError"] != null)
+    {
         grid.SetEditErrorText((string)ViewData["EditError"]);
     }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="747ea9be0aa2404184ff40978a88ffe2" Name="Diagram1">
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.ARTICULO" Width="1.5" PointX="3" PointY="11.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.CONJUNTO_ARTICULOS" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.CONJUNTO_PARCELAS" Width="1.5" PointX="7.5" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.COORDENADAS_OPERACION" Width="1.5" PointX="5.25" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.COORDENADAS_PARCELA" Width="1.5" PointX="7.5" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.FINCA" Width="1.5" PointX="3" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.OPERACION" Width="1.5" PointX="3" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.PARCELA" Width="1.5" PointX="5.25" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.TIPO_OPERACION" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.USUARIO" Width="1.5" PointX="0.75" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.VARIEDAD" Width="1.5" PointX="3" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.lstvariedades" Width="1.5" PointX="7.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="PlotsOnMapsDBModel.database_firewall_rules" Width="1.5" PointX="9.75" PointY="3" IsExpanded="true" />
+        <AssociationConnector Association="PlotsOnMapsDBModel.FK__CONJUNTO___ARTIC__23893F36" ManuallyRouted="false" />
+        <AssociationConnector Association="PlotsOnMapsDBModel.FK__CONJUNTO___OPERA__22951AFD" ManuallyRouted="false" />
+        <AssociationConnector Association="PlotsOnMapsDBModel.FK__CONJUNTO___OPERA__1EC48A19" ManuallyRouted="false" />
+        <AssociationConnector Association="PlotsOnMapsDBModel.FK__CONJUNTO___PARCE__1FB8AE52" ManuallyRouted="false" />
+        <AssociationConnector Association="PlotsOnMapsDBModel.FK__COORDENAD__OPERA__2665ABE1" ManuallyRouted="false" />
+        <AssociationConnector Association="PlotsOnMapsDBModel.FK__COORDENAD__PARCE__77AABCF8" ManuallyRouted="false" />
+        <AssociationConnector Association="PlotsOnMapsDBModel.FK__FINCA__USUARIO__70FDBF69" ManuallyRouted="false" />
+        <AssociationConnector Association="PlotsOnMapsDBModel.FK__PARCELA__FINCA__74CE504D" ManuallyRouted="false" />
+        <AssociationConnector Association="PlotsOnMapsDBModel.FK__OPERACION__TIPO__1AF3F935" ManuallyRouted="false" />
+        <AssociationConnector Association="PlotsOnMapsDBModel.FK__OPERACION__USUAR__1BE81D6E" ManuallyRouted="false" />
+        <AssociationConnector Association="PlotsOnMapsDBModel.FK__PARCELA__VARIEDA__73DA2C14" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
