@@ -863,7 +863,7 @@ public class MainFragmentOperador extends Fragment
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.2547837, -6.9536343)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.3433600, -6.9460370)));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
         if (mMap != null) {
 
@@ -1022,9 +1022,6 @@ public class MainFragmentOperador extends Fragment
     /* Método que subdivide la operación en trozos para localizarla en las parcelas a tratar */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public boolean dibujoEntreZonas(ArrayList<LatLng> dibujo, ArrayList<Integer> posP, List<List<LatLng>> arrayCoord) throws SQLException {
-
-        //Collections.sort(dibujo, new OrdenarCoordenadas(dibujo.get(0)));
-        //dibujo.sort(new OrdenarCoordenadas(dibujo.get(0)));
 
 
         List<List<LatLng>> partes = new ArrayList<>();
