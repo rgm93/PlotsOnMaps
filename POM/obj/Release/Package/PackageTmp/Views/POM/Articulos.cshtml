@@ -52,7 +52,7 @@
             <a href="/POM/Parcelas" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Fincas y Parcelas</a>
 
             <div class="w3-dropdown-hover w3-hide-small">
-                <button class="w3-button" title="Notifications">Otros <i class="fa fa-caret-down"></i></button>
+                <button class="w3-button">Otros <i class="fa fa-caret-down"></i></button>
                 <div class="w3-dropdown-content w3-card-4 w3-bar-block">
                     <a href="/POM/Usuarios" class="w3-bar-item w3-button">Usuarios</a>
                     <a href="/POM/Variedades" class="w3-bar-item w3-button">Variedades</a>
@@ -109,8 +109,7 @@
                 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
                 <script type="text/javascript" src="https://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
                 <script type="text/javascript">
-
-                    //Add event handler.
+                    
                     $("body").on("click", "#addDB", function () {
                         var objeto = {
                             codigo: $("#codigo").val(),
@@ -147,155 +146,6 @@
                         else alert("Falta elegir el código del artículo.")
                         return devolver;
                     }
-
-                    $("body").on("click", "#buscarObjeto", function () {
-                        var busqueda = $("#cajaBusqueda").val();
-                        var webGrid = $("#WebGrid");
-                        var row = webGrid.find("tr").eq(1);
-                        $.ajax({
-                            type: "POST",
-                            url: "/POM/BuscarArticulo",
-                            data: '{busqueda:' + JSON.stringify(busqueda) + '}',
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            success: function (data) {
-                                if (data) {
-                                    console.log(data);
-                                    $.each(data, function () {
-                                        $("#WebGrid TBODY").empty();
-                                        for (i = 0; i <= data.length - 1; i++) {
-                                            $("#WebGrid TBODY").append("<tr><td>" + data[i].codigo + "</td><td>" + data[i].nombre + "</td><td> <span class=\"link\">" +
-                                                "<a class=\"Edit\"> Editar </a><a class=\"Delete\"> Eliminar </a><a class=\"Update\" style=\"display: none\">Actualizar</a>" +
-                                                "<a class=\"Cancel\" style = \"display:none\"> Cancelar </a></td></tr>");
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                    });
-
-                    //Edit event handler.
-                    $("body").on("click", "#WebGrid TBODY .Edit", function () {
-                        var row = $(this).closest("tr");
-                        $("td", row).each(function () {
-                            if ($(this).find(".text").length > 0) {
-                                $(this).find(".text").show();
-                                $(this).find(".label").hide();
-                            }
-                        });
-                        row.find(".Update").show();
-                        row.find(".Cancel").show();
-                        row.find(".Delete").hide();
-                        $(this).hide();
-                    });
-
-                    var span;
-                    var input;
-
-                    var objetoAux = {};
-
-
-                    $("body").on("click", "#WebGrid TBODY .Update", function () {
-                        var row = $(this).closest("tr");
-                        objetoAux.codigo = row.find(".Id").find(".label").html();
-                        objetoAux.nombre = row.find(".Nombre").find(".label").html();
-                        $("td", row).each(function () {
-                            if ($(this).find(".text").length > 0) {
-                                span = $(this).find(".label");
-                                input = $(this).find(".text");
-                                span.html(input.val());
-                                span.show();
-                                input.hide();
-                            }
-                        });
-
-                        row.find(".Edit").show();
-                        row.find(".Delete").show();
-                        row.find(".Update").hide();
-                        row.find(".Cancel").hide();
-
-                        var objeto = {};
-                        objeto.codigo = row.find(".Id").find(".label").html();
-                        objeto.nombre = row.find(".Nombre").find(".label").html();
-                        $.ajax({
-                            type: "POST",
-                            url: "/POM/ActualizarArticulo",
-                            data: '{objeto:' + JSON.stringify(objeto) + '}',
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            success: function (data) {
-                                if (!data) {
-                                    alert("La variedad ya existe.");
-                                    row.find(".Nombre").find(".label").text(objetoAux.nombre);
-                                    row.find(".Cancel").click();
-                                }
-                                else {
-                                    row.find(".Edit").show();
-                                    row.find(".Delete").show();
-                                    row.find(".Update").hide();
-                                    row.find(".Cancel").hide();
-                                    $(this).hide();
-                                }
-                            }
-                        });
-                    });
-
-                    //Delete event handler.
-                    $("body").on("click", "#WebGrid TBODY .Delete", function () {
-                        var row = $(this).closest("tr");
-                        $("td", row).each(function () {
-                            if ($(this).find(".text").length > 0) {
-                                var span = $(this).find(".label");
-                                var input = $(this).find(".text");
-                                span.html(input.val());
-                                span.show();
-                                input.hide();
-                            }
-                        });
-
-                        var objeto = {};
-                        objeto.codigo = row.find(".Id").find(".label").html();
-                        objeto.nombre = row.find(".Nombre").find(".label").html();
-                        $.ajax({
-                            type: "POST",
-                            url: "/POM/EliminarArticulo",
-                            data: '{objeto:' + JSON.stringify(objeto) + '}',
-                            contentType: "application/json; charset=utf-8",
-                            dataType: "json",
-                            success: function (data) {
-                                if (data) {
-                                    if ($("#tblDB tr").length > 1) {
-                                        row.remove();
-                                    } else {
-                                        row.find(".Edit").hide();
-                                        row.find(".Delete").hide();
-                                        row.find("span").html('&nbsp;');
-                                        row.remove();
-                                    }
-                                }
-                                else alert("El artículo no puede eliminarse.");
-
-                            }
-                        });
-                    });
-
-                    //Cancel event handler.
-                    $("body").on("click", "#WebGrid TBODY .Cancel", function () {
-                        var row = $(this).closest("tr");
-                        $("td", row).each(function () {
-                            if ($(this).find(".text").length > 0) {
-                                var span = $(this).find(".label");
-                                var input = $(this).find(".text");
-                                input.val(span.html());
-                                span.show();
-                                input.hide();
-                            }
-                        });
-                        row.find(".Edit").show();
-                        row.find(".Delete").show();
-                        row.find(".Update").hide();
-                        $(this).hide();
-                    });
                 </script>
             </div>
     </div>

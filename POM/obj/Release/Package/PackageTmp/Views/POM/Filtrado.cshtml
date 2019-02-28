@@ -57,7 +57,7 @@
             <a href="/POM/Parcelas" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Fincas y Parcelas</a>
 
             <div class="w3-dropdown-hover w3-hide-small">
-                <button class="w3-button" title="Notifications">Otros <i class="fa fa-caret-down"></i></button>
+                <button class="w3-button">Otros <i class="fa fa-caret-down"></i></button>
                 <div class="w3-dropdown-content w3-card-4 w3-bar-block">
                     <a href="/POM/Usuarios" class="w3-bar-item w3-button">Usuarios</a>
                     <a href="/POM/Variedades" class="w3-bar-item w3-button">Variedades</a>
@@ -106,7 +106,6 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (data) {
-                            console.log("entra");
                             initMap2(data);
                         },
                         error: function (xhr, status, error) { alert("Fallo en la operación"); }
@@ -141,8 +140,8 @@
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 37.2547837, lng: -6.9536343 },
-                zoom: 12
+                center: { lat: 37.342427, lng: -6.946881 },
+                zoom: 16
             });
 
             infowindow = new google.maps.InfoWindow();
@@ -155,35 +154,9 @@
             var nDibujosOperaciones = @Html.Raw(Json.Encode(ViewBag.PomsNDibujos));
             var operaciones = @Html.Raw(Json.Encode(ViewBag.PomsOperaciones));
 
-            /*$("#SetOperaciones").html(" ");
-            var SetData = $("#SetOperaciones");
-            for (var i = 0; i < operaciones.length; i++) {
-                console.log(operaciones[i]);
-                var Data = "<tr class='row_" + operaciones[i].codigo + "'>" +
-                    "<td>" + operaciones[i].codigo + "</td>" +
-                    "<td>" + operaciones[i].nombre + "</td>" +
-                    "<td>" + operaciones[i].color + "</td>" +
-                    "<td>" + operaciones[i].tipo + "</td>" +
-                    "<td>" + operaciones[i].fecha + "</td>" +
-                    "<td>" + operaciones[i].articulos + "</td>" +
-                    "<td>" + operaciones[i].observaciones + "</td>" +
-                    "<td>" + operaciones[i].parcela + "</td>" +
-                    "<td>" + operaciones[i].finca + "</td>" +
-                    "<td>" + operaciones[i].usuario + "</td>" +
-                    "</tr>";
-                SetData.append(Data);
-                $("#LoadingStatus").html(" ");
-                SetData.removeData();
-            }
-
-            console.log(coordenadasparcelas);
-            console.log(coordenadasoperaciones);
-            console.log(nDibujosOperaciones);
-            console.log(operaciones);*/
-            //var operaciones = ViewData["Operaciones"];
+           
 
             var polylinesDB = [];
-            var polylinesOPDB = [];
 
             for (var i in coordenadasparcelas) {
                 arr = [];
@@ -230,7 +203,6 @@
 
                         }
                         else {
-                            console.log(coordenadasoperaciones[i][j - 1].colorHex)
                             var polys = new google.maps.Polyline({
                                 path: arrLL,
                                 strokeColor: coordenadasoperaciones[i][j-1].colorHex,
@@ -324,8 +296,8 @@
 
         function initMap2(data) {
             map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 37.2547837, lng: -6.9536343 },
-                zoom: 12
+                center: { lat: 37.342427, lng: -6.946881 },
+                zoom: 16
             });
 
             infowindow = new google.maps.InfoWindow();
@@ -448,7 +420,6 @@
                 var bounds = new google.maps.LatLngBounds();
                 places.forEach(function (place) {
                     if (!place.geometry) {
-                        console.log("Returned place contains no geometry");
                         return;
                     }
                     var icon = {

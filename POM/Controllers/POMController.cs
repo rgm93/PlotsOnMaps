@@ -53,80 +53,13 @@ namespace POM.Controllers
                 }
 
                 else cargarOperacionesEnMapa();
-
-                /*List<Finca> fincas = new List<Finca>();
-                fincas = azure.filtrarFincas();
-
-                List<SelectListItem> li = new List<SelectListItem>();
-                li.Add(new SelectListItem { Text = "Todas las fincas", Value = "0" });
-                for (int i = 0; i < fincas.Count; i++)
-                {
-                    li.Add(new SelectListItem { Text = fincas[i].nombre, Value = (i + 1).ToString() });
-                }
-
-                List<Variedad> variedades = new List<Variedad>();
-                variedades = azure.filtrarVariedades();
-
-                List<SelectListItem> li2 = new List<SelectListItem>();
-                li2.Add(new SelectListItem { Text = "Todas las variedades", Value = "0" });
-                for (int i = 0; i < variedades.Count; i++)
-                {
-                    li2.Add(new SelectListItem { Text = variedades[i].nombre, Value = (i + 1).ToString() });
-                }
-
-                List<Parcela> parcelas = new List<Parcela>();
-                parcelas = azure.filtrarParcelas();
-                //parcelas = azure.filtrarParcelas();
-                List<SelectListItem> li3 = new List<SelectListItem>();
-                li3.Add(new SelectListItem { Text = "Todas las parcelas", Value = "0" });
-                /*for (int i = 0; i < parcelas.Count; i++)
-                {
-                    li3.Add(new SelectListItem { Text = parcelas[i].nombre, Value = (i + 1).ToString() });
-                }
-
-                List<Articulo> articulos = new List<Articulo>();
-                articulos = azure.filtrarArticulos();
-                List<SelectListItem> li4 = new List<SelectListItem>();
-                li4.Add(new SelectListItem { Text = "Todos los artículos", Value = "0" });
-                for (int i = 0; i < articulos.Count; i++)
-                {
-                    li4.Add(new SelectListItem { Text = articulos[i].nombre, Value = (i + 1).ToString() });
-                }
-
-                List<Operacion> tiposOperacion = new List<Operacion>();
-                tiposOperacion = azure.filtrarOperaciones();
-                List<SelectListItem> li5 = new List<SelectListItem>();
-                li5.Add(new SelectListItem { Text = "Todos los tipos de operaciones", Value = "0" });
-                for (int i = 0; i < tiposOperacion.Count; i++)
-                {
-                    li5.Add(new SelectListItem { Text = tiposOperacion[i].nombre, Value = (i + 1).ToString() });
-                }
-
-                List<Usuario> usuarios = new List<Usuario>();
-                usuarios = azure.filtrarUsuarios();
-                List<SelectListItem> li6 = new List<SelectListItem>();
-                li6.Add(new SelectListItem { Text = "Todos los usuarios", Value = "0" });
-                for (int i = 0; i < usuarios.Count; i++)
-                {
-                    li6.Add(new SelectListItem { Text = usuarios[i].username, Value = (i + 1).ToString() });
-                }*/
                 
-                /*ViewData["Fincas"] = li;
-                ViewData["Variedades"] = li2;
-                ViewData["Parcelas"] = li3;
-                ViewData["Articulos"] = li4;
-                ViewData["TiposOperaciones"] = li5;
-                ViewData["Usuarios"] = li6;*/
-
                 return View();
             }
 
             return RedirectToAction("Login");
             
         }
-
-
-        /**/
 
         [HttpPost]
         public ActionResult ObtenerFiltrado(Filtrar filter)
@@ -141,10 +74,6 @@ namespace POM.Controllers
                 {
                     cadena.Add(v[i]);
                 }
-
-                /*cadena.RemoveAll("StartsWith(");
-                cadena.RemoveAll(",");
-                cadena.RemoveAll(" ");*/
 
                 for (int i = 0; i < cadena.Count; i++)
                 {
@@ -198,16 +127,7 @@ namespace POM.Controllers
 
                 Filtrar faux = Filtrar(filter);
                 CargarFiltrado cf = cargarOperacionesEnMapa(faux);
-
-                //Filtrado(f);
-
-                /*List<Object> resultados = new List<Object>();
-                resultados.Add(ViewBag.PomsOP);
-                resultados.Add(ViewBag.PomsNDibujos);
-                resultados.Add(ViewBag.Operaciones);*/
-
-                //return PartialView("Filtrado", f);
-                //return Json(resultados);
+                
                 Session["query"] = "";
                 return Json(cf, JsonRequestBehavior.AllowGet);
             }
@@ -539,86 +459,9 @@ namespace POM.Controllers
             return RedirectToAction("Login");
         }
 
-        public ActionResult CrearUsuario()
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            if (!azure.obtenerCODUsuario(Request.Form["codigo"].ToString())) {
-                if (Request.Form["password"].ToString().Equals(Request.Form["password2"].ToString()))
-                {
-                    bool creado = azure.crearUsuario(Request.Form["codigo"], Request.Form["username"].ToString(), Request.Form["password"].ToString(), Request.Form["tipo"].ToString());
-                    if (!creado)
-                    {
-                        Console.WriteLine("Usuario creado");
-                    }
-                }
-            }
+       
 
-            else
-            {
-                Console.WriteLine("Error");
-            }
-
-            return RedirectToAction("Usuarios");
-        }
-
-        [HttpPost]
-        public ActionResult ModificarUsuario()
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            //String n = fm["smu"].ToString();
-            int pos = int.Parse(Request.Form["UsuariosL"].ToString()) - 1;
-            List<Usuario> usuarios = new List<Usuario>();
-            usuarios = azure.filtrarUsuarios();
-            String username_selected = usuarios[pos].username;
-
-            if (azure.comprobarUsuario(username_selected))
-            {
-                if (Request.Form["password_m"].ToString().Equals(Request.Form["password2_m"].ToString()))
-                {
-                    String username = Request.Form["username_m"].ToString();
-                    String pass = Request.Form["password_m"].ToString();
-                    String pass2 = Request.Form["password2_m"].ToString();
-                    if (!username.Equals("") && !pass.Equals("") && !pass2.Equals(""))
-                    {
-                        bool modificado = azure.modificarUsuario(username_selected, username, pass);
-                        if (!modificado)
-                        {
-                            Console.WriteLine("Usuario modificado");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Error");
-                    }
-                }
-            }
-
-            else
-            {
-                Console.WriteLine("Error");
-            }
-
-            azure.Cerrar();
-
-            return RedirectToAction("Usuarios");
-        }
-
-        /*[HttpPost]
-        public ActionResult EliminarUsuario(Usuario u)
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            String cod = azure.obtenerCodigo(u.codigo, "USUARIO");
-            bool eliminado = false;
-            if (!azure.contieneOperacionCampo(cod, "USUARIO"))
-            {
-                eliminado = azure.eliminarUsuario(cod);
-            }
-
-            return Json(eliminado, JsonRequestBehavior.AllowGet);
-        }*/
+        
 
         [HttpPost]
         public ActionResult EliminarParcela(Parcela p)
@@ -639,232 +482,7 @@ namespace POM.Controllers
 
             return Json(cf, JsonRequestBehavior.AllowGet);
         }
-
-        public ActionResult CrearVariedad()
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            if (!azure.obtenerCODVariedad(Request.Form["codigo"].ToString()))
-            {
-                bool creado = azure.crearVariedad(Request.Form["codigo"], Request.Form["nombre"].ToString());
-                if (!creado)
-                {
-                    Console.WriteLine("Variedad creada");
-                }
-            }
-
-            else
-            {
-                Console.WriteLine("Error");
-            }
-            azure.Cerrar();
-
-            return RedirectToAction("Variedades");
-        }
-
-        [HttpPost]
-        public ActionResult ModificarVariedad()
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            //String n = fm["smu"].ToString();
-            int pos = int.Parse(Request.Form["VariedadL"].ToString()) - 1;
-            List<Variedad> variedades = new List<Variedad>();
-            variedades = azure.filtrarVariedades();
-            String variedad_selected = variedades[pos].nombre;
-
-            if (azure.comprobarVariedad(variedad_selected))
-            {
-                String nombre = Request.Form["nombre"].ToString();
-                if (!nombre.Equals(""))
-                {
-                    bool modificado = azure.modificarVariedad(variedad_selected, nombre);
-                    if (!modificado)
-                    {
-                        Console.WriteLine("Variedad modificada");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Error");
-                }
-            }
-
-            else
-            {
-                Console.WriteLine("Error");
-            }
-
-            azure.Cerrar();
-
-            return RedirectToAction("Variedades");
-        }
-
-        /*[HttpPost]
-        public ActionResult EliminarVariedad(Variedad v)
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            bool eliminado = false;
-            String cod = azure.obtenerCodigo(v.codigo, "VARIEDAD");
-            if (!azure.contieneOperacionVariedad(cod))
-            {
-                eliminado = azure.eliminarVariedad(cod);
-            }
-            return Json(eliminado, JsonRequestBehavior.AllowGet);
-        }*/
-
-        public ActionResult CrearArticulo()
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            if (!azure.obtenerCODArticulo(Request.Form["codigo"].ToString()))
-            {
-                bool creado = azure.crearArticulo(Request.Form["codigo"], Request.Form["nombre"].ToString());
-                if (!creado)
-                {
-                    Console.WriteLine("Articulo creado");
-                }
-            }
-
-            else
-            {
-                Console.WriteLine("Error");
-            }
-
-            azure.Cerrar();
-
-            return RedirectToAction("Articulos");
-        }
-
-        [HttpPost]
-        public ActionResult ModificarArticulo()
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            //String n = fm["smu"].ToString();
-            int pos = int.Parse(Request.Form["ArticuloL"].ToString()) - 1;
-            List<Articulo> articulos = new List<Articulo>();
-            articulos = azure.filtrarArticulos();
-            String articulo_selected = articulos[pos].nombre;
-
-            if (azure.comprobarArticulo(articulo_selected))
-            {
-                String nombre = Request.Form["nombre"].ToString();
-                if (!nombre.Equals(""))
-                {
-                    bool modificado = azure.modificarArticulo(articulo_selected, nombre);
-                    if (!modificado)
-                    {
-                        Console.WriteLine("Articulo modificado");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Error");
-                }
-            }
-
-            else
-            {
-                Console.WriteLine("Error");
-            }
-
-            azure.Cerrar();
-
-            return RedirectToAction("Articulos");
-        }
-
-        /*[HttpPost]
-        public ActionResult EliminarArticulo(Articulo a)
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            String cod = azure.obtenerCodigo(a.codigo, "ARTICULO");
-            bool eliminado = false;
-            if (!azure.contieneOperacionCampo(cod, "ARTICULOS"))
-            {
-                eliminado = azure.eliminarArticulo(cod);
-            }
-
-            return Json(eliminado, JsonRequestBehavior.AllowGet);
-        }*/
-
-        public ActionResult CrearOperacion()
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            if (!azure.obtenerCODOperacion(Request.Form["codigo"].ToString()))
-            {
-                bool creado = azure.crearOperacion(Request.Form["codigo"], Request.Form["nombre"].ToString(), Request.Form["tiene"].ToString());
-                if (!creado)
-                {
-                    Console.WriteLine("Operación creada");
-                }
-            }
-
-            else
-            {
-                Console.WriteLine("Error");
-            }
-
-            azure.Cerrar();
-
-            return RedirectToAction("Operaciones");
-        }
-
-        [HttpPost]
-        public ActionResult ModificarOperacion()
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            int pos = int.Parse(Request.Form["OperacionL"].ToString()) - 1;
-            List<Operacion> operaciones = new List<Operacion>();
-            operaciones = azure.filtrarOperaciones();
-            String operacion_selected = operaciones[pos].nombre;
-
-            if (azure.comprobarOperacion(operacion_selected))
-            {
-                String nombre = Request.Form["nombre"].ToString();
-                String tiene = Request.Form["tiene"].ToString();
-                if (!nombre.Equals(""))
-                {
-                    bool modificado = azure.modificarOperacion(operacion_selected, nombre, tiene);
-                    if (!modificado)
-                    {
-                        Console.WriteLine("Operación modificada");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Error");
-                }
-            }
-
-            else
-            {
-                Console.WriteLine("Error");
-            }
-
-            azure.Cerrar();
-
-            return RedirectToAction("Operaciones");
-        }
-
-        /*[HttpPost]
-        public ActionResult EliminarOperacion(Operacion tp)
-        {
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            bool eliminado = false;
-            String cod = azure.obtenerCodigo(tp.codigo, "TIPO_OPERACION");
-            if (!azure.contieneOperacionCampo(cod, "TIPO"))
-            {
-                eliminado = azure.eliminarOperacion(cod);
-            }
-            return Json(eliminado, JsonRequestBehavior.AllowGet);
-        }*/
-
+        
         [HttpPost]
         public ActionResult CrearFinca(Finca f)
         {
@@ -1048,14 +666,8 @@ namespace POM.Controllers
                 bool creado = azure.crearParcela(p.codigo, p.nombre, "1", variedad_selected, finca_selected, listaCoordenadas);
                 if (!creado)
                 {
-                    Console.WriteLine("Parcela creada");
                     return Json(parc, JsonRequestBehavior.AllowGet);
                 }
-            }
-
-            else
-            {
-                Console.WriteLine("Error");
             }
 
             azure.Cerrar();
@@ -1119,7 +731,7 @@ namespace POM.Controllers
                
                 while(j < cp[i].Count)
                 {
-                    Console.WriteLine("Coordenada: " + cp[i][j].latitud.ToString() + "," + cp[i][j].longitud.ToString() + " - trozo: " + cp[i][j].trozo);
+                    
                     if (cp[i][j].trozo + 1 > nTrozos[i])
                     {
                         polys += "];";
@@ -1166,7 +778,7 @@ namespace POM.Controllers
 
                 while (j < cp[i].Count)
                 {
-                    Console.WriteLine("Coordenada: " + cp[i][j].latitud.ToString() + "," + cp[i][j].longitud.ToString() + " - trozo: " + cp[i][j].trozo);
+                    
                     if (cp[i][j].trozo + 1 > nTrozos[i])
                     {
                         polys += "];";
@@ -1191,60 +803,6 @@ namespace POM.Controllers
         [HttpPost]
         public Filtrar Filtrar(Filtrar f)
         {
-            //azure.Conectar();
-            
-            /*int posF = int.Parse(f.finca.ToString()) - 1;
-            String finca_selected = "";
-            if (posF != -1)
-            {
-                List<Finca> fincas = new List<Finca>();
-                fincas = azure.filtrarFincas();
-                finca_selected = fincas[posF].codigo;
-            }
-
-            String parcela_selected = "";
-            if (f.parcela.ToString() != "Todas las parcelas")
-            {
-                parcela_selected = azure.obtenerCODParcelaDesdeFinca(finca_selected, f.parcela.ToString());
-            }
-
-            int posV = int.Parse(f.variedad.ToString()) - 1;
-            String variedad_selected = "";
-            if(posV != -1)
-            {
-                List<Variedad> variedades = new List<Variedad>();
-                variedades = azure.filtrarVariedades();
-                variedad_selected = variedades[posV].codigo;
-            }
-
-            String fecha_selected = f.fecha;
-
-            int posOp = int.Parse(f.tipoOperacion.ToString()) - 1;
-            String tipoOperacion_selected = "";
-            if(posOp != -1) {
-                List<Operacion> operaciones = new List<Operacion>();
-                operaciones = azure.filtrarOperaciones();
-                tipoOperacion_selected = operaciones[posOp].codigo;
-            }
-           
-            int posPd = int.Parse(f.articulo.ToString()) - 1;
-            String producto_selected = "";
-            if(posPd != -1)
-            {
-                List<Articulo> productos = new List<Articulo>();
-                productos = azure.filtrarArticulos();
-                producto_selected = productos[posPd].codigo;
-            }
-
-            int posU = int.Parse(f.usuario.ToString()) - 1;
-            String usuario_selected = "";
-            if (posU != -1)
-            {
-                List<Usuario> usuarios = new List<Usuario>();
-                usuarios = azure.filtrarUsuarios();
-                usuario_selected = usuarios[posU].codigo;
-            }*/
-
             Filtrar faux;
             faux = new Filtrar(f.finca, f.parcela, f.color, f.variedad, f.fecha, f.fecha2, f.tipoOperacion, f.articulo, f.usuario, f.nombre, f.codigo);
             return faux;
@@ -1311,36 +869,6 @@ namespace POM.Controllers
         }
 
         [HttpPost]
-        public ActionResult EliminarUsuario(USUARIO objeto)
-        {
-            bool encontrado = false;
-            PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4();
-            USUARIO removedUsuario = entities.USUARIO.Find(objeto.CODIGO);
-            OPERACION existe = entities.OPERACION.Find(objeto.CODIGO);
-            if (existe == null)
-            {
-                entities.USUARIO.Remove(removedUsuario);
-                entities.SaveChanges();
-                encontrado = true;
-            }
-            
-            return Json(encontrado);
-        }
-
-        [HttpPost]
-        public ActionResult BuscarUsuario(string busqueda)
-        {
-            List<Usuario> lista = new List<Usuario>();
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            lista = azure.filtrarUsuarios();
-            azure.Cerrar();
-            var listaBusqueda = lista.Where(s => s.username.ToUpper().Contains(busqueda.ToUpper()) || s.username.ToUpper().Contains(busqueda.ToUpper()));
-
-            return Json(listaBusqueda, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
         public JsonResult InsertarVariedad(VARIEDAD objeto)
         {
             bool insertado = false;
@@ -1400,23 +928,6 @@ namespace POM.Controllers
             return Json(encontrado);
         }
 
-        [HttpPost]
-        public ActionResult EliminarVariedad(VARIEDAD objeto)
-        {
-            bool encontrado = false;
-            PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4();
-            VARIEDAD removed = entities.VARIEDAD.Find(objeto.CODIGO);
-            PARCELA existe = entities.PARCELA.Find(objeto.CODIGO);
-            if (existe == null)
-            {
-                entities.VARIEDAD.Remove(removed);
-                entities.SaveChanges();
-                encontrado = true;
-            }
-
-            return Json(encontrado);
-        }
-
         static string RemoveDiacritics(string text)
         {
             var normalizedString = text.Normalize(NormalizationForm.FormD);
@@ -1432,19 +943,6 @@ namespace POM.Controllers
             }
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-        }
-
-        [HttpPost]
-        public ActionResult BuscarVariedad(string busqueda)
-        {
-            List<Variedad> variedades = new List<Variedad>();
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            variedades = azure.filtrarVariedades();
-            azure.Cerrar();
-            var variedadesBusqueda = variedades.Where(s => s.nombre.ToUpper().Contains(busqueda.ToUpper()) || s.nombre.ToUpper().Contains(busqueda.ToUpper()));
-            
-            return Json(variedadesBusqueda, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1506,36 +1004,6 @@ namespace POM.Controllers
             }
 
             return Json(actualizado);
-        }
-
-        [HttpPost]
-        public ActionResult EliminarArticulo(ARTICULO objeto)
-        {
-            bool encontrado = false;
-            PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4();
-            ARTICULO removed = entities.ARTICULO.Find(objeto.CODIGO);
-            OPERACION existe = entities.OPERACION.Find(objeto.CODIGO);
-            if (existe == null)
-            {
-                entities.ARTICULO.Remove(removed);
-                entities.SaveChanges();
-                encontrado = true;
-            }
-
-            return Json(encontrado);
-        }
-
-        [HttpPost]
-        public ActionResult BuscarArticulo(string busqueda)
-        {
-            List<Articulo> lista = new List<Articulo>();
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            lista = azure.filtrarArticulos();
-            azure.Cerrar();
-            var listaBusqueda = lista.Where(s => s.nombre.ToUpper().Contains(busqueda.ToUpper()) || s.nombre.ToUpper().Contains(busqueda.ToUpper()));
-
-            return Json(listaBusqueda, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -1647,36 +1115,6 @@ namespace POM.Controllers
 
             return Json(actualizado);
         }
-        
-        [HttpPost]
-        public ActionResult EliminarTipoOperacion(TIPO_OPERACION objeto)
-        {
-            bool encontrado = false;
-            PlotsOnMapsDBEntities4 entities = new PlotsOnMapsDBEntities4();
-            TIPO_OPERACION removed = entities.TIPO_OPERACION.Find(objeto.CODIGO);
-            OPERACION existe = entities.OPERACION.Find(objeto.CODIGO);
-            if (existe == null)
-            {
-                entities.TIPO_OPERACION.Remove(removed);
-                entities.SaveChanges();
-                encontrado = true;
-            }
-
-            return Json(encontrado);
-        }
-
-        [HttpPost]
-        public ActionResult BuscarTipoOperacion(string busqueda)
-        {
-            List<Operacion> lista = new List<Operacion>();
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            lista = azure.filtrarOperaciones();
-            azure.Cerrar();
-            var listaBusqueda = lista.Where(s => s.nombre.ToUpper().Contains(busqueda.ToUpper()) || s.nombre.ToUpper().Contains(busqueda.ToUpper()));
-
-            return Json(listaBusqueda, JsonRequestBehavior.AllowGet);
-        }
 
         [HttpPost]
         public ActionResult ActualizarFinca(FINCA objeto)
@@ -1748,8 +1186,6 @@ namespace POM.Controllers
 
             return Json(actualizado);
         }
-
-        // ¿Borrar las funciones anteriores?
 
         PlotsOnMapsDBEntities4 db = new PlotsOnMapsDBEntities4();
 
@@ -1858,16 +1294,6 @@ namespace POM.Controllers
             {
                 try
                 {
-                    /*var modelItem = model.FirstOrDefault(it => it.NOMBRE == item.NOMBRE);
-                    if (modelItem != null)
-                    {
-                        item.NOMBRE = item.NOMBRE.ToUpper();
-                        ActualizarFinca(item);
-                        model = db1.FINCA;
-                        UpdateModel(model);
-                        db1.SaveChanges();
-                    }*/
-
                     ActualizarFinca(item);
                     AzureDB azure = new AzureDB();
                     azure.Conectar();
@@ -1887,32 +1313,8 @@ namespace POM.Controllers
                 }
             }
             else ViewData[EditResultKey] = string.Format("No es posible actualizar la finca: '{0}'", item.NOMBRE);
-
-            /*List<FINCA> p = model.ToList();
-            AzureDB azure = new AzureDB();
-            azure.Conectar();
-            for (int i = 0; i < model.Count(); i++)
-            {
-                p[i].COLOR = azure.obtenerColor(p[i].COLOR);
-                p[i].USUARIO = azure.obtenerNombreUsuario(p[i].USUARIO);
-            }
-            azure.Cerrar();*/
+            
             return PartialView("_GridViewPartialFincas", model.ToList());
-
-
-
-            /*
-                    ActualizarParcela(item);
-                    AzureDB azure = new AzureDB();
-                    azure.Conectar();
-                    List<PARCELA> p = model.ToList();
-                    for (int i = 0; i < model.Count(); i++)
-                    {
-                        p[i].FINCA = azure.obtenerNombreFinca(p[i].FINCA);
-                        p[i].VARIEDAD = azure.obtenerNombreVariedad(p[i].VARIEDAD);
-                    }
-                    azure.Cerrar();
-             */
         }
         [HttpPost, ValidateInput(false)]
         public ActionResult GridViewPartialFincasDelete([ModelBinder(typeof(DevExpressEditorsBinder))] FINCA item)
@@ -1994,14 +1396,6 @@ namespace POM.Controllers
                     }
                     azure.Cerrar();
                     ViewData[EditResultKey] = string.Format("Actualizada la parcela: '{0}'", item.NOMBRE);
-                    //GridViewPartialParcelas.grid.JSProperties["cpMessage"] = string.Format("Recargue el mapa para ver los resultados");
-
-                    /*var modelItem = model.FirstOrDefault(it => it.CODIGO == item.CODIGO);
-                    if (modelItem != null)
-                    {
-                        this.UpdateModel(modelItem);
-                        db2.SaveChanges();
-                    }*/
                 }
                 catch (Exception e)
                 {
@@ -2028,8 +1422,6 @@ namespace POM.Controllers
                         AzureDB azure = new AzureDB();
                         azure.Conectar();
                         azure.eliminarParcela(item.CODIGO);
-                        //modelCoordenadas.Remove(itemDelete2);
-                        //model.Remove(itemDelete);
                         db2.SaveChanges();
                         model = db2.PARCELA;
                         List<PARCELA> p = model.ToList();
@@ -2180,8 +1572,7 @@ namespace POM.Controllers
             }
             return PartialView("_GridViewPartialArticulos", model.ToList());
         }
-
-        //PlotsOnMapsDBEntities4 db4 = new PlotsOnMapsDBEntities4();
+        
 
         [ValidateInput(false)]
         public ActionResult GridViewPartialConjuntoArticulos()
@@ -2385,9 +1776,6 @@ namespace POM.Controllers
                 try
                 {
                     ActualizarOperacionFiltrado(item);
-                    /*model = db6.OPERACION;
-                    UpdateModel(model);
-                    db6.SaveChanges();*/
                 }
                 catch (Exception e)
                 {
@@ -2430,7 +1818,6 @@ namespace POM.Controllers
                     if (itemDelete != null && itemDelete2 != null)
                     {
                         azure.eliminarFiltradoOperacion(item.CODIGO);
-                        //model.Remove(itemDelete);
                         db6.SaveChanges();
                         ViewData[EditResultKey] = string.Format("Eliminado la operación: '{0}'", itemDelete.NOMBRE);
                     }
@@ -2661,8 +2048,6 @@ namespace POM.Controllers
         {
             PlotsOnMapsDBEntities4 db = new PlotsOnMapsDBEntities4();
             String[] articulos = db.ARTICULO.Select(x => x.NOMBRE).ToArray();
-            //String[] articulos_c = db.CONJUNTO_ARTICULOS.Select(x => x.ARTICULO).Distinct().ToArray();
-            //String[] a = articulos.Concat(articulos_c).ToArray();
             return articulos;
         }
 
@@ -2670,8 +2055,6 @@ namespace POM.Controllers
         {
             PlotsOnMapsDBEntities4 db = new PlotsOnMapsDBEntities4();
             String[] parcelas = db.PARCELA.Select(x => x.NOMBRE).Distinct().ToArray();
-           // String[] parcelas_c = db.CONJUNTO_PARCELAS.Select(x => x.PARCELA).Distinct().ToArray();
-           // String[] p = parcelas.Concat(parcelas_c).ToArray();
             return parcelas;
         }
 

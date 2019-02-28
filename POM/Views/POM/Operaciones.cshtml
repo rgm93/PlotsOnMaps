@@ -44,7 +44,6 @@
         <a href="#" class="w3-bar-item w3-button">Link 5</a>
     </nav>
 
-    <!-- Navbar -->
     <div class="w3-top">
         <div class="w3-bar w3-theme-d2 w3-left-align">
             <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-hover-white w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
@@ -52,7 +51,7 @@
             <a href="/POM/Parcelas" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Fincas y Parcelas</a>
 
             <div class="w3-dropdown-hover w3-hide-small">
-                <button class="w3-button" title="Notifications">Otros <i class="fa fa-caret-down"></i></button>
+                <button class="w3-button">Otros <i class="fa fa-caret-down"></i></button>
                 <div class="w3-dropdown-content w3-card-4 w3-bar-block">
                     <a href="/POM/Usuarios" class="w3-bar-item w3-button">Usuarios</a>
                     <a href="/POM/Variedades" class="w3-bar-item w3-button">Variedades</a>
@@ -65,7 +64,6 @@
             <a href="/POM/Login" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-white">Cerrar Sesión</a>
         </div>
 
-        <!-- Navbar on small screens -->
         <div id="navDemo" class="w3-bar-block w3-theme-d2 w3-hide w3-hide-large w3-hide-medium">
             <a href="/POM/Parcelas" class="w3-bar-item w3-button">Parcelas</a>
             <a href="/POM/Otros" class="w3-bar-item w3-button">Otros</a>
@@ -127,7 +125,6 @@
                     var nameColor = "";
                     switch (color) {
                         case "-16776961":
-                            console.log("wow");
                             nameColor = "AZUL";
                             break;
                         case "-16711936":
@@ -156,9 +153,6 @@
                     document.getElementById('selectColor').innerHTML = nameColor;
                 }
 
-
-
-                //Add event handler.
                 $("body").on("click", "#addDB", function () {
                     var objeto = {
                         codigo: $("#codigo").val(),
