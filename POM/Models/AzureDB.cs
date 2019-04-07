@@ -15,10 +15,10 @@ namespace POM.Models
         public AzureDB()
         {
             builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "plotsonmaps.database.windows.net";
-            builder.UserID = "rgm93@plotsonmaps";
-            builder.Password = "Ruben07091993plotsonmaps";
-            builder.InitialCatalog = "PlotsOnMapsDB";
+            builder.DataSource = "";
+            builder.UserID = "";
+            builder.Password = "";
+            builder.InitialCatalog = "";
             builder.MultipleActiveResultSets = true;
             connection = new SqlConnection(builder.ConnectionString);
         }
