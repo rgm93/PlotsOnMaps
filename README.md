@@ -1,17 +1,17 @@
 # PlotsOnMaps
 
-An platform to control your workers by Google Maps Polylines
+Plataforma para controlar a los trabajadores en el campo mediante Google Maps API
 
 ## Branches
 
 ### Android
 
-Android app when a worker can save its pathway into plots
+Aplicación Android donde un trabajador puede registrar por dónde ha realizado una operación a través de polilineas.
 
 ### ASPNET
 
-Web app when a administrator can check worker's pathway into plots
+WebApp donde un administrador puede comprobar la trazabilidad del trabajador y de las entidades que las relaciona.
 
 ### AzureSQL
 
-Scripts to set the specific DB
+Scripts para montar la base de datos SQL
